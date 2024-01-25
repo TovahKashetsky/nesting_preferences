@@ -4,4 +4,4 @@
 
 List of files
 
--   Analyes: quarto document that includes the data cleaning, wrangling, visudalizations and models
+-   Analyses: quarto document that includes the data cleaning, wrangling, visudalizations and models
