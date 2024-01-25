@@ -1,6 +1,6 @@
 # README
 
-## Social influences and parasite avoidance in nest-site selection
+## Social influences and parasite avoidance during nest-site selection
 
 List of files
 
