@@ -52,12 +52,12 @@ library(lme4)
 
 
 ## Load data
-data <- read_csv('Aggregate_nesting_data.csv')
+data <- read_csv('Data/Aggregate_nesting_data.csv')
 
 ## Add in straws that remained empty throughout the experiment
 
 # add empty data frame
-empty_data <- read_csv('Empty_data.csv')
+empty_data <- read_csv('Data/Empty_data.csv')
 # add columns to say 'for binding' or NA to tell data frames apart and prioritize the collected data
 empty_data$For_binding <- 0
 data$For_binding <- 1
@@ -229,7 +229,7 @@ long_choice$Bee_choice <- as.numeric(long_choice$Bee_choice)
 
 ### Question 1: Nesting according to available cavities ###
 
-## Count the number of Available Cavities in each nest including pseudo
+## Count the number of Available Cavities in each trapnest including pseudo
 # make a new column to say available (1) or not (0), or NA
 long_avail <- long_choice %>% 
   mutate(Available_bin = ifelse(Status == 'no_visit' | Status == 'non_existent', NA, ifelse(Status == 'empty', 1,  0)))
@@ -366,7 +366,7 @@ prefs <- rbind(prefs.1, prefs.0)
 
 ## Creating column with number of good days for bee activity based on weather between my visits to the trapnests 
 
-weather <- read_csv('Weather_data.csv')
+weather <- read_csv('Data/Weather_data.csv')
 
 # remove empty rows
 weather <- weather[rowSums(is.na(weather)) != ncol(weather), ]
@@ -506,7 +506,7 @@ preferences <- preferences %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == '
 preferences <- preferences %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V1 == 'TBD', (Meg_equ + Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_no_ps_prior_V1) | Meg_no_ps_prior_V1 != 'TBD', Meg_no_ps_prior_V1, 'leftover' ))) 
 
 # take only columns I need
-preferences <- preferences %>% select(Date, Site, Subsite, Trapnest, Treatment, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
+preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
 
 
 # write.csv(preferences, 'preferences.csv')
@@ -523,7 +523,7 @@ preferences <- preferences %>% select(Date, Site, Subsite, Trapnest, Treatment, 
 ### Question 3: Do parasites affect nesting preferences ###
 
 # load data
-os_par <- read_csv('Parasites_Osmia_clean.csv') # 728 rows
+os_par <- read_csv('Data/Parasites_Osmia_clean.csv') # 728 rows
 
 table(os_par$Cell_occupant)
 # there will be some missing data even though we have the nest info because the nests were too moldy to dissect, and megachile nests are not logged yet e.g., 6_17a and 3_13b
@@ -551,14 +551,14 @@ os_par <- os_par %>%
 os_par <- os_par %>% 
   select(Trapnest, Date, Nest_ID, Cell_ID, Number_of_cells, Cell_occupant, Cell_par, Cumulative_par) # 721 rows
 # bind parasite counts with preferences data
-preferences$Trapnest <- as.numeric(preferences$Trapnest)
-os_par_pref <- select(preferences, Trapnest, Site:Treatment, Date, Filled_length_mm:Bee_choice, New_nests_os:Meg_no_ps_prior) # 24871 rows ### NOW 26060
+# preferences$Trapnest <- as.numeric(preferences$Trapnest)
+os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, New_nests_os:Meg_no_ps_prior) # 24871 rows ### NOW 26060
 os_par$Date <- as.Date(os_par$Date)
 os_parasites <- merge(os_par_pref, os_par, all=T) # the status is repeating for each cell # 25356 NOW 25203
 
 ### CHECK FOR MISSING STATUSES ### these would be mistakes/ extras
 
-os_parasites$Trapnest <- as.numeric(os_parasites$Trapnest)
+# os_parasites$Trapnest <- as.numeric(os_parasites$Trapnest)
 # IM TRYING TO SEE IF REMOVING THE DUPLOCATES REMOVES AGGREGATE DATA
 os_parasites %>% filter(!is.na(New_nest_sum)) # with duplicates = 3246 # now 3317
 
@@ -657,6 +657,10 @@ nesting <- nesting %>%
 
 # make data frames
 
+nesting$Straw_length_mm <- as.numeric(nesting$Straw_length_mm)
+nesting$Filled_length_mm <- as.numeric(nesting$Filled_length_mm)
+
+
 investment <- nesting %>%  
   filter(!is.na(Straw_length_mm) & Occupant != 'NA' & Occupant != 'none') %>% 
   mutate(Prop_filled = Filled_length_mm/Straw_length_mm) 
@@ -711,6 +715,8 @@ nesting_meg <- nesting_meg %>%
 
 #  #  #  #  #  # 
 nesting_os <- nesting_os %>% filter(Occupant == 'osmia' | Occupant == 'none')
+
+
 #  #  #  #  #  #
 
 ```
@@ -1176,7 +1182,6 @@ ggpredict(mod_par_os, c('Par_in_trapnest')) %>%
 library(betareg)
 
 hist(investment_os$Prop_filled)
-investment_os$Trapnest <- as.factor(investment_os$Trapnest)
 
 mod_invest_os <- glmer(Prop_filled ~ Par_in_trapnest * Cumulative_par + Day_of_year + Site + (1|Subsite/Cavity_ID), data = investment_os, family = binomial)
 
@@ -1258,6 +1263,7 @@ investment %>% filter(Occupant == 'osmia' | Occupant == 'megachile') %>%
 
 
 # write.csv(preferences, 'preferences.csv')
+# write.csv(nesting, 'nesting.csv')
 
 
 ```
