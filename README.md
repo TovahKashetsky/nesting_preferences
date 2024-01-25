@@ -1,9 +1,6 @@
-# nest_site_selection
-Nesting preferences of wild cavity-nesting bees
+# README file for "social influences and parasite avoidance in nest-site selection"
 
+List of files
 
-on the web
+* Analyes: quarto document that includes the data cleaning, wrangling, visudalizations and models
 
-
-
-on r studio 
