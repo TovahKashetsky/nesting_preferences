@@ -421,11 +421,12 @@ preferences <- rbind(preferences, pref_BP_Meg)
 preferences <- rbind(preferences, pref_CP)
 
 # compare new df to the old intact one, should be the same
-length(prefs$Trapnest)
-length(preferences$Trapnest)
+length(prefs$Trapnest) # 26568
+length(preferences$Trapnest) # 26568
 
 
 ```
+
 
 ```{r Calculating prior values, include=FALSE, echo=TRUE, results='hide'}
 
