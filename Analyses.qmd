@@ -242,7 +242,7 @@ summ_avail$Available_post <- replace(summ_avail$Available_post, summ_avail$Avail
 # Available_post: number of available cavities for each trapnest and date combo
 
 ## Count number of New Osmia Nests per trapnest 
-long_new_os <- filter(long_choice, !is.na(Bee_choice), Occupant == 'osmia' | Occupant == 'empty')
+long_new_os <- filter(long_choice, !is.na(Bee_choice) | Occupant == 'osmia' | Occupant == 'empty') 
 summ_new_os <- long_new_os %>%
   group_by(Trapnest, Date) %>%
   summarize(New_nests_os = sum(Bee_choice == 1))
@@ -295,7 +295,7 @@ prefs_os <- prefs_os %>% select(-Osmia_bi_ps, -Osmia_bi_no_ps )
 # Available_post: number of available cavities for each trapnest and date combo
 
 ## Count number of New Nests per trapnest 
-long_new_meg <- filter(long_choice, !is.na(Bee_choice), Occupant == 'megachile' | Occupant == 'empty')
+long_new_meg <- filter(long_choice, !is.na(Bee_choice) | Occupant == 'megachile' | Occupant == 'empty')
 summ_new_meg <- long_new_meg %>%
   group_by(Trapnest, Date) %>%
   summarize(New_nests_meg = sum(Bee_choice == 1))
@@ -429,7 +429,7 @@ length(preferences$Trapnest)
 
 ```{r Calculating prior values, include=FALSE, echo=TRUE, results='hide'}
 
-
+### GO THORUGH THIS STEP BY STEP
 ## Dealing with multiple nests built on the same day
 # for available cavities
 # and for congenera present 
