@@ -4,7 +4,6 @@ format: html
 editor: visual
 ---
 
-
 ------------------------------------------------------------------------
 
 ```{r Notes, include=FALSE, echo=TRUE, results='hide'}
@@ -48,7 +47,8 @@ library(glmmTMB)
 library(DHARMa)
 library(car)
 library(lme4)
-# citation() # to see packages
+# citation() # to see package versions 
+
 
 
 ## Load data
@@ -135,12 +135,11 @@ long_data <- long_data %>% select(Site:Straw_ID, Straw_length_mm, Filled_length_
 # rename new occupant.v2 column
 long_data <- rename(long_data, Occupant = Occupant.v3)
 
-# see if each trapnest has 18 existing cavities (unique cavity IDs) for each visit
+# check if each trapnest has 18 existing cavities (unique cavity IDs) for each visit
 long_data %>% 
   filter(Status != 'non_existent' & Status != 'no_visit') %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Count = length(unique(Nest_ID))) 
-
 
 # remove chunks of "non_existent" for first and second half of the summer ### CHECK do i need other bp and cp?
 long_data_BP <- long_data %>% filter(Subsite == 'A' | Subsite == 'B' | Subsite == 'C' | Subsite == 'D' | Subsite == 'E' | Subsite == 'F')
@@ -219,17 +218,19 @@ Bee_choice$index <- as.numeric(Bee_choice$index)
 long_choice <- long_i %>% left_join(Bee_choice)
 long_choice$Bee_choice <- as.numeric(long_choice$Bee_choice)
 
-
+sum(long_choice$Bee_choice, na.rm = TRUE) # 269 new nests, but this is incorrect 
+# some have two 1s, like 5_9a, 6_17a, 7_3a
 
 ```
 
-```{r Osmia Nesting Preferences, include=FALSE, echo=TRUE, results='hide'}
 
-### Osmia ###
+
+```{r Conspecific Presence and Available Cavities, include=FALSE, echo=TRUE, results='hide'}
 
 ### Question 1: Nesting according to available cavities ###
 
 ## Count the number of Available Cavities in each trapnest including pseudo
+
 # make a new column to say available (1) or not (0), or NA
 long_avail <- long_choice %>% 
   mutate(Available_bin = ifelse(Status == 'no_visit' | Status == 'non_existent', NA, ifelse(Status == 'empty', 1,  0)))
@@ -237,129 +238,136 @@ long_avail <- long_choice %>%
 summ_avail <- long_avail %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Available_post = sum(Available_bin, na.rm = T))
-# replace zeros with NA
+# the zeros are no_visits, so replace zeros with NA
 summ_avail$Available_post <- replace(summ_avail$Available_post, summ_avail$Available_post == 0, NA)
-# Available_post: number of available cavities for each trapnest and date combo
-
-## Count number of New Osmia Nests per trapnest 
-long_new_os <- filter(long_choice, !is.na(Bee_choice) | Occupant == 'osmia' | Occupant == 'empty') 
-summ_new_os <- long_new_os %>%
-  group_by(Trapnest, Date) %>%
-  summarize(New_nests_os = sum(Bee_choice == 1)) ##### HAVE TO DO THIS AFTER EXTRA 1S ARE REMOVED, AND JUST REPLACE 1S DON REMOVE ROWS
-# New_nests_os: number of new osmia nests for each trapnest and date combo
-
-# Merge together
-prefs_os <- merge(long_choice, summ_avail, all.x = TRUE) 
-prefs_os <- merge(prefs_os,  summ_new_os, all.x = TRUE)
+# Available_post: number of available cavities for each trapnest and date combo after new nests had been built, i.e., the number of available cavities we saw on that visit
 
 
 ### Question 2: Nesting according to conspecific presence (with and without pseudo nests) ###
 
-## Make column to say osmia present or not, including pseudo
-prefs_os <- prefs_os %>% 
+### Osmia ###
+
+# Make column to say osmia present or not, including pseudo
+conspecifics_os <- long_choice %>% 
   mutate(Osmia_bi_ps = ifelse(Occupant == 'osmia', 1, 0)) 
-## Make column to say osmia present or not, excluding pseudo
-prefs_os <- prefs_os %>% 
+
+# Make column to say osmia present or not, excluding pseudo
+conspecifics_os <- conspecifics_os %>% 
   mutate(Osmia_bi_no_ps = ifelse(Occupant == 'osmia' & Status != 'pseudo', 1, 0)) 
 
-## Count the number of genera in each nest
+## Count the number of osmia in each nest
+
 # with pseudo nests/ pseudo nests considered osmia occupancies
-summ_osmia_ps <- prefs_os %>% 
+summ_osmia_ps <- conspecifics_os %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Osmia_ps = (sum(Osmia_bi_ps)))
 # Osmia_ps: number of osmia in each trapnest per date, including pseudo nests
 
 # without pseudo nests (pseudo nests not considered osmia occupancies)
-summ_osmia_no_ps <- prefs_os %>% 
+summ_osmia_no_ps <- conspecifics_os %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Osmia_no_ps = (sum(Osmia_bi_no_ps)))
 # Osmia_no_ps: number of osmia in each trapnest per date, excluding pseudo nests
 
 # Merge together
-prefs_os <- merge(prefs_os,  summ_osmia_ps, all.x = TRUE)
-prefs_os <- merge(prefs_os,  summ_osmia_no_ps, all.x = TRUE)
+conspecifics_os_2 <- merge(conspecifics_os,  summ_osmia_ps, all.x = TRUE)
+conspecifics_os_2 <- merge(conspecifics_os_2,  summ_osmia_no_ps, all.x = TRUE)
 
 # Delete columns I dont need
-prefs_os <- prefs_os %>% select(-Osmia_bi_ps, -Osmia_bi_no_ps )
+conspecifics_os_2 <- conspecifics_os_2 %>% select(-Osmia_bi_ps, -Osmia_bi_no_ps )
 
-
-```
-
-```{r Megachile Nesting Preferences, include=FALSE, echo=TRUE, results='hide'}
 
 ### Megachile ###
 
-### Question 1: Nesting according to available cavities ###
-
-## Count the number of Available Cavities in each nest including pseudo, done in previous chunk
-# Available_post: number of available cavities for each trapnest and date combo
-
-## Count number of New Nests per trapnest 
-long_new_meg <- filter(long_choice, !is.na(Bee_choice) | Occupant == 'megachile' | Occupant == 'empty')
-summ_new_meg <- long_new_meg %>%
-  group_by(Trapnest, Date) %>%
-  summarize(New_nests_meg = sum(Bee_choice == 1))
-# New_nests_meg: number of new megachile nests for each trapnest and date combo
-
-# Merge together
-prefs_meg <- merge(long_choice, summ_avail, all.x = TRUE) 
-prefs_meg <- merge(prefs_meg,  summ_new_meg, all.x = TRUE)
-
-
-### Question 2: Nesting according to conspecific presence (with and without pseudo nests) ###
-
-## Make column to say osmia present or not, including pseudo
-prefs_meg <- prefs_meg %>% 
+# Make column to say osmia present or not, including pseudo
+conspecifics_meg <- long_choice %>% 
   mutate(Mega_bi_ps = ifelse(Occupant == 'megachile', 1, 0)) 
-## Make column to say osmia present or not, excluding pseudo
-prefs_meg <- prefs_meg %>% 
+
+# Make column to say osmia present or not, excluding pseudo
+conspecifics_meg <- conspecifics_meg %>% 
   mutate(Mega_bi_no_ps = ifelse(Occupant == 'megachile' & Status != 'pseudo', 1, 0)) 
 
 ## Count the number of genera in each nest
+
 # with pseudo nests/ pseudo nests considered osmia occupancies
-summ_Meg_ps <- prefs_meg %>% 
+summ_meg_ps <- conspecifics_meg %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Meg_ps = (sum(Mega_bi_ps)))
 # Meg_ps: number of megachile in each trapnest per date, including pseudo nests
 
 # without pseudo nests/ pseudo nests not considered osmia occupancies
-summ_Meg_no_ps <- prefs_meg %>% 
+summ_meg_no_ps <- conspecifics_meg %>% 
   group_by(Trapnest, Date) %>% 
   summarize(Meg_no_ps = (sum(Mega_bi_no_ps)))
 # Meg_no_ps: number of megachile in each trapnest per date, excluding pseudo nests
 
 # Merge together
-prefs_meg <- merge(prefs_meg,  summ_Meg_ps, all.x = TRUE)
-prefs_meg <- merge(prefs_meg,  summ_Meg_no_ps, all.x = TRUE)
+conspecifics_meg_2 <- merge(conspecifics_meg,  summ_meg_ps, all.x = TRUE)
+conspecifics_meg_2 <- merge(conspecifics_meg_2,  summ_meg_no_ps, all.x = TRUE)
 
 # Delete columns I dont need
-prefs_meg <- prefs_meg %>% select(-Mega_bi_ps, -Mega_bi_no_ps )
+conspecifics_meg_2 <- conspecifics_meg_2 %>% select(-Mega_bi_ps, -Mega_bi_no_ps )
 
-# Join Osmia and Megachile preferences together
-prefs <- merge(prefs_os, prefs_meg)
-
+# Join Osmia and Megachile data together
+conspecifics <- merge(conspecifics_os_2, conspecifics_meg_2)
 
 
 ```
+
 
 ```{r Cleaning Data 2}
 
-## Cleaning required after nesting preferences data frame created
+
+## Cleaning required after previous steps 
 
 # remove rest of no_visits and non_existents (had to leave them in for the loop)
-prefs <- prefs %>% filter(Status != 'no_visit' & Status != 'non_existent')
-
+conspecifics <- conspecifics %>% filter(Status != 'no_visit' & Status != 'non_existent')
 
 # make sure no duplicates of Bee_choice for new nests 
-prefs.1 <- prefs %>% filter(Bee_choice == 1)
-prefs.1$Bee_choice[duplicated(prefs.1$Nest_ID)] <- NA
-prefs.0 <- prefs %>%
+conspecifics.1 <- conspecifics %>% filter(Bee_choice == 1)
+conspecifics.1$Bee_choice[duplicated(conspecifics.1$Nest_ID)] <- NA
+conspecifics.0 <- conspecifics %>%
   filter(Bee_choice == 0 | is.na(Bee_choice))
-prefs <- rbind(prefs.1, prefs.0)
+conspecifics <- rbind(conspecifics.1, conspecifics.0)
 
-# 26568 - 26529
+sum(conspecifics$Bee_choice, na.rm = TRUE) # 231 new nests 
+
 
 ```
+
+```{r New Nests, include=FALSE, echo=TRUE, results='hide'}
+
+
+## Counting the number of new nests
+
+
+## Count number of new osmia nests per trapnest 
+summ_new_os <- long_choice %>%
+  filter(Bee_choice == 1 & Occupant == 'osmia') %>% 
+  group_by(Trapnest, Date) %>%
+  summarize(New_nests_os = sum(Bee_choice == 1)) 
+# New_nests_os: number of new osmia nests for each trapnest and date combo, currently only has values for days with at least 1 new nest
+
+
+## Count number of new megachile nests per trapnest 
+summ_new_meg <- long_choice %>%
+  filter(Bee_choice == 1 & Occupant ==  'megachile') %>% 
+  group_by(Trapnest, Date) %>%
+  summarize(New_nests_meg = sum(Bee_choice == 1))
+# New_nests_meg: number of new megachile nests for each trapnest and date combo
+
+# merge together
+conspecifics_and_avail <- inner_join(conspecifics, summ_avail) # there's 432 rows in summ_avail not in conspecifics because they were no_visits that we removed from conspecifics, so inner_join will keep only rows in both
+new_nests_os <- full_join(conspecifics_and_avail, summ_new_os)
+prefs <- full_join(new_nests_os, summ_new_meg)
+
+# change New_nests_os to have 0s for days with no values
+prefs$New_nests_os <- replace(prefs$New_nests_os, is.na(prefs$New_nests_os), 0)
+prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 0)
+
+
+```
+
 
 ```{r Weather Data, include=FALSE, echo=TRUE, results='hide'}
 
@@ -433,7 +441,7 @@ length(preferences$Trapnest) # 26568
 ### GO THORUGH THIS STEP BY STEP
 
 ## Dealing with multiple nests built on the same day
-# for available cavities and for congenera present 
+# for available cavities and congenera present 
 
 
 ## Changing available cavities for prior number
@@ -448,20 +456,14 @@ length(preferences$Trapnest) # 26568
 preferences <- preferences %>% mutate(New_nest_sum = ifelse(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, ifelse(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
 
 # 2- Make a column to take the average of the available cavities that each bee could have encountered. E.g., if there were 2 new nests in a low-occupancy treatment with no other active nests, the first bee encountered 18 empty cavities while the second bee encountered 17 empty ones. Use (n+1)/2 which is equivalent to n+(n-1)+(n-2).../n. E.g., (3+1)/2=2, while (3+2+1)/3=2. n being the number of new nests. Then add this equation to the number of cavities available after the nest nests (number i see on the visit)
-# Remove occurences of zeros because (0+1)/2 = 0.5, and include occurences where there was new nest(s) of one genera but not the other
+# Use only 1 nest or more, and exclude occurences of zeros because (0+1)/2 = 0.5
 
-# make the equation
-preferences <- preferences %>% mutate(Nest_equation = ifelse(New_nest_sum > 1, ((New_nest_sum + 1)/2), ifelse(New_nests_os == 1 | New_nests_meg == 1 & is.na(New_nest_sum), 1, 'leftover')))
+# A- make the equation
+# if there's more than 1 New_nest_sum, add that number in to the equation
+preferences <- preferences %>% mutate(Nest_equation = ifelse(New_nest_sum >= 1, ((New_nest_sum + 1)/2),  0))
 
-# make nest equation numeric
-preferences$Nest_equation <- as.numeric(preferences$Nest_equation)
-
-# add equation and available post to make available prior
+# B- add equation and available post to make available prior
 preferences$Available_prior <- (preferences$Nest_equation + preferences$Available_post)
-
-# filter out wasps and non-targets from choices, after we counted them as occupied cavities
-preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unkown' & Occupant !='masked bee')
-table(preferences$Occupant)
 
 
 ## Changing occupant count for prior number
@@ -473,7 +475,7 @@ table(preferences$Occupant)
 # e.g, 3 new nests, 9 Osmia_ps (so only 6 filled the previous visit) = ((3-1)/2) + (9-3) = 7
 # Osmia_ps_prior + Available_prior should usually = 18, unless there's megachile or non-target occupants 
 
-# 1- for 0-1 new nests, (available_post - new nests)
+# 1- for 0 or 1 new nests, (available_post - new nests)
   # osmia pseudo
 preferences <- preferences %>% mutate(Osmia_ps_prior_V1 = ifelse(New_nests_os == 1, (Osmia_ps - New_nests_os), ifelse(is.na(Osmia_ps) | is.na(New_nests_os), NA, 'TBD'))) 
   # osmia no pseudo
@@ -504,6 +506,16 @@ preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, 
 
 
 # write.csv(preferences, 'preferences.csv')
+
+
+
+# filter out wasps and non-targets from choices, after we counted them as occupied cavities
+preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unkown' & Occupant !='masked bee')
+table(preferences$Occupant)
+
+## Inspect data
+
+table(preferences$Status)
 
 ```
 
