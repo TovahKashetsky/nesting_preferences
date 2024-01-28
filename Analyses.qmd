@@ -476,14 +476,14 @@ preferences$Available_prior <- (preferences$Nest_equation + preferences$Availabl
 # Osmia_ps_prior + Available_prior should usually = 18, unless there's megachile or non-target occupants 
 
 # 1- for 0 or 1 new nests, (available_post - new nests)
-  # osmia pseudo
-preferences <- preferences %>% mutate(Osmia_ps_prior_V1 = ifelse(New_nests_os == 1, (Osmia_ps - New_nests_os), ifelse(is.na(Osmia_ps) | is.na(New_nests_os), NA, 'TBD'))) 
+  # osmia pseudo ### new
+preferences <- preferences %>% mutate(Osmia_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_ps - New_nests_os), 'TBD')) 
   # osmia no pseudo
-preferences <- preferences %>% mutate(Osmia_no_ps_prior_V1 = ifelse(New_nests_os == 1, (Osmia_no_ps - New_nests_os), ifelse(is.na(Osmia_no_ps) | is.na(New_nests_os), NA, 'TBD')))  
+preferences <- preferences %>% mutate(Osmia_no_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_no_ps - New_nests_os), 'TBD')) 
   # megachile pseudo
-preferences <- preferences %>% mutate(Meg_ps_prior_V1 = ifelse(New_nests_meg == 1, (Meg_ps - New_nests_meg), ifelse(is.na(Meg_ps) | is.na(New_nests_meg), NA, 'TBD'))) 
+preferences <- preferences %>% mutate(Meg_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_ps - New_nests_meg), 'TBD')) 
   # megachile no pseudo
-preferences <- preferences %>% mutate(Meg_no_ps_prior_V1 = ifelse(New_nests_meg == 1, (Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_no_ps) | is.na(New_nests_meg), NA, 'TBD'))) 
+preferences <- preferences %>% mutate(Meg_no_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_no_ps - New_nests_meg), 'TBD')) 
 
 # 2 A- for multiple new nests, (n-1)/2
   # osmia
@@ -505,21 +505,27 @@ preferences <- preferences %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V
 preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
 
 
-# write.csv(preferences, 'preferences.csv')
-
-
-
 # filter out wasps and non-targets from choices, after we counted them as occupied cavities
 preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unkown' & Occupant !='masked bee')
 table(preferences$Occupant)
 
-## Inspect data
+# inspect data
+sum(is.na(preferences$New_nests_os))
+sum(is.na(preferences$New_nests_meg))
+sum(is.na(preferences$New_nest_sum))
+sum(is.na(preferences$Osmia_ps_prior))
+sum(is.na(preferences$Osmia_no_ps_prior))
+sum(is.na(preferences$Meg_ps_prior))
+sum(is.na(preferences$Meg_no_ps_prior))
 
-table(preferences$Status)
+
+# write.csv(preferences, 'preferences.csv')
 
 ```
 
 ```{r Parasitism Data, include=FALSE, echo=TRUE, results='hide'}
+
+##### GO THORUGH THIS, COLUMNS ARE ALL NAs
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
@@ -653,7 +659,6 @@ nesting <- nesting %>%
   ungroup()
 
 
-
 ```
 
 ```{r Investment Data, include=FALSE, echo=TRUE, results='hide'}
@@ -752,7 +757,7 @@ Variables:
 ```{r Models: Nest per Available Cavities}
 
 ### New nests per available cavities Osmia ###
-mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = Osmia_data, family = binomial) # boundary singular warning
+mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
 
 plot(simulateResiduals(mod_c_cav_os)) # looks good jan 9
 testDispersion(mod_c_cav_os, type = 'DHARMa') # ns
@@ -1029,7 +1034,7 @@ meg_season %>%
   theme(
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank()) + 
-  xlim(0, 18)
+  xlim(0, 18) 
   
 # Megachile during whole of summer
 Megachile_data %>% 
