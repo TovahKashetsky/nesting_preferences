@@ -38,15 +38,13 @@ editor: visual
 knitr::opts_chunk$set(echo = TRUE)
 
 
-library(tidyverse)
-library(ggplot2)
-library(ggeffects)
 library(kableExtra)
 library(sqldf)
 library(glmmTMB)
 library(DHARMa)
 library(car)
 library(lme4)
+library(tidyverse)
 # citation() # to see package versions 
 
 
@@ -223,8 +221,6 @@ sum(long_choice$Bee_choice, na.rm = TRUE) # 269 new nests, but this is incorrect
 
 ```
 
-
-
 ```{r Conspecific Presence and Available Cavities, include=FALSE, echo=TRUE, results='hide'}
 
 ### Question 1: Nesting according to available cavities ###
@@ -314,7 +310,6 @@ conspecifics <- merge(conspecifics_os_2, conspecifics_meg_2)
 
 ```
 
-
 ```{r Cleaning Data 2}
 
 
@@ -367,7 +362,6 @@ prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 
 
 
 ```
-
 
 ```{r Weather Data, include=FALSE, echo=TRUE, results='hide'}
 
@@ -435,10 +429,7 @@ length(preferences$Trapnest) # 26568
 
 ```
 
-
 ```{r Calculating prior values, include=FALSE, echo=TRUE, results='hide'}
-
-### GO THORUGH THIS STEP BY STEP
 
 ## Dealing with multiple nests built on the same day
 # for available cavities and congenera present 
@@ -509,23 +500,14 @@ preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, 
 preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unkown' & Occupant !='masked bee')
 table(preferences$Occupant)
 
-# inspect data
-sum(is.na(preferences$New_nests_os))
-sum(is.na(preferences$New_nests_meg))
-sum(is.na(preferences$New_nest_sum))
-sum(is.na(preferences$Osmia_ps_prior))
-sum(is.na(preferences$Osmia_no_ps_prior))
-sum(is.na(preferences$Meg_ps_prior))
-sum(is.na(preferences$Meg_no_ps_prior))
+sum(preferences$Bee_choice, na.rm = TRUE) # 231 nests
 
-
-# write.csv(preferences, 'preferences.csv')
+# since I'm lookg at new nests, I'm not going to make the other colums like osmia_ps_prior etc "NA" is Bee-choice is NA, because there shouldnt be a time where I'm using those values if Bee_choice isn't 1 or 0
 
 ```
 
 ```{r Parasitism Data, include=FALSE, echo=TRUE, results='hide'}
 
-##### GO THORUGH THIS, COLUMNS ARE ALL NAs
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
@@ -535,7 +517,7 @@ sum(is.na(preferences$Meg_no_ps_prior))
 ### Question 3: Do parasites affect nesting preferences ###
 
 # load data
-os_par <- read_csv('Data/Parasites_Osmia_clean.csv') # 728 rows
+os_par <- read_csv('Data/Parasites_Osmia_clean.csv') 
 
 table(os_par$Cell_occupant)
 # there will be some missing data even though we have the nest info because the nests were too moldy to dissect, and megachile nests are not logged yet e.g., 6_17a and 3_13b
@@ -544,13 +526,13 @@ table(os_par$Cell_occupant)
 os_par$Nest_ID <- with(os_par, paste(Trapnest, paste0(Cavity_number, Straw_ID), sep = '_'))
 os_par$Cell_ID <- with(os_par, paste(Nest_ID, Cell_number, sep = '_'))
 
-# take number of cells total
-os_par <- os_par %>% # 248 rows
+# take number of cells total for that nest and date combo
+os_par <- os_par %>% 
     group_by(Nest_ID, Date) %>% 
     mutate(Number_of_cells = max(Cell_number))
 
 # create column to say if cell is parasitized or not
-os_par <- os_par %>% # 721 rows
+os_par <- os_par %>% 
   mutate(Cell_par = ifelse(Cell_occupant == 'sapyga', 1, 0)) 
 
 
@@ -560,45 +542,38 @@ os_par <- os_par %>% # 721 rows
 os_par <- os_par %>% 
   group_by(Nest_ID) %>% 
   mutate(Cumulative_par = cumsum(Cell_par))
-os_par <- os_par %>% 
-  select(Trapnest, Date, Nest_ID, Cell_ID, Number_of_cells, Cell_occupant, Cell_par, Cumulative_par) # 721 rows
-# bind parasite counts with preferences data
-# preferences$Trapnest <- as.numeric(preferences$Trapnest)
-os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, New_nests_os:Meg_no_ps_prior) # 24871 rows ### NOW 26060
-os_par$Date <- as.Date(os_par$Date)
-os_parasites <- merge(os_par_pref, os_par, all=T) # the status is repeating for each cell # 25356 NOW 25203
-
-### CHECK FOR MISSING STATUSES ### these would be mistakes/ extras
-
-# os_parasites$Trapnest <- as.numeric(os_parasites$Trapnest)
-# IM TRYING TO SEE IF REMOVING THE DUPLOCATES REMOVES AGGREGATE DATA
-os_parasites %>% filter(!is.na(New_nest_sum)) # with duplicates = 3246 # now 3317
-
-# remove duplicates from repeating combos (more than one cell built in a nest in one day)
-os_parasites <- os_parasites %>%  
-  group_by(Date, Nest_ID, Cumulative_par) %>%
-  distinct(Cumulative_par, .keep_all = TRUE)
-os_parasites %>% filter(!is.na(New_nest_sum)) # without duplicates = 2927 Now 2980
-
 
 # take max number of parasites for a nest_ID - date combo
 # e.g., on 2023-06-14 for 13_18a (cells 1 and 2), both are parasitized, so take the highest parasite count for that date, aka say that for 13_18a on 2023-06-14, there's 2 parasites
-os_parasites <- os_parasites %>% 
+os_par <- os_par %>% 
   group_by(Date, Nest_ID) %>% 
   mutate(Cumulative_par_max = max(Cumulative_par)) %>% 
   ungroup()
-# remove duplicates of the same nest_ID - date combo, take only max number
-os_parasites <- os_parasites %>%  
-  group_by(Date, Nest_ID, Cumulative_par_max) %>% 
-  distinct(Cumulative_par_max, .keep_all = TRUE) # 26031 NOW 26062
 
+# remove duplicates of the same nest_ID - date combo, take only max number
+os_par <- os_par %>%  
+  group_by(Date, Nest_ID, Cumulative_par_max) %>% 
+  distinct(Cumulative_par_max, .keep_all = TRUE) %>% 
+  ungroup()
+
+# bind parasite counts with preferences data
+os_par <- os_par %>% 
+  select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
+os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Available_prior, New_nests_os:Meg_no_ps_prior) 
+os_par$Date <- as.Date(os_par$Date)
+os_par$Trapnest <- paste('trapnest', os_par$Trapnest, sep = '_')
+os_parasites <- full_join(os_par, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
+
+# missing statuses would be mistakes/ extras or 29_4a ?
+
+# x <-os_parasites %>% filter(!is.na(Filled_length_mm))
 
 ## Loop for making the cumulative_par_max value for the duration the nest is in the trapnest 
 
 # make sure data is arranged chronologically
 os_parasites <- os_parasites %>% arrange(Nest_ID, Date)
 # initiate new column, then fill it in
-os_parasites$Cumulative_par_V2 <- os_parasites$Cumulative_par 
+os_parasites$Cumulative_par_V2 <- os_parasites$Cumulative_par #### SHOULD THI BE _MX?
 
 # loop takes too long to do at once, so remove all empty and pseudo, then adding back in after. Tested this in the next chunk with trapnest 12
 os_parasites_exclude <- os_parasites %>% filter(Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
@@ -611,8 +586,7 @@ for(i in 1:nrow(os_parasites_exclude)){
   
   check1 <- !all(is.na(allprev))
   check2 <- !os_parasites_exclude$Status[i] %in% c('empty', 'pseudo') 
-  # you'll have to adjust this as needed for the intended behaviour & possible values in your larger dataset
-  
+
   if(check1 & check2){
     os_parasites_exclude$Cumulative_par_V2[i] <- max(allprev, na.rm = T)
   }
@@ -626,7 +600,7 @@ os_parasites_v2 <- rbind(os_parasites_exclude, os_parasites_include) # 26031
 os_parasites_v2 <- os_parasites_v2 %>% arrange(Nest_ID, Date)
 # remove unnecessary columns
 os_parasites_v2 <- ungroup(os_parasites_v2)
-os_parasites_v2 <- os_parasites_v2 %>% select(-Cell_ID, -Cumulative_par, -Cumulative_par_max, -Cell_par, -Cell_occupant)
+os_parasites_v2 <- os_parasites_v2 %>% select( -Cumulative_par, -Cumulative_par_max)
 # rename column and df
 os_parasites_v2 <- os_parasites_v2 %>% rename(Cumulative_par = Cumulative_par_V2)
 # x <- left_join(preferences, os_parasites_v2, all=T) # 25981
@@ -659,7 +633,10 @@ nesting <- nesting %>%
   ungroup()
 
 
+
+
 ```
+
 
 ```{r Investment Data, include=FALSE, echo=TRUE, results='hide'}
 
@@ -704,7 +681,7 @@ table(nesting$Day_of_year)
 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none') 
-# for each model and filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the 'full summer' of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
+# to reduze zeros from "empties" outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the 'full summer' of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
 dates_os <- nesting_os %>% 
   group_by(Date, Occupant) %>% 
   filter(Occupant == 'osmia' & Status != 'pseudo' & Status != 'no change')
@@ -723,12 +700,22 @@ dates_exclude_meg <- c('2023-05-11', '2023-05-12', '2023-05-15', '2023-05-16', '
 nesting_meg <- nesting_meg %>%
   filter(!Date %in% dates_exclude_meg)
 
+# counting new nests 
+nesting_os %>% filter(!is.na(Bee_choice)) %>% 
+  summarize(nests_total = sum(Bee_choice)) # 164 osmia nests for osmia through the summer
+nesting_meg %>% filter(!is.na(Bee_choice)) %>% 
+  summarize(nests_total = sum(Bee_choice)) # 58 osmia nests for osmia through the summer
+nesting %>% filter(!is.na(Bee_choice)) %>% 
+  summarize(nests_total = sum(Bee_choice))
+# 222 instead of 231, but missing confirmed occupants (unsure what they are before they emerge)
 
-#  #  #  #  #  # 
-nesting_os <- nesting_os %>% filter(Occupant == 'osmia' | Occupant == 'none')
 
+## Saving wrangled data
 
-#  #  #  #  #  #
+# write.csv(nesting, 'data/Nesting_cleaned_all_bees.csv')
+# write.csv(nesting_os, 'data/Nesting_cleaned_osmia.csv')
+# write.csv(nesting_meg, 'data/Nesting_cleaned_megachile.csv')
+
 
 ```
 
@@ -972,221 +959,8 @@ ggpredict(mod_par_os, c('Par_in_trapnest')) %>%
 
 ```
 
-------------------------------------------------------------------------
 
-## Visualizations
-
-The figures below show if a new nest is built when I visit the trapnests, represented in a binary response in which, *of the cavities available for nesting*, 1 is when a new nest is built and 0 is no new nest is built (i.e., the cavity remains empty).
-
-### Measuring the choice to nest per available cavities.
-
-```{r Figures: Available Cavities, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
-
-## Setting up things for figures
-
-
-theme_set(theme_classic(base_size=12)) 
-# make data frames for each season
-os_season <- filter(preferences, Subsite == 'A' | Subsite == 'B' | Subsite == 'C' | Subsite == 'D' | Subsite == 'E' | Subsite == 'F' | Subsite == 'G' | Subsite == 'H' | Subsite == 'I' | Subsite == 'J' | Subsite == 'K' | Subsite == 'L')
-meg_season <- filter(preferences, Subsite == 'M' | Subsite == 'N' | Subsite == 'O' | Subsite == 'P' | Subsite == 'Q' | Subsite == 'R' | Subsite == 'S' | Subsite == 'T' | Subsite == 'U' | Subsite == 'V' | Subsite == 'W' | Subsite == 'X')
-
-
-## New nests per available cavities
-
-# Osmia during Osmia season
-os_season %>% 
-  filter(Bee_choice != 'NA' & Occupant == 'osmia' | Bee_choice == 0) %>%  
-  ggplot(aes(Available_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  scale_color_manual(values=c('steelblue3', 'plum3')) +
-  labs(x='Available cavities', y = 'Presence of Presence of new nest for each visit', title = 'Osmia: available cavities (Osmia season)') +
-  theme( # removing the y axes labels
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) + 
-  xlim(0, 18)
-
-
-# Osmia during whole of summer
-Osmia_data %>% 
-  filter(Bee_choice != 'NA' & Occupant == 'osmia' | Bee_choice == 0) %>%  
-  ggplot(aes(Available_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  scale_color_manual(values=c('steelblue3', 'plum3')) +
-  labs(x= 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (Full season)') + theme( # removing the y axes labels
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) + 
-  xlim(0, 18) 
-
-# Plot actual model
-ggpredict(mod_c_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (full season)')
-
-
-# Megachile during megachile season
-meg_season %>% 
-  filter(Bee_choice != 'NA' & Occupant == 'megachile' | Bee_choice == 0) %>% 
-  ggplot(aes(Available_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') + 
-  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
-  labs(x= 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (Megachile season)') +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) + 
-  xlim(0, 18) 
-  
-# Megachile during whole of summer
-Megachile_data %>% 
-  filter(Bee_choice != 'NA' & Occupant == 'megachile' | Bee_choice == 0) %>% 
-  ggplot(aes(Available_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') + 
-  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
-  labs(x='Available cavities', y='Presence of new nest for each visit', title='Megachile: available cavities (Full season)') + theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) + 
-  xlim(0, 18)
-#################### SOMETHING ABOUT THIS ISNT RIGHT, ONY 23 DATA POINTS HERE AND 10 ON MEG SEASON 
-
-
-# Plot actual model
-ggpredict(mod_c_cav_meg, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (full season)')
-
-
-
-```
-
-------------------------------------------------------------------------
-
-### Measuring the choice to nest per presence of conspecifics.
-
-```{r Figures: Conspecific Presence, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
-
-  
-## New nests per con-specific occupancies (with and without pseudo nests)
-
-# Osmia # with pseudo 
-Osmia_data %>% 
-  filter(Occupant == 'osmia' | Occupant == 'none') %>%  
-  ggplot(aes(Osmia_ps_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  labs(title = 'Osmia occupancies', x = 'Osmia occupancies (including pseudo)', y = 'Presence of new nest for each visit') +
-  scale_color_manual(values=c('steelblue3', 'plum3'))  +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) +
-  xlim(0, 18)
-
-# Plot actual model
-ggpredict(mod_c_consp_os_ps, c('Osmia_ps_prior')) %>% 
-  plot(rawdata = TRUE, jitter = .04) + 
-  labs(x = 'Osmia occupancies including pseudo', y = 'Presence of new nest for each visit', title = 'Osmia') +
-  xlim(0, 18)
-
-
-# Osmia # without pseudo 
-Osmia_data %>% 
-  filter(Occupant == 'osmia' | Occupant == 'none') %>%  
-  ggplot(aes(Osmia_no_ps_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  labs(title = 'Osmia occupancies', x = 'Osmia occupancies (excluding pseudo)', y = 'Presence of new nest for each visit') +
-  scale_color_manual(values=c('steelblue3', 'plum3')) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) +
-  xlim(0, 18)
-
-# Plot actual model
-ggpredict(mod_c_consp_os_no_ps, c('Osmia_no_ps_prior')) %>% 
-  plot(rawdata = TRUE, jitter = .04) + 
-  labs(x = 'Osmia occupancies excluding pseudo', y = 'Presence of new nest for each visit', title = 'Osmia') +
-  xlim(0, 18)
-
-
-# Megachile # with pseudo 
-Megachile_data %>% 
-  filter(Occupant == 'megachile' | Occupant == 'none') %>%  
-  ggplot(aes(Meg_ps_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'pink3', fill = 'lightpink') +
-  labs(title = 'Megachile occupancies',  x = 'Megachile occupancies (including pseudo)', y = 'Presence of new nest for each visit') +
-  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) +
-  xlim(0, 18)
-
-# Plot actual model
-ggpredict(mod_c_consp_meg_ps, c('Meg_ps_prior')) %>% 
-  plot(rawdata = TRUE, jitter = .04) + 
-  labs(x = 'Megachile occupancies including pseudo', y = 'Presence of new nest for each visit', title = 'Megachile')
-
-
-# Megachile # without pseudo 
-Megachile_data %>% 
-  filter(Occupant == 'megachile' | Occupant == 'none') %>%  
-  ggplot(aes(Meg_no_ps_prior, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  labs(title = 'Megachile occupancies',  x = 'Megachile occupancies (excluding pseudo)', y = 'Presence of new nest for each visit') +
-  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
-  theme(
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) +
-  xlim(0, 18)
-
-# Plot actual model
-ggpredict(mod_c_consp_meg_no_ps, c('Meg_no_ps_prior')) %>% 
-  plot(rawdata = TRUE, jitter = .04) + 
-  labs(x='Megachile occupancies excluding pseudo',y='Presence of new nest for each visit', title='Megachile') + 
-  xlim(0, 18)
-
-
-```
-
-------------------------------------------------------------------------
-
-### Parasitism
-
-```{r Parasitism Visuals}
-
-## Something is off about this. I'll need help...
-
-nesting_os %>% 
-  ggplot(aes(Par_in_trapnest, Bee_choice)) + 
-  geom_jitter(height = 0.03, alpha = 0.4) 
-
-# each data point is again a trapnest and date combo
-
-# Cumulative number of parasites per osmia occupancies
-nesting %>% 
-  filter(Occupant == 'osmia' & !is.na(Cumulative_par)) %>% 
-  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', colour = 'grey75') +
-  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Cumulative number of parasites') 
-
-# Proportion of cells in a nest with parasites per osmia occupancies
-nesting %>% 
-  filter(Occupant == 'osmia' & !is.na(Prop_cells_par)) %>% 
-  ggplot(aes(Osmia_no_ps_prior, Prop_cells_par)) +
-  geom_jitter() + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
-  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Proportion of cells in a nest that are parasitized') 
-
-# Plot actual model
-ggpredict(mod_par_os, c('Par_in_trapnest')) %>% 
-  plot(rawdata = TRUE, jitter = .04) 
-
-
-```
-
-------------------------------------------------------------------------
-
-### Nest investement
+### Investment
 
 ```{r Investment Models, include=FALSE, echo=TRUE, results='hide'}
 
@@ -1198,10 +972,6 @@ mod_invest_os <- glmer(Prop_filled ~ Par_in_trapnest * Cumulative_par + Day_of_y
 
 plot(simulateResiduals(mod_invest_os))
 summary(mod_invest_os)
-
-
-
-
 
 
 
@@ -1245,39 +1015,31 @@ summary(mod_invest_os)
 
 ```
 
-```{r Figures: Nest Investment, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
+
+
+```{r Plotting Models}
+
+# Plot models
+
+
+ggpredict(mod_c_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (full season)')
 
 
 
+# Plot actual model
+ggpredict(mod_c_cav_meg, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (full season)')
 
 
-
-
-## Plot number of cells with filled length
-investment %>% ggplot(aes(Prop_filled, Number_of_cells, label = Nest_ID)) + 
-  geom_jitter() + geom_text(aes(colour = Trapnest), size = 2)
-
-
-
-
-
-
-investment$Treatment <- factor(investment$Treatment , levels=c('Low', 'Mid', 'High'))
-
-investment %>% filter(Occupant == 'osmia' | Occupant == 'megachile') %>% 
-  ggplot(aes(Treatment, Prop_filled, fill = Occupant)) +
-  geom_boxplot(alpha = 0.8) +
-  scale_fill_manual(values=c('goldenrod2', 'plum3'), labels = c('Megachile', 'Osmia')) +
-  labs(y = 'Proportion of straw filled with cells') + 
-  theme(legend.text = element_text(face = 'italic'))
-
-
-
-# write.csv(preferences, 'preferences.csv')
-# write.csv(nesting, 'nesting.csv')
-
+# Plot actual model
+ggpredict(mod_c_consp_os_ps, c('Osmia_ps_prior')) %>% 
+  plot(rawdata = TRUE, jitter = .04) + 
+  labs(x = 'Osmia occupancies including pseudo', y = 'Presence of new nest for each visit', title = 'Osmia') +
+  xlim(0, 18)
 
 ```
+
+
+
 
 ```{r Example code}
  
