@@ -131,28 +131,49 @@ nesting_meg %>%
 ```{r Parasitism}
 
 
-nesting_os %>% 
-  ggplot(aes(Par_in_trapnest, Bee_choice)) + 
-  geom_jitter(height = 0.03, alpha = 0.4) 
-
 # each data point is again a trapnest and date combo
 
+
+# New nests against parasites in the trapnest
+
+nesting_os %>% 
+  ggplot(aes(Par_in_trapnest, Bee_choice)) + 
+  stat_smooth(method='glm', colour = 'rosybrown2', fill = 'rosybrown2') +
+  geom_jitter(height = 0.03, alpha = 0.4) 
+
+
 # Cumulative number of parasites per osmia occupancies
+
 nesting_os %>% 
   filter(!is.na(Cumulative_par)) %>% 
   ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
-  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
-  stat_smooth(method='glm', colour = 'grey75') +
+  geom_jitter(height = 0.05, alpha = 0.6) + 
+  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
   labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Cumulative number of parasites') 
 
+nesting_os %>% # with peusdo 
+  filter(!is.na(Cumulative_par)) %>% 
+  ggplot(aes(Osmia_ps_prior, Cumulative_par)) + 
+  geom_jitter(height = 0.05, alpha = 0.6) + 
+  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
+  labs(x = 'Osmia occupancies (including pseudo)', y = 'Cumulative number of parasites') 
+
+
 # Proportion of cells in a nest with parasites per osmia occupancies
+
 nesting %>% 
   filter(Occupant == 'osmia' & !is.na(Prop_cells_par)) %>% 
   ggplot(aes(Osmia_no_ps_prior, Prop_cells_par)) +
   geom_jitter() + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'plum', fill = 'plum') +
   labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Proportion of cells in a nest that are parasitized') 
 
+nesting %>% # with peusdo 
+  filter(Occupant == 'osmia' & !is.na(Prop_cells_par)) %>% 
+  ggplot(aes(Osmia_ps_prior, Prop_cells_par)) +
+  geom_jitter() + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'plum', fill = 'plum') +
+  labs(x = 'Osmia occupancies (including pseudo)', y = 'Proportion of cells in a nest that are parasitized')
 
 
 ```

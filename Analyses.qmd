@@ -76,7 +76,7 @@ data$Trapnest <- paste('trapnest', data$Trapnest, sep = '_')
 data <- data %>% 
     group_by(Nest_ID) %>% 
     filter(For_binding == max(For_binding))
-length(data$Nest_ID) # 1707, few extras.... ### CHECK ###
+length(data$Nest_ID) # 1706, few extras.... ### CHECK ###
 
 
 ## Pivot longer and inspect
