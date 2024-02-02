@@ -130,7 +130,6 @@ nesting_meg %>%
 
 ```{r Parasitism}
 
-## Something is off about this. I'll need help...
 
 nesting_os %>% 
   ggplot(aes(Par_in_trapnest, Bee_choice)) + 
@@ -139,8 +138,8 @@ nesting_os %>%
 # each data point is again a trapnest and date combo
 
 # Cumulative number of parasites per osmia occupancies
-nesting %>% 
-  filter(Occupant == 'osmia' & !is.na(Cumulative_par)) %>% 
+nesting_os %>% 
+  filter(!is.na(Cumulative_par)) %>% 
   ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
   geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
   stat_smooth(method='glm', colour = 'grey75') +
@@ -165,11 +164,13 @@ nesting %>%
 
 
 ## Plot number of cells with filled length
-investment %>% ggplot(aes(Prop_filled, Number_of_cells, label = Nest_ID)) + 
+investment %>% 
+  ggplot(aes(Prop_filled, Number_of_cells, label = Nest_ID)) + 
   geom_jitter() + geom_text(aes(colour = Trapnest), size = 2)
 
 
-investment$Treatment <- factor(investment$Treatment , levels=c('Low', 'Mid', 'High'))
+investment$Treatment <- factor(investment$Treatment, levels=c('Low', 'Mid', 'High'))
+
 
 investment %>% filter(Occupant == 'osmia' | Occupant == 'megachile') %>% 
   ggplot(aes(Treatment, Prop_filled, fill = Occupant)) +

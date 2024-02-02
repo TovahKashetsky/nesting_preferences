@@ -508,6 +508,7 @@ sum(preferences$Bee_choice, na.rm = TRUE) # 231 nests
 
 ```{r Parasitism Data, include=FALSE, echo=TRUE, results='hide'}
 
+### THE CUMULATIVE PARASITES AND PROP PAR CELLS ARE ALL NAs - Feb 1st 
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
@@ -551,29 +552,30 @@ os_par <- os_par %>%
   ungroup()
 
 # remove duplicates of the same nest_ID - date combo, take only max number
-os_par <- os_par %>%  
+os_par_2 <- os_par %>%  
   group_by(Date, Nest_ID, Cumulative_par_max) %>% 
   distinct(Cumulative_par_max, .keep_all = TRUE) %>% 
   ungroup()
 
 # bind parasite counts with preferences data
-os_par <- os_par %>% 
+os_par_2 <- os_par_2 %>% 
   select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
 os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Available_prior, New_nests_os:Meg_no_ps_prior) 
-os_par$Date <- as.Date(os_par$Date)
-os_par$Trapnest <- paste('trapnest', os_par$Trapnest, sep = '_')
-os_parasites <- full_join(os_par, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
+os_par_2$Date <- as.Date(os_par_2$Date)
+os_par_2$Trapnest <- paste('trapnest', os_par_2$Trapnest, sep = '_')
+os_parasites <- full_join(os_par_2, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
+# os_parasites should have the values for number_of_cells and cumulative_par(_max) for only the dates with activity. The loop will make those values consistent throughout the time the nest is in the trapnest
 
 # missing statuses would be mistakes/ extras or 29_4a ?
 
-# x <-os_parasites %>% filter(!is.na(Filled_length_mm))
+
 
 ## Loop for making the cumulative_par_max value for the duration the nest is in the trapnest 
 
 # make sure data is arranged chronologically
 os_parasites <- os_parasites %>% arrange(Nest_ID, Date)
 # initiate new column, then fill it in
-os_parasites$Cumulative_par_V2 <- os_parasites$Cumulative_par #### SHOULD THI BE _MX?
+os_parasites$Cumulative_par_V2 <- os_parasites$Cumulative_par_max 
 
 # loop takes too long to do at once, so remove all empty and pseudo, then adding back in after. Tested this in the next chunk with trapnest 12
 os_parasites_exclude <- os_parasites %>% filter(Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
@@ -603,14 +605,7 @@ os_parasites_v2 <- ungroup(os_parasites_v2)
 os_parasites_v2 <- os_parasites_v2 %>% select( -Cumulative_par, -Cumulative_par_max)
 # rename column and df
 os_parasites_v2 <- os_parasites_v2 %>% rename(Cumulative_par = Cumulative_par_V2)
-# x <- left_join(preferences, os_parasites_v2, all=T) # 25981
 
-# checking for differences/ extra data
-# preferences_list <- preferences %>% select(Date, Nest_ID, Status)
-# os_parasites_list <- os_parasites_v2 %>% select(Date, Nest_ID, Status)
-# extra_1 <- sqldf('SELECT * FROM preferences_list EXCEPT SELECT * FROM os_parasites_list') 
-# extra_2 <- sqldf('SELECT * FROM os_parasites_list EXCEPT SELECT * FROM preferences_list') 
-# figure out whats up with 18_8a/b ### CHECK ###
 
 
 ## Number of cells parasitized per number of cells in the nest 
@@ -618,8 +613,8 @@ os_parasites_v2 <- os_parasites_v2 %>% rename(Cumulative_par = Cumulative_par_V2
 os_parasites_v2$Number_of_cells <- as.numeric(os_parasites_v2$Number_of_cells)
 os_parasites_v2$Osmia_ps_prior <- as.numeric(os_parasites_v2$Osmia_ps_prior)
 os_parasites_v2$Osmia_no_ps_prior <- as.numeric(os_parasites_v2$Osmia_no_ps_prior)
-preferences$Meg_ps_prior <- as.numeric(preferences$Meg_ps_prior)
-preferences$Meg_no_ps_prior <- as.numeric(preferences$Meg_no_ps_prior)
+os_parasites_v2$Meg_ps_prior <- as.numeric(os_parasites_v2$Meg_ps_prior)
+os_parasites_v2$Meg_no_ps_prior <- as.numeric(os_parasites_v2$Meg_no_ps_prior)
 
 nesting <- os_parasites_v2
 nesting <- nesting %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
@@ -631,8 +626,6 @@ nesting <- nesting %>%
   group_by(Date, Trapnest) %>%
   mutate(Par_in_trapnest = sum(!is.na(Cumulative_par))) %>%
   ungroup()
-
-
 
 
 ```
@@ -662,6 +655,7 @@ investment_os %>%
   geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
 
 ```
+
 
 ```{r Editing data for models, include=FALSE, echo=TRUE, results='hide'}
 
@@ -716,6 +710,10 @@ nesting %>% filter(!is.na(Bee_choice)) %>%
 # write.csv(nesting_os, 'data/Nesting_cleaned_osmia.csv')
 # write.csv(nesting_meg, 'data/Nesting_cleaned_megachile.csv')
 
+# making data for Abby
+Abby_data <- nesting_os %>% select(Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Date, Nest_ID, Cavity_ID, Status, Occupant, Good_days:Meg_no_ps_prior)
+# write.csv(Abby_data, 'data/Data_for_Abby.csv')
+
 
 ```
 
@@ -732,10 +730,10 @@ Variables:
 -   Available_post: number of available cavities for each trapnest and date combo AFTER the new nests for that visit have been started (i.e., how many available cavities that the experiments saw when arriving to the nest)
 -   New_nests_os: number of new osmia nests for each trapnest and date combo
 -   Osmia_ps_prior: number of existing osmia in each trapnest per date, including pseudo nests
--   Osmia_no_ps: number of existing osmia in each trapnest per date, excluding pseudo nests
+-   Osmia_no_ps_prior: number of existing osmia in each trapnest per date, excluding pseudo nests
 -   New_nests_meg: number of new megachile nests for each trapnest and date combo
 -   Meg_ps_prior: number of existing megachile in each trapnest per date, including pseudo nests
--   Meg_no_ps: number of existing megachile in each trapnest per date, excluding pseudo nests
+-   Meg_no_ps_prior: number of existing megachile in each trapnest per date, excluding pseudo nests
 -   New_nests_sum: total number of new nests including megachile and osmia.
 -   Available_prior: average number of available cavities for each trapnest and date combo BEFORE the new nests for that visit have been started (i.e., how many available cavities the bees saw when arriving to the nest before building). This is the average, so there are some numbers that have .5 in there. For example, if there are 8 cavities available_post and two new nests were built when we visited that trapnest, the first bee to nest would have seen 10 available cavities, and the second would have seen 9. So we average that out to 9.5 for available_prior.
 
@@ -937,7 +935,6 @@ knitr::kable(obs.meg,
 
 ```
 
-------------------------------------------------------------------------
 
 ### Parasitism
 
