@@ -4,7 +4,6 @@ format: html
 editor: visual
 ---
 
-
 ```{r Getting things ready, include=FALSE}
 
 library(ggplot2)
@@ -22,7 +21,6 @@ nesting_meg <- read_csv('data/Nesting_cleaned_megachile.csv')
 theme_set(theme_classic(base_size=12)) 
 
 ```
-
 
 ```{r Nest per Available Cavities, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
 
@@ -62,8 +60,7 @@ nesting_meg %>%
 
 ```
 
-
-```{r Nests per Conspecific Presence, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
+```{r Conspecific Presence, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
 
 
 # Osmia # with pseudo 
@@ -127,7 +124,6 @@ nesting_meg %>%
 
 ```
 
-
 ```{r Parasitism}
 
 
@@ -178,9 +174,7 @@ nesting %>% # with peusdo
 
 ```
 
-
-
-```{r Nest Investment, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
+```{r Investment, echo=FALSE, out.width='50%', out.height='50%', fig.show='hold', fig.align='side', warning=FALSE, message=FALSE}
 
 
 
@@ -188,6 +182,11 @@ nesting %>% # with peusdo
 investment %>% 
   ggplot(aes(Prop_filled, Number_of_cells, label = Nest_ID)) + 
   geom_jitter() + geom_text(aes(colour = Trapnest), size = 2)
+
+investment_os %>% 
+  ggplot(aes(Prop_filled, Par_in_trapnest)) + 
+  geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+
 
 
 investment$Treatment <- factor(investment$Treatment, levels=c('Low', 'Mid', 'High'))
@@ -203,8 +202,3 @@ investment %>% filter(Occupant == 'osmia' | Occupant == 'megachile') %>%
 
 
 ```
-
-
-
-
-

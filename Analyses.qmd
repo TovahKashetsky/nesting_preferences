@@ -650,12 +650,9 @@ investment <- nesting %>%
 investment_os <- investment %>% filter(Occupant == 'osmia')
 investment_meg <- investment %>% filter(Occupant == 'megachile')
 
-investment_os %>% 
-  ggplot(aes(Prop_filled, Par_in_trapnest)) + 
-  geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+#
 
 ```
-
 
 ```{r Editing data for models, include=FALSE, echo=TRUE, results='hide'}
 
@@ -709,9 +706,10 @@ nesting %>% filter(!is.na(Bee_choice)) %>%
 # write.csv(nesting, 'data/Nesting_cleaned_all_bees.csv')
 # write.csv(nesting_os, 'data/Nesting_cleaned_osmia.csv')
 # write.csv(nesting_meg, 'data/Nesting_cleaned_megachile.csv')
+# write.csv(investment_os, 'data/Investment_cleaned_osmia.csv')
 
 # making data for Abby
-Abby_data <- nesting_os %>% select(Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Date, Nest_ID, Cavity_ID, Status, Occupant, Good_days:Meg_no_ps_prior)
+# Abby_data <- nesting_os %>% select(Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Date, Nest_ID, Cavity_ID, Status, Occupant, Good_days:Meg_no_ps_prior)
 # write.csv(Abby_data, 'data/Data_for_Abby.csv')
 
 
@@ -935,7 +933,6 @@ knitr::kable(obs.meg,
 
 ```
 
-
 ### Parasitism
 
 ```{r Parasitism Models}
@@ -955,7 +952,6 @@ ggpredict(mod_par_os, c('Par_in_trapnest')) %>%
 
 
 ```
-
 
 ### Investment
 
@@ -1012,8 +1008,6 @@ summary(mod_invest_os)
 
 ```
 
-
-
 ```{r Plotting Models}
 
 # Plot models
@@ -1034,9 +1028,6 @@ ggpredict(mod_c_consp_os_ps, c('Osmia_ps_prior')) %>%
   xlim(0, 18)
 
 ```
-
-
-
 
 ```{r Example code}
  
