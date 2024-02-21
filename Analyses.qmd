@@ -6,6 +6,8 @@ editor: visual
 
 ------------------------------------------------------------------------
 
+See overdisperson and convergence warning here!! https://biostats-uottawa.github.io/bio8940_manual/intro_glmm.html
+
 ```{r Notes, include=FALSE, echo=TRUE, results='hide'}
 
 ## To Do List ##
@@ -87,7 +89,7 @@ table(long_data$Occupant)
 long_data$Status <- replace(long_data$Status, long_data$Status=='eaten','empty')
 long_data$Status <- replace(long_data$Status, long_data$Status=='inner wall started','empty')
 long_data$Status <- replace(long_data$Status, long_data$Status=='non-target inner wall started','empty')
-long_data$Status <- replace(long_data$Status, long_data$Status=='megachile?','megachile') # for now, but not working???
+long_data$Status <- replace(long_data$Status, long_data$Status=='megachile?','megachile') ### CHECK for now, but not working???
 
 
 ## Make the date column actually a date
@@ -139,16 +141,16 @@ long_data %>%
   group_by(Trapnest, Date) %>% 
   summarize(Count = length(unique(Nest_ID))) 
 
-# remove chunks of "non_existent" for first and second half of the summer ### CHECK do i need other bp and cp?
+# remove chunks of "non_existent" for first and second half of the summer 
+# for the first half of the summer, BP and NN had different chunks of non_existents, so there's separate lists of data for them. But for the second half, CP and BP had the same dates so there's one list
 long_data_BP <- long_data %>% filter(Subsite == 'A' | Subsite == 'B' | Subsite == 'C' | Subsite == 'D' | Subsite == 'E' | Subsite == 'F')
 long_data_NN <- long_data %>% filter(Subsite == 'G' | Subsite == 'H' | Subsite == 'I' | Subsite == 'J' | Subsite == 'K' | Subsite == 'L')
-
 long_data_BP <- long_data_BP %>% filter(Date != '2023-05-06' & Date != '2023-06-30' & Date != '2023-07-03' & Date != '2023-07-04' & Date != '2023-07-05' & Date != '2023-07-06' & Date != '2023-07-07' & Date != '2023-07-10' & Date != '2023-07-12' & Date != '2023-07-14' & Date != '2023-07-17' & Date != '2023-07-20' & Date != '2023-07-24' & Date != '2023-07-26' & Date != '2023-07-28' & Date != '2023-07-29' & Date != '2023-08-01' & Date != '2023-08-04' & Date != '2023-08-09')
 long_data_NN <- long_data_NN %>% filter(Date != '2023-07-07' & Date != '2023-07-10' & Date != '2023-07-12' & Date != '2023-07-14' & Date != '2023-07-17' & Date != '2023-07-20' & Date != '2023-07-24' & Date != '2023-07-26' & Date != '2023-07-28' & Date != '2023-07-29' & Date != '2023-08-01' & Date != '2023-08-04' & Date != '2023-08-09')
 long_data_second <- long_data %>% filter(Subsite == 'M' | Subsite == 'N' | Subsite == 'O' | Subsite == 'P' | Subsite == 'Q' | Subsite == 'R' | Subsite == 'S' | Subsite == 'T' | Subsite == 'U' | Subsite == 'V' | Subsite == 'W' | Subsite == 'X')
 long_data_second <- long_data_second %>% filter(Date != '2023-05-06' & Date != '2023-05-07' & Date != '2023-05-11' & Date != '2023-05-12' & Date != '2023-05-15' & Date != '2023-05-16' & Date != '2023-05-17' & Date != '2023-05-18' & Date != '2023-05-19' & Date != '2023-05-21' & Date != '2023-05-22' & Date != '2023-05-23' & Date != '2023-05-25' & Date != '2023-05-26' & Date != '2023-05-28' & Date != '2023-05-29' & Date != '2023-05-31' & Date != '2023-06-01' & Date != '2023-06-02' & Date != '2023-06-04' & Date != '2023-06-05' & Date != '2023-06-08' & Date != '2023-06-09' & Date != '2023-06-10' & Date != '2023-06-11' & Date != '2023-06-12' & Date != '2023-06-14' & Date != '2023-06-15' & Date != '2023-06-16' & Date != '2023-06-19' & Date != '2023-06-20' & Date != '2023-06-22' & Date != '2023-06-23' & Date != '2023-06-29' & Date != '2023-06-30')
 
-long_data <- rbind(long_data_BP, long_data_NN, long_data_second)
+long_data <- rbind(long_data_BP, long_data_NN, long_data_second) # 15180+18486+13124 = 46790
 
 
 ## Loop for making the column for new nests per visit at the cavity-level
@@ -216,7 +218,7 @@ Bee_choice$index <- as.numeric(Bee_choice$index)
 long_choice <- long_i %>% left_join(Bee_choice)
 long_choice$Bee_choice <- as.numeric(long_choice$Bee_choice)
 
-sum(long_choice$Bee_choice, na.rm = TRUE) # 269 new nests, but this is incorrect 
+sum(long_choice$Bee_choice, na.rm = TRUE) # 270 new nests, but this is incorrect, we had fewer nests
 # some have two 1s, like 5_9a, 6_17a, 7_3a
 
 ```
@@ -325,7 +327,7 @@ conspecifics.0 <- conspecifics %>%
   filter(Bee_choice == 0 | is.na(Bee_choice))
 conspecifics <- rbind(conspecifics.1, conspecifics.0)
 
-sum(conspecifics$Bee_choice, na.rm = TRUE) # 231 new nests 
+sum(conspecifics$Bee_choice, na.rm = TRUE) # 231 new nests, real number
 
 
 ```
@@ -527,50 +529,49 @@ table(os_par$Cell_occupant)
 os_par$Nest_ID <- with(os_par, paste(Trapnest, paste0(Cavity_number, Straw_ID), sep = '_'))
 os_par$Cell_ID <- with(os_par, paste(Nest_ID, Cell_number, sep = '_'))
 
+# create column to say if cell is parasitized or not
+os_par <- os_par %>% 
+  mutate(Cell_par = ifelse(Cell_occupant == 'sapyga', 1, 0)) 
+
 # take number of cells total for that nest and date combo
 os_par <- os_par %>% 
     group_by(Nest_ID, Date) %>% 
     mutate(Number_of_cells = max(Cell_number))
 
-# create column to say if cell is parasitized or not
-os_par <- os_par %>% 
-  mutate(Cell_par = ifelse(Cell_occupant == 'sapyga', 1, 0)) 
-
 
 ## Make column to say nest is parasitized or not for when a parasite is in a cell, from that date onwards
 
 # make column to say for each date, if a cell has parasites, then count cumulative parasites in a new column
-os_par <- os_par %>% 
+os_par_v2 <- os_par %>% 
   group_by(Nest_ID) %>% 
   mutate(Cumulative_par = cumsum(Cell_par))
 
 # take max number of parasites for a nest_ID - date combo
-# e.g., on 2023-06-14 for 13_18a (cells 1 and 2), both are parasitized, so take the highest parasite count for that date, aka say that for 13_18a on 2023-06-14, there's 2 parasites
-os_par <- os_par %>% 
+# e.g., on 2023-06-14 for 13_18a (cells 1 and 2), both are parasitized, so take the highest parasite count for that date, so say for 13_18a on 2023-06-14, there's 2 parasites
+os_par_v2 <- os_par_v2 %>% 
   group_by(Date, Nest_ID) %>% 
   mutate(Cumulative_par_max = max(Cumulative_par)) %>% 
   ungroup()
 
 # remove duplicates of the same nest_ID - date combo, take only max number
-os_par_2 <- os_par %>%  
+os_par_v3 <- os_par_v2 %>%  
   group_by(Date, Nest_ID, Cumulative_par_max) %>% 
   distinct(Cumulative_par_max, .keep_all = TRUE) %>% 
   ungroup()
 
 # bind parasite counts with preferences data
-os_par_2 <- os_par_2 %>% 
+os_par_v3 <- os_par_v3 %>% 
   select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
 os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Available_prior, New_nests_os:Meg_no_ps_prior) 
-os_par_2$Date <- as.Date(os_par_2$Date)
-os_par_2$Trapnest <- paste('trapnest', os_par_2$Trapnest, sep = '_')
-os_parasites <- full_join(os_par_2, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
+os_par_v3$Date <- as.Date(os_par_v3$Date)
+os_par_v3$Trapnest <- paste('trapnest', os_par_v3$Trapnest, sep = '_')
+os_parasites <- full_join(os_par_v3, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
 # os_parasites should have the values for number_of_cells and cumulative_par(_max) for only the dates with activity. The loop will make those values consistent throughout the time the nest is in the trapnest
 
 # missing statuses would be mistakes/ extras or 29_4a ?
 
 
-
-## Loop for making the cumulative_par_max value for the duration the nest is in the trapnest 
+## Loop 1 for making the cumulative_par_max value for the duration the nest is in the trapnest 
 
 # make sure data is arranged chronologically
 os_parasites <- os_parasites %>% arrange(Nest_ID, Date)
@@ -595,7 +596,6 @@ for(i in 1:nrow(os_parasites_exclude)){
 } ### END
 
 
-
 # bind back together
 os_parasites_include <- os_parasites %>% filter(Status == 'empty' | Status == 'pseudo') # include empty and pseudo 
 os_parasites_v2 <- rbind(os_parasites_exclude, os_parasites_include) # 26031
@@ -608,15 +608,51 @@ os_parasites_v2 <- os_parasites_v2 %>% rename(Cumulative_par = Cumulative_par_V2
 
 
 
+## Loop 2 for making the Number_of_cells value for the duration the nest is in the trapnest 
+
+# arrange data chronologically
+os_parasites_v2 <- os_parasites_v2 %>% arrange(Nest_ID, Date)
+# initiate new column, then fill it in
+os_parasites_v2$Number_of_cells_V2 <- os_parasites_v2$Number_of_cells 
+
+# loop takes too long to do at once, so remove all empty and pseudo, then adding back in after.
+os_parasites_v2_exclude <- os_parasites_v2 %>% filter(Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
+
+### START
+for(i in 1:nrow(os_parasites_v2_exclude)){
+  nestID <- os_parasites_v2_exclude$Nest_ID[i] # focal nest for i-th row
+  dt <- os_parasites_v2_exclude$Date[i] # date for i-th row
+  allprev <- os_parasites_v2_exclude %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Number_of_cells_V2) # all previous parasite counts for that focal nest
+  
+  check1 <- !all(is.na(allprev))
+  check2 <- !os_parasites_v2_exclude$Status[i] %in% c('empty', 'pseudo') 
+
+  if(check1 & check2){
+    os_parasites_v2_exclude$Number_of_cells_V2[i] <- max(allprev, na.rm = T)
+  }
+} ### END
+
+
+# bind back together
+os_parasites_v2_include <- os_parasites_v2 %>% filter(Status == 'empty' | Status == 'pseudo') # include empty and pseudo 
+os_parasites_v3 <- rbind(os_parasites_v2_exclude, os_parasites_v2_include) 
+os_parasites_v3 <- os_parasites_v3 %>% arrange(Nest_ID, Date)
+# remove unnecessary columns
+os_parasites_v3 <- ungroup(os_parasites_v3)
+os_parasites_v3 <- os_parasites_v3 %>% select(-Number_of_cells)
+# rename column and df
+os_parasites_v3 <- os_parasites_v3 %>% rename(Number_of_cells = Number_of_cells_V2)
+
+
 ## Number of cells parasitized per number of cells in the nest 
 
-os_parasites_v2$Number_of_cells <- as.numeric(os_parasites_v2$Number_of_cells)
-os_parasites_v2$Osmia_ps_prior <- as.numeric(os_parasites_v2$Osmia_ps_prior)
-os_parasites_v2$Osmia_no_ps_prior <- as.numeric(os_parasites_v2$Osmia_no_ps_prior)
-os_parasites_v2$Meg_ps_prior <- as.numeric(os_parasites_v2$Meg_ps_prior)
-os_parasites_v2$Meg_no_ps_prior <- as.numeric(os_parasites_v2$Meg_no_ps_prior)
+os_parasites_v3$Number_of_cells <- as.numeric(os_parasites_v3$Number_of_cells)
+os_parasites_v3$Osmia_ps_prior <- as.numeric(os_parasites_v3$Osmia_ps_prior)
+os_parasites_v3$Osmia_no_ps_prior <- as.numeric(os_parasites_v3$Osmia_no_ps_prior)
+os_parasites_v3$Meg_ps_prior <- as.numeric(os_parasites_v3$Meg_ps_prior)
+os_parasites_v3$Meg_no_ps_prior <- as.numeric(os_parasites_v3$Meg_no_ps_prior)
 
-nesting <- os_parasites_v2
+nesting <- os_parasites_v3
 nesting <- nesting %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
 
 
@@ -629,7 +665,6 @@ nesting <- nesting %>%
 
 
 ```
-
 
 ```{r Investment Data, include=FALSE, echo=TRUE, results='hide'}
 
@@ -647,10 +682,7 @@ investment <- nesting %>%
   mutate(Prop_filled = Filled_length_mm/Straw_length_mm) 
 # some are still missing now because they mustve been moldy ### CHECK ###
 
-investment_os <- investment %>% filter(Occupant == 'osmia')
-investment_meg <- investment %>% filter(Occupant == 'megachile')
 
-#
 
 ```
 
@@ -673,6 +705,7 @@ table(nesting$Day_of_year)
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none') 
 # to reduze zeros from "empties" outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the 'full summer' of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
+# this stuff overlaps with the first cleaning chunk that removed excessive non_existents 
 dates_os <- nesting_os %>% 
   group_by(Date, Occupant) %>% 
   filter(Occupant == 'osmia' & Status != 'pseudo' & Status != 'no change')
@@ -684,7 +717,7 @@ dates_meg <- nesting_meg %>%
   # earliest activity date is 2023-06-23
   # latest activity date is 2023-08-04
 list(unique(nesting$Date)) 
-dates_exclude_os <- c('2023-07-14', '2023-07-17', '2023-07-20', '2023-07-24', '2023-07-26', '2023-07-28', '2023-07-29', '2023-08-01', '2023-08-04', '2023-08-09') ### CHECK make this the same as first cleaning chunk?
+dates_exclude_os <- c('2023-07-14', '2023-07-17', '2023-07-20', '2023-07-24', '2023-07-26', '2023-07-28', '2023-07-29', '2023-08-01', '2023-08-04', '2023-08-09') 
 nesting_os <- nesting_os %>%
   filter(!Date %in% dates_exclude_os)
 dates_exclude_meg <- c('2023-05-11', '2023-05-12', '2023-05-15', '2023-05-16', '2023-05-17', '2023-05-18', '2023-05-19', '2023-05-21', '2023-05-22', '2023-05-23', '2023-05-25', '2023-05-26', '2023-05-28', '2023-05-29', '2023-05-31', '2023-06-01', '2023-06-02', '2023-06-04', '2023-06-05', '2023-06-08', '2023-06-09', '2023-06-10', '2023-06-11', '2023-06-12', '2023-06-14', '2023-06-15', '2023-06-16', '2023-06-19', '2023-06-20', '2023-06-22', '2023-08-09')
@@ -703,14 +736,15 @@ nesting %>% filter(!is.na(Bee_choice)) %>%
 
 ## Saving wrangled data
 
-# write.csv(nesting, 'data/Nesting_cleaned_all_bees.csv')
-# write.csv(nesting_os, 'data/Nesting_cleaned_osmia.csv')
-# write.csv(nesting_meg, 'data/Nesting_cleaned_megachile.csv')
-# write.csv(investment_os, 'data/Investment_cleaned_osmia.csv')
+write.csv(nesting, 'data/nesting_cleaned_all_bees.csv')
+write.csv(nesting_os, 'data/nesting_cleaned_osmia.csv')
+write.csv(nesting_meg, 'data/nesting_cleaned_megachile.csv')
+write.csv(investment, 'data/investment_cleaned.csv')
+
 
 # making data for Abby
 # Abby_data <- nesting_os %>% select(Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Date, Nest_ID, Cavity_ID, Status, Occupant, Good_days:Meg_no_ps_prior)
-# write.csv(Abby_data, 'data/Data_for_Abby.csv')
+# write.csv(Abby_data, 'data/data_for_Abby.csv')
 
 
 ```
@@ -742,27 +776,28 @@ Variables:
 ### New nests per available cavities Osmia ###
 mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
 
-plot(simulateResiduals(mod_c_cav_os)) # looks good jan 9
-testDispersion(mod_c_cav_os, type = 'DHARMa') # ns
-testOutliers(mod_c_cav_os, type = 'bootstrap') # ns p value = 1
-summary(mod_c_cav_os)
+plot(simulateResiduals(mod_choice_cav_os)) # looks good feb 21
+testDispersion(mod_choice_cav_os, type = 'DHARMa') # ns
+testOutliers(mod_choice_cav_os, type = 'bootstrap') # ns p value = 1
+summary(mod_choice_cav_os)
 
-opitimizers_os <- allFit(mod_c_cav_os) # did this to compare with model below that gets more warnings
+
+# opitimizers_os <- allFit(mod_choice_cav_os) # did this to compare with model below that gets more warnings
 
 
 ### New nests per available cavities Megachile ###
-mod_choice_cav_meg <- glmer(Bee_choice ~ scale(Available_prior) + scale(Good_days) + scale(Day_of_year)  + (1|Cavity_ID), data = Megachile_data, family = binomial) # Model failed to converge with max|grad|
+mod_choice_cav_meg <- glmer(Bee_choice ~ scale(Available_prior) + scale(Good_days) + scale(Day_of_year)  + (1|Cavity_ID), data = nesting_meg, family = binomial) # Model failed to converge with max|grad|
 
-# check optimizors and their fits
-opitimizers <- allFit(mod_c_cav_meg)
-# https://github.com/lme4/lme4/issues/120
-relgrad <- with(mod_c_cav_meg@optinfo$derivs,solve(Hessian,gradient))
-max(abs(relgrad))
+# # check optimizors and their fits
+# opitimizers <- allFit(mod_choice_cav_meg)
+# # https://github.com/lme4/lme4/issues/120
+# relgrad <- with(mod_choice_cav_meg@optinfo$derivs,solve(Hessian,gradient))
+# max(abs(relgrad))
 
-plot(simulateResiduals(mod_c_cav_meg)) # WONKY! jan 9, but using only Cavity_ID is better then subsite, trapnest, and cavity ID
-testDispersion(mod_c_cav_meg, type = 'DHARMa') # significant
-testOutliers(mod_c_cav_meg, type = 'bootstrap') # ns p value = 1
-summary(mod_c_cav_meg)
+plot(simulateResiduals(mod_choice_cav_meg)) # overdispersed, feb 21
+testDispersion(mod_choice_cav_meg, type = 'DHARMa') # significant
+testOutliers(mod_choice_cav_meg, type = 'bootstrap') # 
+summary(mod_choice_cav_meg)
 
 ```
 
@@ -772,40 +807,40 @@ summary(mod_c_cav_meg)
 
 ### New nests per conspecifics Osmia ###
 ## with pseudo ##
-mod_choice_consp_os_ps <- glmer(Bee_choice ~ Osmia_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = Osmia_data, family = binomial) # boundary singular warning 
+mod_choice_consp_os_ps <- glmer(Bee_choice ~ Osmia_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning 
 
-plot(simulateResiduals(mod_c_consp_os_ps)) # looks good jan 9
-testDispersion(mod_c_consp_os_ps, type = 'DHARMa')  # ns
-testOutliers(mod_c_consp_os_ps, type = 'bootstrap') # ns p value = 1
-summary(mod_c_consp_os_ps)
+plot(simulateResiduals(mod_choice_consp_os_ps)) #  overdispersed, feb 21
+testDispersion(mod_choice_consp_os_ps, type = 'DHARMa')  # significant
+testOutliers(mod_choice_consp_os_ps, type = 'bootstrap') # 
+summary(mod_choice_consp_os_ps)
 
 ### New nests per conspecifics Osmia ###
 ## without pseudo ##
-mod_choice_consp_os_no_ps <- glmer(Bee_choice ~ Osmia_no_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = Osmia_data, family = binomial) # boundary singular warning 
+mod_choice_consp_os_no_ps <- glmer(Bee_choice ~ Osmia_no_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # failed to converge, large eigenvalue
 
-plot(simulateResiduals(mod_c_consp_os_no_ps)) # looks good jan 9
-testDispersion(mod_c_consp_os_no_ps, type = 'DHARMa') # ns 
-testOutliers(mod_c_consp_os_no_ps, type = 'bootstrap') # ns p value = 1
-summary(mod_c_consp_os_no_ps)
+plot(simulateResiduals(mod_choice_consp_os_no_ps)) # overdispersed, feb 21
+testDispersion(mod_choice_consp_os_no_ps, type = 'DHARMa') # significant
+testOutliers(mod_choice_consp_os_no_ps, type = 'bootstrap') # 
+summary(mod_choice_consp_os_no_ps)
 
 
 ### New nests per conspecifics Megachile ###
 ## with pseudo ##
-mod_choice_consp_meg_ps <- glmer(Bee_choice ~ Meg_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = Megachile_data, family = binomial)  # boundary singular warning 
+mod_choice_consp_meg_ps <- glmer(Bee_choice ~ Meg_ps_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_meg, family = binomial)  # boundary singular warning 
 
-plot(simulateResiduals(mod_c_consp_meg_ps)) # WONKY! jan 9
-testDispersion(mod_c_consp_meg_ps, type = 'DHARMa') # significant
-testOutliers(mod_c_consp_meg_ps, type = 'bootstrap') # ns p value = 1
-summary(mod_c_consp_meg_ps)
+plot(simulateResiduals(mod_choice_consp_meg_ps)) # overdispersed, feb 21
+testDispersion(mod_choice_consp_meg_ps, type = 'DHARMa') # significant
+testOutliers(mod_choice_consp_meg_ps, type = 'bootstrap') # 
+summary(mod_choice_consp_meg_ps)
 
 ### New nests per conspecifics Megachile ###
 ## without pseudo ##
-mod_choice_consp_meg_no_ps <- glmer(Bee_choice ~ scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Cavity_ID), data = Megachile_data, family = binomial) # Model failed to converge with max|grad|
+mod_choice_consp_meg_no_ps <- glmer(Bee_choice ~ scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_meg, family = binomial) # Model failed to converge, large egienvalue 
 
-plot(simulateResiduals(mod_c_consp_meg_no_ps)) # WONKY! jan 9
-testDispersion(mod_c_consp_meg_no_ps, type = 'DHARMa') # significant
-testOutliers(mod_c_consp_meg_no_ps, type = 'bootstrap') # ns p value = 1 
-summary(mod_c_consp_meg_no_ps)
+plot(simulateResiduals(mod_choice_consp_meg_no_ps)) # overdispersed, feb 21
+testDispersion(mod_choice_consp_meg_no_ps, type = 'DHARMa') # significant
+testOutliers(mod_choice_consp_meg_no_ps, type = 'bootstrap') # 
+summary(mod_choice_consp_meg_no_ps)
 
 ```
 
@@ -820,7 +855,7 @@ summary(mod_c_consp_meg_no_ps)
 ## Make a summary of the observed new nests in each trapnest
 
 # have to make new dataframe and pivot to converge date and trapnest data (removing cavity IDs)
-for.table <- select(preferences, Trapnest, Subsite, Site, Date, Treatment,New_nests_os, New_nests_meg)
+for.table <- select(nesting, Trapnest, Subsite, Site, Date, Treatment,New_nests_os, New_nests_meg)
 for.table <- distinct(for.table, Trapnest, Date, .keep_all = TRUE)
 
 # count total nests
@@ -903,6 +938,10 @@ chi.meg$Expected_nests <- c(19.94595, 13.2973, 7.756757)
 chisq.test(chi.os$Observed_nests, chi.os$Expected_nests)
 fisher.test(chi.meg$Observed_nests, chi.meg$Expected_nests)
 
+write.csv(obs.os, 'data/observed_data_os.csv')
+write.csv(obs.meg, 'data/observed_data_meg.csv')
+write.csv(exp.os, 'data/expected_data_os.csv')
+write.csv(exp.meg, 'data/expected_data_meg.csv')
 
 
 ```
@@ -1013,16 +1052,16 @@ summary(mod_invest_os)
 # Plot models
 
 
-ggpredict(mod_c_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (full season)')
+ggpredict(mod_choice_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (full season)')
 
 
 
 # Plot actual model
-ggpredict(mod_c_cav_meg, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (full season)')
+ggpredict(mod_choice_cav_meg, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (full season)')
 
 
 # Plot actual model
-ggpredict(mod_c_consp_os_ps, c('Osmia_ps_prior')) %>% 
+ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %>% 
   plot(rawdata = TRUE, jitter = .04) + 
   labs(x = 'Osmia occupancies including pseudo', y = 'Presence of new nest for each visit', title = 'Osmia') +
   xlim(0, 18)

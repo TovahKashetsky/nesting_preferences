@@ -2,6 +2,9 @@
 title: "Report"
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 ## Introduction
+
+-   bees are attracted to old nest content odors [@pitts-singer2007]
