@@ -36,12 +36,7 @@ editor: visual
 knitr::opts_chunk$set(echo = TRUE)
 
 
-library(kableExtra)
 library(sqldf)
-library(glmmTMB)
-library(DHARMa)
-library(car)
-library(lme4)
 library(tidyverse)
 # citation() # to see package versions 
 
@@ -506,7 +501,6 @@ sum(preferences$Bee_choice, na.rm = TRUE) # 231 nests
 
 ```{r Parasitism Data, include=FALSE, echo=TRUE, results='hide'}
 
-### THE CUMULATIVE PARASITES AND PROP PAR CELLS ARE ALL NAs - Feb 1st 
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
@@ -660,6 +654,25 @@ nesting <- nesting %>%
   ungroup()
 
 
+
+## Loop 3 for making the active period
+
+# criteria:
+ # starts with something that isn't 'empty', 'no_visit', 'no change', or 'pseudo', or with Bee_choice
+ # ends with anything containing 'end cap'
+
+table(nesting$Status)
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 ```{r Investment Data, include=FALSE, echo=TRUE, results='hide'}
@@ -745,7 +758,6 @@ write.csv(investment, 'data/investment_cleaned.csv')
 
 ```
 
-
 ### Observed and Expected values of new nests
 
 ```{r Chi Square, include=FALSE, echo=TRUE, results='hide'}
@@ -771,7 +783,6 @@ obs.meg.1 <- for.table %>% filter(!is.na(New_nests_meg)) %>%
 obs.os.1 <- obs.os.1 %>% filter(Site == 'BP' | Site == 'NN')
 obs.meg.1 <- obs.meg.1 %>% filter(Site == 'BP')
 
-obs.os <- pivot_wider(obs.os.1, names_from = Treatment, values_from = Total_nests)
 obs.meg <- pivot_wider(obs.meg.1, names_from = Treatment, values_from = Total_nests)
 
 # replaces NAs

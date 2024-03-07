@@ -8,3 +8,44 @@ bibliography: references.bib
 ## Introduction
 
 -   bees are attracted to old nest content odors [@pitts-singer2007]
+
+# **Introduction**
+
+#### **Background**
+
+Strategies for raising offspring exist on a spectrum from cooperative breeding in tightly knit social groups to raising young in isolation and may not even encounter their offspring once they emerge. Raising young in proximity to others can increase protection from predators, reduce occurrences of infanticide, and enhance knowledge of local resources. However, proximity can increase the circulation of pathogens and foster competition if resources become scarce. Bees exhibit the entirety of this spectrum, as species that range from solitary nesting (e.g., mining bees: Andrena spp.) to advanced eusociality (e.g., honeybees: Apis spp.). Some species along this spectrum are facultatively social, meaning that within a population, they exhibit social polymorphism for their nesting strategy and thus can be solitary or social.
+
+Aggregate nesting is common among ground-nesting bees, which make up three quarters of bee species worldwide. There are a few outlined explanations for why ground-nesting bee aggregations may occur. Bees of the same species are likely to prefer the same site characteristics; thus, one location may be appealing to several individuals. Additionally, resource limitation can encourage aggregations, as bees nest near floral resources, and nesting locations themselves are resources. Philopatry, the behaviour of returning to have offspring at the location of birth, could also be a driving factor in aggregations. Finally, individuals could be attracted to conspecifics, as their presence could signal good-quality habitat. The remaining 25% of bee species nest in above ground cavities. While there is evidence that Osmia bees, at least in one population in Colorado, do not consider presence of other individuals while choosing where to nest, it remains unclear how aggregation density and parasitism interact in nest-site selection of cavity-nesters.
+
+#### **Objectives**
+
+I will address this research gap by studying nest-site selection of non-eusocial cavity-nesting bees by measuring their preferences for aggregations and avoidance of parasites. In the Greenbelt of Ottawa, I will test nesting preferences of orchard bees (*Osmia* spp.) and leafcutter bees (*Megachile* spp.). I have two primary questions:
+
+1.  Do cavity-nesters have aggregation density preferences? If bees have aggregation density preferences, they could prefer nesting in higher density aggregations because the presence of nesting conspecifics could indicate the presence of high-quality nesting habitat. Alternatively, bees could avoid the presence of conspecifics if density increases parasitism risk, thus prefer nesting in lower aggregation densities.
+
+2.  How does parasitism interact with nesting preferences? Firstly, to answer this question, I will investigate the relation between parasites and aggregation densities. Parasites might target higher densities of nests because the presence of many host nests indicates more opportunities for parasitism. On the other hand, parasites may target lower densities of nests because there could be fewer chances of directly encountering a host, which could interrupt the act of parasitizing a nest. Secondly, I will measure how parasitism rates affect nesting preferences of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism.
+
+# **Methods**
+
+#### **Experimental Setup**
+
+I deployed wooden boxes with 18 cavities drilled in for bees to nest, called trapnests. The first half of the summer was dedicated towards the early-season orchard bees, while the second half was dedicated towards the later-season leafcuter bees. For each half of the summer, I deployed 36 trapnests spread evenly between two sites, for a total of 72 for spring and summer of 2023. Trapnests were divided into three treatments to simulate variations in occupancy, shown in Figure 1:
+
+-   Low-occupancy treatment: the baseline of completed nests is zero. Once a bee nest is completed, we removed it for storage at the University of Ottawa in falcon tubes. The trapnest treatment should have little to no bee activity.
+
+-   Mid-occupancy treatment: the baseline of completed nests was 6 out of 18 cavities occupied. Occupancy was simulated with pseudo nests built from old nesting material from real orchard or leafcutter bee nests, or the equivalent to what bees would use for building (mud for orchard bee season, leaves for leafcutter bee season). Once real nests were built, pseudo nests were removed to maintain baseline occupancy. If real nests surpassed the baseline occupancy, we removed them for storage in falcon tubes to maintain the baseline density.
+
+-   High-occupancy treatment: the baseline of completed nests was 11 out of 18 cavities. Maintaining the baseline occupancy was identical to methods for the mid-occupancy treatment.
+
+
+Figure 1. A set of trapnests for one subsite before deployment containing pesudo nests. On the left, the low-occupancy treatment trapnest has 0/18 cavities occupied with pseudo nests. The mid-occupancy treatment trapnest in the middle has 6/18 cavities occupied with pseudo nests. On the right, the high-occupancy treatment trapnest has 11/18 cavities occupied. I used trapnests that were previously used in other experiment which had more cavities than required, so the light-coloured patches on the trapnests are wood filler to cover extra cavities.
+
+#### **Measures**
+
+1.  I measured the **choice of a bee to nest** in a given cavity. For time I visited a trapnest, which was typically three times a week, I recorded the genus of the occupant (which I can tell by the nesting material used) and new nesting activity (e.g., building nest walls, nesting cells containing pollen and an egg, or end caps to seal off the nest). Once bees emerge in the spring, I will record the species by freezing and identifying at least one specimen from each nest under the microscope. I hope to release the majority of the emerging bees back at the site in which I collected them.
+
+2.  I will record **emergence of parasites** from the nests this upcoming spring.
+
+Along with these primary measures, I will measure the potential behaviour that bees exhibit to counteract parasites:
+
+3.  To measure **investment** into a nest, I will record the proportion of the volume filled with cells within each nest.
