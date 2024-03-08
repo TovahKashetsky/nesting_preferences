@@ -308,6 +308,8 @@ conspecifics <- merge(conspecifics_os_2, conspecifics_meg_2)
 
 ## Cleaning required after previous steps 
 
+##### CHECK remove the unkown occuapnt 47_11a from bee_choice !!
+
 # remove rest of no_visits and non_existents (had to leave them in for the loop)
 conspecifics <- conspecifics %>% filter(Status != 'no_visit' & Status != 'non_existent')
 
@@ -655,13 +657,26 @@ nesting <- nesting %>%
 
 
 
-## Loop 3 for making the active period
+## Making the active period
+# Wasn't working in a loop or even a single ifelse statement, so broke it up
 
 # criteria:
- # starts with something that isn't 'empty', 'no_visit', 'no change', or 'pseudo', or with Bee_choice
+ # within Nest_ID
+ # starts with Bee_choice being 1
  # ends with anything containing 'end cap'
 
-table(nesting$Status)
+# make column to say if it contains "end cap" or not
+nesting$End_cap <- grepl('end cap', nesting$Status)
+# make column to say if it's sealed (by containing an end cap)
+nesting <- nesting %>% mutate(Sealed_2 = ifelse(is.na(Bee_choice) & End_cap == TRUE | Bee_choice == 1 & End_cap == TRUE, 'sealed',
+                                                ifelse(Bee_choice == 0 | is.na(Bee_choice) & Status == 'pseudo', 'NA_',
+                                                       ifelse(Bee_choice == 1 & End_cap == FALSE, 'not sealed', 'leftover'))))
+
+# inspecting to see if it worked
+# sealed <- nesting %>% filter(Sealed_2 == 'sealed') # yeet
+# not_sealed <- nesting %>% filter(Sealed_2 == 'not sealed') # great
+# end_cap_T <- nesting %>% filter(End_cap == TRUE) # swag
+# end_cap_F <- nesting %>% filter(End_cap == FALSE) # amazing
 
 
 
@@ -670,7 +685,88 @@ table(nesting$Status)
 
 
 
+ ## Trying loops with Spencer
+list_IDs <- unique(nesting$Nest_ID)
 
+blank_table <- data.frame(matrix(ncol = ncol(nesting), nrow = 0))
+colnames(blank_table) <- colnames(nesting)
+
+
+for(i in list_IDs) {
+  
+  # i <- "1_16a"
+  nest_ID_table <- nesting %>% filter(Nest_ID %in% i)
+  nest_ID_table$Sealed <- NA
+  
+
+  
+  if(any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
+    if(any(grepl('end cap', nest_ID_table$Status)) ) {
+        nest_ID_table$Sealed == 'sealed'
+    } else {
+      nest_ID_table$Sealed == 'not sealed'
+    } else 
+  { nest_ID_table$Sealed == 'not sealed' 
+}
+}
+
+  
+  
+  
+  for(i in list_IDs) {
+  nest_ID_table <- nesting %>% filter(Nest_ID %in% i)
+  nest_ID_table$Sealed <- NA
+  
+      for (j in 1:nrow(nest_ID_table)) {
+        
+         if(nest_ID_table[j,15] %in% 1 ) {
+                if_else((grepl('end cap', nest_ID_table$Status[j])),
+                               nest_ID_table$Sealed <- 'sealed', 
+                               nest_ID_table$Sealed <- 'not sealed') 
+         } else
+        {nest_ID_table$Sealed <- 'NA'}
+        
+      }
+      
+  
+  if (nest_ID_table$Bee_choice == 0) {(any(grepl('end cap', nest_ID_table$Status))) {
+      nest_ID_table$Sealed <- 'sealed' }
+    else {nest_ID_table$Sealed <- 'no sealed'}
+  }
+  }
+  
+  
+  
+  (any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
+    if(any(grepl('end cap', nest_ID_table$Status))) {
+      nest_ID_table$Sealed <- 'sealed'  # Use assignment operator <- instead of ==
+    } else {
+      nest_ID_table$Sealed <- 'not sealed'  # Use assignment operator <- instead of ==
+    }
+  } else {
+    nest_ID_table$Sealed <- 'not sealed' 
+  }
+}
+
+
+
+
+
+  
+  
+  
+  
+  
+    if(any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
+    if(any(grepl('end cap', nest_ID_table$Status))) {
+      nest_ID_table$Sealed <- 'sealed'  # Use assignment operator <- instead of ==
+    } else {
+      nest_ID_table$Sealed <- 'not sealed'  # Use assignment operator <- instead of ==
+    }
+  } else {
+    nest_ID_table$Sealed <- 'not sealed' 
+  }
+}
 
 
 ```
