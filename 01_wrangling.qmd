@@ -644,13 +644,13 @@ os_parasites_v3$Osmia_no_ps_prior <- as.numeric(os_parasites_v3$Osmia_no_ps_prio
 os_parasites_v3$Meg_ps_prior <- as.numeric(os_parasites_v3$Meg_ps_prior)
 os_parasites_v3$Meg_no_ps_prior <- as.numeric(os_parasites_v3$Meg_no_ps_prior)
 
-nesting <- os_parasites_v3
-nesting <- nesting %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
+nesting_0 <- os_parasites_v3
+nesting_0 <- nesting_0 %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
 
 
 ## Number of parasites in that trapnest - date combo
 
-nesting <- nesting %>%
+nesting_0 <- nesting_0 %>%
   group_by(Date, Trapnest) %>%
   mutate(Par_in_trapnest = sum(!is.na(Cumulative_par))) %>%
   ungroup()
@@ -660,113 +660,65 @@ nesting <- nesting %>%
 ## Making the active period
 # Wasn't working in a loop or even a single ifelse statement, so broke it up
 
-# criteria:
- # within Nest_ID
- # starts with Bee_choice being 1
- # ends with anything containing 'end cap'
+ # Step 1 #
+# criteria: within Nest_ID, starts with Bee_choice being 1, ends with anything containing 'end cap'
 
 # make column to say if it contains "end cap" or not
-nesting$End_cap <- grepl('end cap', nesting$Status)
+nesting_0$End_cap <- grepl('end cap', nesting_0$Status)
 # make column to say if it's sealed (by containing an end cap)
-nesting <- nesting %>% mutate(Sealed_2 = ifelse(is.na(Bee_choice) & End_cap == TRUE | Bee_choice == 1 & End_cap == TRUE, 'sealed',
+nesting_0 <- nesting_0 %>% mutate(Sealed = ifelse(is.na(Bee_choice) & End_cap == TRUE | Bee_choice == 1 & End_cap == TRUE, 'sealed',
                                                 ifelse(Bee_choice == 0 | is.na(Bee_choice) & Status == 'pseudo', 'NA_',
                                                        ifelse(Bee_choice == 1 & End_cap == FALSE, 'not sealed', 'leftover'))))
 
 # inspecting to see if it worked
-# sealed <- nesting %>% filter(Sealed_2 == 'sealed') # yeet
-# not_sealed <- nesting %>% filter(Sealed_2 == 'not sealed') # great
-# end_cap_T <- nesting %>% filter(End_cap == TRUE) # swag
-# end_cap_F <- nesting %>% filter(End_cap == FALSE) # amazing
+# sealed <- nesting_0 %>% filter(Sealed == 'sealed') # yeet
+# not_sealed <- nesting_0 %>% filter(Sealed == 'not sealed') # great
+# end_cap_T <- nesting_0 %>% filter(End_cap == TRUE) # swag
+# end_cap_F <- nesting_0 %>% filter(End_cap == FALSE) # amazing
+
+ # Step 2 #
+
+# make loop
+
+# arrange data chronologically
+nesting_0 <- nesting_0 %>% arrange(Nest_ID, Date)
+# use 7_3b for ex, is not sealed, NA, sealed, NA, want to make 7_3b not sealed, not sealed, sealed, sealed.
+# use 7_8a for ex to see if multiple rows (three NAs) all say not sealed
+# initiate new column, then fill it in
+nesting_0$Sealed_V2 <- nesting_0$Sealed 
 
 
 
-
-
-
-
-
- ## Trying loops with Spencer
-list_IDs <- unique(nesting$Nest_ID)
-
-blank_table <- data.frame(matrix(ncol = ncol(nesting), nrow = 0))
-colnames(blank_table) <- colnames(nesting)
-
-
-for(i in list_IDs) {
+### START
+for(i in 1:nrow(nesting_0)){
+  nestID <- nesting_0$Nest_ID[i] # focal nest for i-th row
+  dt <- nesting_0$Date[i] # date for i-th row
+  allprev <- nesting_0 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Sealed_V2) # all sealed statuses for that focal nest
   
-  # i <- "1_16a"
-  nest_ID_table <- nesting %>% filter(Nest_ID %in% i)
-  nest_ID_table$Sealed <- NA
-  
+  check1 <- !all(is.na(allprev))
+  # check2 <- !os_parasites_v2_exclude$Status[i] %in% c('empty', 'pseudo') 
 
-  
-  if(any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
-    if(any(grepl('end cap', nest_ID_table$Status)) ) {
-        nest_ID_table$Sealed == 'sealed'
-    } else {
-      nest_ID_table$Sealed == 'not sealed'
-    } else 
-  { nest_ID_table$Sealed == 'not sealed' 
-}
-}
-
-  
-  
-  
-  for(i in list_IDs) {
-  nest_ID_table <- nesting %>% filter(Nest_ID %in% i)
-  nest_ID_table$Sealed <- NA
-  
-      for (j in 1:nrow(nest_ID_table)) {
-        
-         if(nest_ID_table[j,15] %in% 1 ) {
-                if_else((grepl('end cap', nest_ID_table$Status[j])),
-                               nest_ID_table$Sealed <- 'sealed', 
-                               nest_ID_table$Sealed <- 'not sealed') 
-         } else
-        {nest_ID_table$Sealed <- 'NA'}
-        
-      }
-      
-  
-  if (nest_ID_table$Bee_choice == 0) {(any(grepl('end cap', nest_ID_table$Status))) {
-      nest_ID_table$Sealed <- 'sealed' }
-    else {nest_ID_table$Sealed <- 'no sealed'}
+  if(check1 & check2){
+    nesting_0$Sealed_V2[i] <- max(allprev, na.rm = T)
   }
-  }
-  
-  
-  
-  (any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
-    if(any(grepl('end cap', nest_ID_table$Status))) {
-      nest_ID_table$Sealed <- 'sealed'  # Use assignment operator <- instead of ==
-    } else {
-      nest_ID_table$Sealed <- 'not sealed'  # Use assignment operator <- instead of ==
-    }
-  } else {
-    nest_ID_table$Sealed <- 'not sealed' 
-  }
-}
+} ### END
+
+### CHECK some NAs only for resin bees, fix later
+
+
+# several items to manually fix: 5_9a, 5_18a, 7_17a, 24_18a, 31_3a, 32_9a, and 59_16a were all eaten at some point by birds or insects, so they appear as sealed or not sealed, then should again appear as NA (because they're vacant), I will manually overide these
+
+
+# if the Nest_ID == any of those eaten nests above, then say NA_, otherwise say Sealed_02
 
 
 
 
+### 25_11 is a mistake, shouldnt be pseudo
 
-  
-  
-  
-  
-  
-    if(any(nest_ID_table$Bee_choice == 1 | is.na(nest_ID_table$Bee_choice))) {
-    if(any(grepl('end cap', nest_ID_table$Status))) {
-      nest_ID_table$Sealed <- 'sealed'  # Use assignment operator <- instead of ==
-    } else {
-      nest_ID_table$Sealed <- 'not sealed'  # Use assignment operator <- instead of ==
-    }
-  } else {
-    nest_ID_table$Sealed <- 'not sealed' 
-  }
-}
+
+
+
 
 
 ```
