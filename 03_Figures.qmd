@@ -55,6 +55,7 @@ obs.os <- read_csv('data/observed_data_os.csv')
 obs.meg <- read_csv('data/observed_data_meg.csv') 
 exp.os <- read_csv('data/expected_data_os.csv')
 exp.meg <- read_csv('data/expected_data_meg.csv')
+parasite_sum_os_contains_cells <- read_csv('Data/parasite_sum_os_contains_cells.csv')
 
 # remove numbers columns to chi data 
 obs.os <- obs.os %>% select(Site, Low, Mid, High)
@@ -613,7 +614,7 @@ nesting_os %>%
 # Cumulative number of parasites per osmia occupancies
 
 nesting_os %>% 
-  filter(!is.na(Cumulative_par) & ) %>% 
+  filter(!is.na(Cumulative_par)) %>% 
   ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
   geom_jitter(height = 0.05, alpha = 0.6) + 
   stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
