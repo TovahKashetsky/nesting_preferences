@@ -117,7 +117,7 @@ nesting_meg %>%
 
 ```
 
-#### Spread of new nests across available cavities 
+#### Spread of new nests across available cavities
 
 Y axis = total of new Osmia or Megachile nests / total Osmia or Megachile nests. E.g, If 9 Osmia nests were built throughout the season when there were 6 other available cavities in a trapnest, the Y axis would be 9/164.
 

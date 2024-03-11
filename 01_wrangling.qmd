@@ -26,7 +26,7 @@ editor: visual
 # Meg_no_ps: number of existing megachile in each trapnest per date, excluding pseudo nests
 # New_nests_sum: total number of new nests including megachile and osmia.
 # Available_prior: average number of available cavities for each trapnest and date combo BEFORE the new nests for that visit have been started (i.e., how many available cavities the bees saw when arriving to the nest before building). This is the average, so there are some numbers that have .5 in there. For example, if there are 8 cavities available_post and two new nests were built when we visited that trapnest, the first bee to nest would have seen 10 available cavities, and the second would have seen 9. So we average that out to 9.5 for available_prior.
-# Available_post = + Osmia_ps_prior + Meg_ps_prior (+ non-target nests) = 18
+# Available_post = Osmia_ps_prior + Meg_ps_prior (+ non-target nests) = 18
 
 
 
@@ -358,6 +358,35 @@ prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 
 
 ```
 
+```{r Nests Containing Cells, include=FALSE, echo=TRUE, results='hide'}
+
+## Categorize occupied nests as containing cells, or as just inner walls
+
+# make column to say if it contains the word "cell" # ONLY OSMIA RN
+contains_cells <- prefs %>% filter(Status != 'empty' & Status != 'pseudo' & Occupant == 'osmia')
+contains_cells$Contains_cells_bin <- ifelse(grepl('cell', contains_cells$Status), 1, 0)
+# 1 means it contains a cell in that status
+
+
+# make column to say if the nest in total contains cells or not
+contains_cells <- contains_cells %>% 
+  group_by(Nest_ID) %>% 
+  summarise(Contains_cells = max(Contains_cells_bin)) %>% 
+  ungroup()
+
+table(contains_cells$Contains_cells) 
+
+# merge with prefs
+
+prefs <- left_join(prefs, contains_cells)
+
+
+
+### CHECK - SHOULD CREATE A LIST OF ALL NEST IDS WITH BEE_CHOICE == 1
+
+```
+
+
 ```{r Weather Data, include=FALSE, echo=TRUE, results='hide'}
 
 
@@ -488,7 +517,7 @@ preferences <- preferences %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == '
 preferences <- preferences %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V1 == 'TBD', (Meg_equ + Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_no_ps_prior_V1) | Meg_no_ps_prior_V1 != 'TBD', Meg_no_ps_prior_V1, 'leftover' ))) 
 
 # take only columns I need
-preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
+preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Contains_cells, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
 
 
 # filter out wasps and non-targets from choices, after we counted them as occupied cavities
@@ -506,7 +535,7 @@ sum(preferences$Bee_choice, na.rm = TRUE) # 231 nests
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
- # Number_of_cells: the cumulative number of cells in the nest at the time.
+ # Number_of_cells: the cumulative number of cells in the nest at the time. Comes from parasite data
  # Prop_cells_par = Cumulative_par/Number_of_cells which gives the proportion of cells parasitized 
 
 ### Question 3: Do parasites affect nesting preferences ###
@@ -554,7 +583,7 @@ os_par_v3 <- os_par_v2 %>%
 # bind parasite counts with preferences data
 os_par_v3 <- os_par_v3 %>% 
   select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
-os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Available_prior, New_nests_os:Meg_no_ps_prior) 
+os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Contains_cells, Available_prior, New_nests_os:Meg_no_ps_prior) 
 os_par_v3$Date <- as.Date(os_par_v3$Date)
 os_par_v3$Trapnest <- paste('trapnest', os_par_v3$Trapnest, sep = '_')
 os_parasites <- full_join(os_par_v3, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
@@ -624,7 +653,6 @@ for(i in 1:nrow(os_parasites_v2_exclude)){
   }
 } ### END
 
-
 # bind back together
 os_parasites_v2_include <- os_parasites_v2 %>% filter(Status == 'empty' | Status == 'pseudo') # include empty and pseudo 
 os_parasites_v3 <- rbind(os_parasites_v2_exclude, os_parasites_v2_include) 
@@ -644,8 +672,7 @@ os_parasites_v3$Osmia_no_ps_prior <- as.numeric(os_parasites_v3$Osmia_no_ps_prio
 os_parasites_v3$Meg_ps_prior <- as.numeric(os_parasites_v3$Meg_ps_prior)
 os_parasites_v3$Meg_no_ps_prior <- as.numeric(os_parasites_v3$Meg_no_ps_prior)
 
-nesting_0 <- os_parasites_v3
-nesting_0 <- nesting_0 %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
+nesting_0 <- os_parasites_v3 %>% mutate(Prop_cells_par = (Cumulative_par/Number_of_cells)) 
 
 
 ## Number of parasites in that trapnest - date combo
@@ -656,11 +683,10 @@ nesting_0 <- nesting_0 %>%
   ungroup()
 
 
-
 ## Making the active period
 # Wasn't working in a loop or even a single ifelse statement, so broke it up
 
- # Step 1 #
+  # Step 1: ifelse #
 # criteria: within Nest_ID, starts with Bee_choice being 1, ends with anything containing 'end cap'
 
 # make column to say if it contains "end cap" or not
@@ -676,9 +702,7 @@ nesting_0 <- nesting_0 %>% mutate(Sealed = ifelse(is.na(Bee_choice) & End_cap ==
 # end_cap_T <- nesting_0 %>% filter(End_cap == TRUE) # swag
 # end_cap_F <- nesting_0 %>% filter(End_cap == FALSE) # amazing
 
- # Step 2 #
-
-# make loop
+  # Step 2: Loop #
 
 # arrange data chronologically
 nesting_0 <- nesting_0 %>% arrange(Nest_ID, Date)
@@ -687,38 +711,93 @@ nesting_0 <- nesting_0 %>% arrange(Nest_ID, Date)
 # initiate new column, then fill it in
 nesting_0$Sealed_V2 <- nesting_0$Sealed 
 
-
+# loop takes too long to do at once, so remove all empty and pseudo, then adding back in after.
+nesting_0_exclude <- nesting_0 %>% filter(Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
 
 ### START
-for(i in 1:nrow(nesting_0)){
-  nestID <- nesting_0$Nest_ID[i] # focal nest for i-th row
-  dt <- nesting_0$Date[i] # date for i-th row
-  allprev <- nesting_0 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Sealed_V2) # all sealed statuses for that focal nest
+for(i in 1:nrow(nesting_0_exclude)){
+  nestID <- nesting_0_exclude$Nest_ID[i] # focal nest for i-th row
+  dt <- nesting_0_exclude$Date[i] # date for i-th row
+  allprev <- nesting_0_exclude %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Sealed_V2) # all sealed statuses for that focal nest
   
   check1 <- !all(is.na(allprev))
-  # check2 <- !os_parasites_v2_exclude$Status[i] %in% c('empty', 'pseudo') 
 
   if(check1 & check2){
-    nesting_0$Sealed_V2[i] <- max(allprev, na.rm = T)
+    nesting_0_exclude$Sealed_V2[i] <- max(allprev, na.rm = T)
   }
 } ### END
 
 ### CHECK some NAs only for resin bees, fix later
 
+# bind back together
+nesting_0_include <- nesting_0 %>% filter(Status == 'empty' | Status == 'pseudo') # include empty and pseudo 
+nesting_0 <- rbind(nesting_0_exclude, nesting_0_include) 
+nesting_0 <- nesting_0 %>% arrange(Nest_ID, Date)
 
-# several items to manually fix: 5_9a, 5_18a, 7_17a, 24_18a, 31_3a, 32_9a, and 59_16a were all eaten at some point by birds or insects, so they appear as sealed or not sealed, then should again appear as NA (because they're vacant), I will manually overide these
-
+# several rows to manually fix: nest IDs 5_9a, 5_18a, 7_17b, 24_18a, 31_3a, 32_9a, and 59_16a were all eaten at some point by birds or insects, so they appear as sealed or not sealed, then should again appear as NA (because they become empty), I will manually override these
+# find these by sorting by Status then Sealed
 
 # if the Nest_ID == any of those eaten nests above, then say NA_, otherwise say Sealed_02
 
+nesting_0 <- nesting_0 %>% mutate(Sealed_V3 = ifelse(Status == 'empty' & Nest_ID == '5_9a' | Status == 'empty' & Nest_ID == '5_18a' | Status == 'empty' & Nest_ID == '7_17b' | Status == 'empty' & Nest_ID == '24_18a' | Status == 'empty' & Nest_ID == '31_3a' | Status == 'empty' & Nest_ID == '32_9a' | Status == 'empty' & Nest_ID == '59_16a', 'NA_', Sealed_V2))
+
+# check there is a difference of 7
+table(nesting_0$Sealed_V2)
+table(nesting_0$Sealed_V3)
+
+# clean up df
+nesting <- nesting_0 %>% select(Trapnest, Date, Site, Subsite, Treatment, Cavity_number, Straw_ID, Cavity_ID, Nest_ID, Filled_length_mm, Straw_length_mm, Status:Par_in_trapnest, Sealed_V3)
+nesting <- rename(nesting, Sealed = Sealed_V3)
+nesting$Sealed <- replace(nesting$Sealed, nesting$Sealed == 'NA_', NA)
+
+### CHECK - 25_11 is a mistake, shouldn't be pseudo, fix once logged into excel
+### CHECK - nests that are the current Bee_choice, if parasitized, are counted in the number of par in trapnest. Fix this. Leads to impossible values in parasite figures 
 
 
+## Calculate how many nests are parasitized and make parasitized binary
 
-### 25_11 is a mistake, shouldnt be pseudo
+# for all nests, take max number of cumulative parasites
+parasite_bin_os <- nesting %>% 
+  filter(Status != 'empty' & Status != 'pseudo' & Occupant == 'osmia') %>% 
+  group_by(Nest_ID) %>% 
+  summarise(Max_par = max(Cumulative_par)) %>% 
+  ungroup()
+# make binary column, parasitized or not  
+parasite_bin_os <- parasite_bin_os %>% mutate(Parasitized = ifelse(Max_par == 0, 'no', 
+                                                                   ifelse(Max_par >= 1, 'yes', NA)))
+table(parasite_bin_os$Parasitized)
+# 69 No, 46 Yes, 50 NAs
+
+# make binary sealed column
+nesting <- nesting %>% mutate(Sealed_bin = ifelse(Sealed == 'sealed', '1', ifelse(Sealed == 'not sealed', '0', NA)))
+nesting$Sealed_bin <- as.numeric(nesting$Sealed_bin)
+
+# make column to say sealed or not
+sealed_sum_os <- nesting %>%
+  filter(Status != 'empty' & Status != 'pseudo' & Occupant == 'osmia') %>%
+  group_by(Nest_ID) %>%
+  summarise(Sealed_bin_max = max(Sealed_bin)) %>%
+  ungroup()
+# make column to say if the nest was ever sealed
+sealed_sum_os <- sealed_sum_os %>% mutate(Sealed_or_not = ifelse(Sealed_bin_max == 0, 'never sealed',
+                                                                 ifelse(Sealed_bin_max == 1, 'sealed', NA))) 
+
+# join together
+parasite_sum_os <- full_join(sealed_sum_os, parasite_bin_os)
+parasite_sum_os <- parasite_sum_os %>% select(-Sealed_bin_max)
 
 
+#### REMOVE NESTS THAT DONT HAVE ANY CELLS
 
+contains_cells <- contains_cells %>% filter(Contains_cells == 1)
 
+parasite_sum_os_contains_cells <- inner_join(contains_cells, parasite_sum_os)
+
+write_csv(parasite_sum_os_contains_cells, 'Data/parasite_sum_os_contains_cells.csv')
+
+parasite_sum_os_contains_cells %>% 
+  ggplot(aes(Sealed_or_not, fill = Parasitized)) +
+  geom_bar()
 
 
 ```
@@ -831,6 +910,7 @@ obs.meg.1 <- for.table %>% filter(!is.na(New_nests_meg)) %>%
 obs.os.1 <- obs.os.1 %>% filter(Site == 'BP' | Site == 'NN')
 obs.meg.1 <- obs.meg.1 %>% filter(Site == 'BP')
 
+obs.os <- pivot_wider(obs.os.1, names_from = Treatment, values_from = Total_nests)
 obs.meg <- pivot_wider(obs.meg.1, names_from = Treatment, values_from = Total_nests)
 
 # replaces NAs
@@ -899,5 +979,55 @@ write.csv(obs.os, 'data/observed_data_os.csv')
 write.csv(obs.meg, 'data/observed_data_meg.csv')
 write.csv(exp.os, 'data/expected_data_os.csv')
 write.csv(exp.meg, 'data/expected_data_meg.csv')
+
+```
+
+
+```{r Example code}
+ 
+# Testing to make sure my looping method works
+
+# # loop takes too long to do at once
+# # so remove all empty and pseudo, then adding back in after
+# # test it with trapnest 12 first
+# os_parasites_ex1 <- os_parasites %>% filter(Trapnest== 12) # including empty and pseudo
+# os_parasites_ex2 <- os_parasites %>% filter(Trapnest== 12 & Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
+# 
+# # Test 1
+# for(i in 1:nrow(os_parasites_ex1)){
+#   nestID <- os_parasites_ex1$Nest_ID[i] # focal nest for i-th row
+#   dt <- os_parasites_ex1$Date[i] # date for i-th row
+#   allprev <- os_parasites_ex1 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Cumulative_par_max) # all previous parasite counts for that focal nest
+#   
+#   check1 <- !all(is.na(allprev))
+#   check2 <- !os_parasites_ex1$Status[i] %in% c('empty', 'pseudo') 
+#   # you'll have to adjust this as needed for the intended behaviour & possible values in your larger dataset
+#   
+#   if(check1 & check2){
+#     os_parasites_ex1$Cumulative_par_V2[i] <- max(allprev, na.rm = T)
+#   }
+# }
+# view(os_parasites_ex1) # looks good
+# 
+# # Test 2
+# for(i in 1:nrow(os_parasites_ex2)){
+#   nestID <- os_parasites_ex2$Nest_ID[i] # focal nest for i-th row
+#   dt <- os_parasites_ex2$Date[i] # date for i-th row
+#   allprev <- os_parasites_ex2 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Cumulative_par_max) # all previous parasite counts for that focal nest
+#   
+#   check1 <- !all(is.na(allprev))
+#   check2 <- !os_parasites_ex2$Status[i] %in% c('empty', 'pseudo') 
+#   # you'll have to adjust this as needed for the intended behaviour & possible values in your larger dataset
+#   
+#   if(check1 & check2){
+#     os_parasites_ex2$Cumulative_par_V2[i] <- max(allprev, na.rm = T)
+#   }
+# }
+# view(os_parasites_ex2) # looks good
+# # bind back together
+# os_parasites_ex3 <- os_parasites %>% filter(Trapnest== 12 & Status == 'empty' | Trapnest== 12 & Status == 'pseudo') # the empty and pseudo ones
+# # the length of ex1 should = ex2 + ex3 --> 80 + 334 
+# os_parasites_ex3 <- rbind(os_parasites_ex2, os_parasites_ex3)
+# os_parasites_ex3 <- os_parasites_ex3 %>% arrange(Nest_ID, Date)
 
 ```

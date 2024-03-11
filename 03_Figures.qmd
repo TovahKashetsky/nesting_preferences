@@ -613,7 +613,7 @@ nesting_os %>%
 # Cumulative number of parasites per osmia occupancies
 
 nesting_os %>% 
-  filter(!is.na(Cumulative_par)) %>% 
+  filter(!is.na(Cumulative_par) & ) %>% 
   ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
   geom_jitter(height = 0.05, alpha = 0.6) + 
   stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
@@ -645,6 +645,24 @@ nesting %>% # with peusdo
 
 
 ```
+```{r Parasitism.2, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+
+
+##### CHECK why New_nests_by_os isnt the exact same as New_nests_os
+
+
+# how many nests have parasites
+
+
+parasite_sum_os_contains_cells %>% 
+  ggplot(aes(Sealed_or_not, fill = Parasitized)) +
+  geom_bar()
+
+
+
+```
 
 ## Nest Investment
 
@@ -655,21 +673,24 @@ investment_os <- investment %>% filter(Occupant == 'osmia')
 investment_meg <- investment %>% filter(Occupant == 'megachile')
 
 
+# investment_os %>% 
+#   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
+#   geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+
+
 investment_os %>% 
+  filter(Sealed == 'not sealed') %>% 
   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
-  geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
+  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
+  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in un-sealed nests')
 
-
-
-investment$Treatment <- factor(investment$Treatment, levels=c('Low', 'Mid', 'High'))
-
-
-investment %>% filter(Occupant == 'osmia' | Occupant == 'megachile') %>% 
-  ggplot(aes(Treatment, Prop_filled, fill = Occupant)) +
-  geom_boxplot(alpha = 0.8) +
-  scale_fill_manual(values=c('goldenrod2', 'plum3'), labels = c('Megachile', 'Osmia')) +
-  labs(y = 'Proportion of straw filled with cells') + 
-  theme(legend.text = element_text(face = 'italic'))
+investment_os %>% 
+  filter(Sealed == 'sealed') %>% 
+  ggplot(aes(Par_in_trapnest, Prop_filled)) + 
+  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
+  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
+  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in sealed nests')
 
 
 

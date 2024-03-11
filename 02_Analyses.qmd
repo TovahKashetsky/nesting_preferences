@@ -26,7 +26,7 @@ Variables:
 -   New_nests_sum: total number of new nests including megachile and osmia.
 -   Available_prior: average number of available cavities for each trapnest and date combo BEFORE the new nests for that visit have been started (i.e., how many available cavities the bees saw when arriving to the nest before building). This is the average, so there are some numbers that have .5 in there. For example, if there are 8 cavities available_post and two new nests were built when we visited that trapnest, the first bee to nest would have seen 10 available cavities, and the second would have seen 9. So we average that out to 9.5 for available_prior.
 
-```{r}
+```{r Setting Up}
 
 ## Loading data and packages
 
@@ -34,6 +34,9 @@ library(glmmTMB)
 library(DHARMa)
 library(lme4)
 library(car)
+library(see)
+library(performance)
+library(ggeffects)
 library(tidyverse)
 
 
@@ -144,9 +147,16 @@ mod_par_os <- glmer(Bee_choice ~ scale(Osmia_no_ps_prior) * scale(Par_in_trapnes
 plot(simulateResiduals(mod_par_os))
 summary(mod_par_os)
 
-# Plot actual model
-ggpredict(mod_par_os, c('Par_in_trapnest')) %>% 
-  plot(rawdata = TRUE, jitter = .04) 
+
+mod_par_os_2 <- glmer(Bee_choice ~ scale(Par_in_trapnest) * Sum_sealed + scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial)
+
+plot(simulateResiduals(mod_par_os_2))
+summary(mod_par_os_2)
+
+
+
+
+
 
 
 ```
@@ -165,37 +175,6 @@ plot(simulateResiduals(mod_invest_os))
 summary(mod_invest_os)
 
 
-
-
-#### Make a loop for active period
-
-# # make an index
-# index_2 <- (1:length(weather$Date)) # make index of 1 to last row
-# weather_i <- weather
-# weather_i$index <- index_2 # making index column to count
-# weather_i <- weather_i %>% relocate('index') # puts it in the front
-# 
-# # initialize a table for type of day count
-# Day_type <- as.data.frame(matrix(NA,0,2))
-# colnames(Day_type)[1] <- 'index'
-# colnames(Day_type)[2]<-'Day_type'
-
-
-# ### START
-# for (i in weather_i$index) { 
-#   
-#   # create Day_type row for our big table
-#   Day_type_i <- as.data.frame(matrix(NA,0,2))
-#   colnames(Day_type_i)[1] <- 'index'
-#   colnames(Day_type_i)[2]<-'Day_type_i'
-#   
-#   Day_type_i[nrow(Day_type_i)+1,] = c(i, XXX )
-#   
-#   # bind the row to the big table
-#   Day_type <- rbind(Day_type, Day_type_i)
-# } ### END
-
-# join things together
 
 
 
@@ -224,54 +203,5 @@ ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %>%
   plot(rawdata = TRUE, jitter = .04) + 
   labs(x = 'Osmia occupancies including pseudo', y = 'Presence of new nest for each visit', title = 'Osmia') +
   xlim(0, 18)
-
-```
-
-```{r Example code}
- 
-# Testing to make sure my looping method works
-
-# # loop takes too long to do at once
-# # so remove all empty and pseudo, then adding back in after
-# # test it with trapnest 12 first
-# os_parasites_ex1 <- os_parasites %>% filter(Trapnest== 12) # including empty and pseudo
-# os_parasites_ex2 <- os_parasites %>% filter(Trapnest== 12 & Status != 'empty' & Status != 'pseudo') # excluding empty and pseudo
-# 
-# # Test 1
-# for(i in 1:nrow(os_parasites_ex1)){
-#   nestID <- os_parasites_ex1$Nest_ID[i] # focal nest for i-th row
-#   dt <- os_parasites_ex1$Date[i] # date for i-th row
-#   allprev <- os_parasites_ex1 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Cumulative_par_max) # all previous parasite counts for that focal nest
-#   
-#   check1 <- !all(is.na(allprev))
-#   check2 <- !os_parasites_ex1$Status[i] %in% c('empty', 'pseudo') 
-#   # you'll have to adjust this as needed for the intended behaviour & possible values in your larger dataset
-#   
-#   if(check1 & check2){
-#     os_parasites_ex1$Cumulative_par_V2[i] <- max(allprev, na.rm = T)
-#   }
-# }
-# view(os_parasites_ex1) # looks good
-# 
-# # Test 2
-# for(i in 1:nrow(os_parasites_ex2)){
-#   nestID <- os_parasites_ex2$Nest_ID[i] # focal nest for i-th row
-#   dt <- os_parasites_ex2$Date[i] # date for i-th row
-#   allprev <- os_parasites_ex2 %>% filter(Nest_ID == nestID & Date <= dt) %>% pull(Cumulative_par_max) # all previous parasite counts for that focal nest
-#   
-#   check1 <- !all(is.na(allprev))
-#   check2 <- !os_parasites_ex2$Status[i] %in% c('empty', 'pseudo') 
-#   # you'll have to adjust this as needed for the intended behaviour & possible values in your larger dataset
-#   
-#   if(check1 & check2){
-#     os_parasites_ex2$Cumulative_par_V2[i] <- max(allprev, na.rm = T)
-#   }
-# }
-# view(os_parasites_ex2) # looks good
-# # bind back together
-# os_parasites_ex3 <- os_parasites %>% filter(Trapnest== 12 & Status == 'empty' | Trapnest== 12 & Status == 'pseudo') # the empty and pseudo ones
-# # the length of ex1 should = ex2 + ex3 --> 80 + 334 
-# os_parasites_ex3 <- rbind(os_parasites_ex2, os_parasites_ex3)
-# os_parasites_ex3 <- os_parasites_ex3 %>% arrange(Nest_ID, Date)
 
 ```

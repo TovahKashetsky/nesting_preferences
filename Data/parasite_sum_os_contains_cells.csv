@@ -1,0 +1,145 @@
+Nest_ID,Contains_cells,Sealed_or_not,Max_par,Parasitized
+1_16a,1,sealed,NA,NA
+12_11b,1,never sealed,0,no
+12_12b,1,sealed,5,yes
+12_15a,1,sealed,2,yes
+12_16a,1,never sealed,0,no
+12_18a,1,sealed,0,no
+12_5a,1,sealed,0,no
+12_6b,1,sealed,0,no
+12_6c,1,sealed,5,yes
+12_9b,1,sealed,1,yes
+13_11a,1,sealed,3,yes
+13_12a,1,sealed,1,yes
+13_14a,1,sealed,2,yes
+13_16a,1,sealed,0,no
+13_18a,1,never sealed,3,yes
+13_2a,1,sealed,0,no
+13_2b,1,sealed,0,no
+13_4a,1,sealed,0,no
+13_4b,1,never sealed,1,yes
+13_5a,1,sealed,1,yes
+13_7a,1,sealed,0,no
+13_7b,1,sealed,0,no
+13_8a,1,sealed,1,yes
+14_10a,1,sealed,0,no
+14_10b,1,sealed,0,no
+14_12a,1,sealed,2,yes
+14_16a,1,sealed,0,no
+15_4a,1,sealed,NA,NA
+15_6b,1,sealed,0,no
+16_11a,1,sealed,NA,NA
+16_14a,1,sealed,0,no
+16_1a,1,never sealed,NA,NA
+16_3b,1,sealed,0,no
+16_5a,1,sealed,0,no
+16_5b,1,sealed,0,no
+16_5c,1,sealed,1,yes
+16_6a,1,sealed,0,no
+16_6b,1,sealed,0,no
+16_8a,1,never sealed,2,yes
+16_8b,1,sealed,0,no
+17_13b,1,sealed,1,yes
+17_15a,1,sealed,0,no
+17_16a,1,sealed,0,no
+17_17a,1,sealed,2,yes
+17_17b,1,sealed,2,yes
+17_18a,1,sealed,NA,NA
+17_9a,1,sealed,NA,NA
+18_10b,1,sealed,0,no
+18_12b,1,sealed,0,no
+18_13a,1,sealed,1,yes
+18_1a,1,sealed,0,no
+18_5a,1,never sealed,0,no
+18_8a,1,sealed,0,no
+19_8a,1,sealed,3,yes
+19_8b,1,sealed,0,no
+19_9a,1,sealed,NA,NA
+2_15b,1,sealed,0,no
+2_16b,1,sealed,2,yes
+2_18a,1,sealed,NA,NA
+2_1a,1,sealed,2,yes
+2_7a,1,never sealed,0,no
+2_9a,1,sealed,0,no
+2_9b,1,never sealed,0,no
+20_15a,1,never sealed,0,no
+20_2a,1,sealed,4,yes
+20_3b,1,sealed,0,no
+20_5a,1,sealed,0,no
+22_9a,1,never sealed,1,yes
+23_15a,1,never sealed,NA,NA
+24_10a,1,sealed,2,yes
+24_12a,1,sealed,1,yes
+24_15a,1,never sealed,NA,NA
+24_2a,1,sealed,2,yes
+24_3b,1,sealed,3,yes
+24_7b,1,sealed,2,yes
+24_9a,1,never sealed,NA,NA
+25_11a,1,sealed,NA,NA
+25_13a,1,sealed,0,no
+25_16a,1,sealed,0,no
+25_1a,1,sealed,NA,NA
+25_1b,1,sealed,1,yes
+25_3a,1,sealed,0,no
+25_3b,1,sealed,2,yes
+25_3c,1,never sealed,0,no
+25_4a,1,NA,NA,NA
+25_4b,1,sealed,1,yes
+25_6a,1,sealed,NA,NA
+25_6b,1,sealed,1,yes
+26_10a,1,never sealed,NA,NA
+28_17a,1,sealed,1,yes
+28_3a,1,sealed,4,yes
+29_1b,1,never sealed,2,yes
+29_4a,1,sealed,NA,NA
+29_7a,1,sealed,NA,NA
+3_11b,1,sealed,1,yes
+3_13b,1,sealed,NA,NA
+3_14a,1,sealed,1,yes
+3_16b,1,never sealed,0,no
+3_18a,1,sealed,0,no
+3_2a,1,sealed,0,no
+3_9b,1,never sealed,0,no
+31_3a,1,never sealed,NA,NA
+32_7a,1,never sealed,NA,NA
+32_8b,1,sealed,0,no
+35_7a,1,never sealed,0,no
+35_8a,1,sealed,NA,NA
+35_9c,1,never sealed,0,no
+36_13b,1,sealed,0,no
+36_15b,1,never sealed,0,no
+36_1a,1,sealed,0,no
+36_3b,1,sealed,NA,NA
+36_4b,1,sealed,1,yes
+36_6a,1,sealed,2,yes
+36_8b,1,never sealed,0,no
+36_9a,1,sealed,1,yes
+4_8a,1,sealed,0,no
+5_18a,1,sealed,1,yes
+5_9a,1,sealed,NA,NA
+50_12a,1,never sealed,0,no
+51_4a,1,never sealed,0,no
+6_13b,1,never sealed,NA,NA
+6_14a,1,sealed,0,no
+6_15a,1,sealed,5,yes
+6_17a,1,sealed,NA,NA
+6_5b,1,sealed,0,no
+6_9b,1,sealed,NA,NA
+62_15a,1,never sealed,0,no
+64_14a,1,never sealed,0,no
+7_12a,1,never sealed,0,no
+7_14a,1,sealed,0,no
+7_15a,1,sealed,0,no
+7_17a,1,sealed,1,yes
+7_17b,1,never sealed,NA,NA
+7_2a,1,sealed,0,no
+7_3a,1,never sealed,0,no
+7_3b,1,sealed,0,no
+7_9a,1,never sealed,0,no
+8_12a,1,sealed,NA,NA
+8_16a,1,sealed,1,yes
+8_2a,1,never sealed,0,no
+8_3a,1,sealed,4,yes
+9_5a,1,sealed,0,no
+9_8a,1,sealed,2,yes
+9_9b,1,sealed,NA,NA
