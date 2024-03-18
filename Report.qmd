@@ -1,51 +1,793 @@
 ---
-title: "Report"
-format: html
+title: "Nest-Site Selection in Non-Eusocial Cavity-Nesting Bees"
+format: 
+  html:
+    self-contained: true
+    toc: true
+  docx: default
 editor: visual
 bibliography: references.bib
 ---
 
-## Introduction
+## Background
 
--   bees are attracted to old nest content odors [@pitts-singer2007]
+Strategies for raising offspring exist on a spectrum from cooperative breeding in tightly knit social groups to raising young in isolation who may not even encounter their parents or siblings after emerging. Raising young in proximity with others has benefits such as increased protection from predators and enhanced knowledge of local resources. However, proximity can increase the circulation of pathogens and foster competition if resources become scarce. Bees have adopted the entirety of this spectrum, as species range from solitary (e.g., most leafcutter bees: *Megachile* spp.) to advanced eusociality (e.g., honeybees: *Apis* spp.). Some species along this spectrum are facultatively social, meaning that within a population, they exhibit social polymorphism for their nesting strategy and thus can be solitary or social (e.g., some carpenter bees: *Xylocopa* spp.)
 
-# **Introduction**
+Bees will nest in the ground or in above-ground cavities, depending on the species. Nesting in proximity to others is common among ground-nesting bees. There are a few outlined explanations for why ground-nesting bee aggregations may occur. Bees of the same species are likely to prefer the same site characteristics; thus, one location may be appealing to several individuals. Additionally, resource limitation can encourage aggregations, as bees nest near floral resources, and nesting locations themselves are resources. Philopatry, the behaviour of returning to have offspring at the location of birth, could also be a driving factor in aggregations. Finally, individuals could be attracted to conspecifics, as their presence could signal good-quality habitat. Nesting aggregation preferences have yet to be explicitely tested in cavity0nesting bees, despite trapnests and bee hotels commonly being used for research and citizen-based conservation. While there is evidence that cavity-nesting *Osmia* bees in one Colorado populationdo not consider presence of other individuals while choosing where to nest [@groulx2018], it remains unclear how aggregation density and parasitism interact in nest-site selection of cavity-nesting bees.
 
-#### **Background**
+## Objectives
 
-Strategies for raising offspring exist on a spectrum from cooperative breeding in tightly knit social groups to raising young in isolation and may not even encounter their offspring once they emerge. Raising young in proximity to others can increase protection from predators, reduce occurrences of infanticide, and enhance knowledge of local resources. However, proximity can increase the circulation of pathogens and foster competition if resources become scarce. Bees exhibit the entirety of this spectrum, as species that range from solitary nesting (e.g., mining bees: Andrena spp.) to advanced eusociality (e.g., honeybees: Apis spp.). Some species along this spectrum are facultatively social, meaning that within a population, they exhibit social polymorphism for their nesting strategy and thus can be solitary or social.
+I began to address this research gap by studying nest-site selection of non-eusocial cavity-nesting bees by measuring their preferences for aggregations and avoidance of parasites. In the Greenbelt of Ottawa, I tested nesting preferences of orchard bees (*Osmia* spp.) and leafcutter bees (*Megachile* spp.). My two primary questions are:
 
-Aggregate nesting is common among ground-nesting bees, which make up three quarters of bee species worldwide. There are a few outlined explanations for why ground-nesting bee aggregations may occur. Bees of the same species are likely to prefer the same site characteristics; thus, one location may be appealing to several individuals. Additionally, resource limitation can encourage aggregations, as bees nest near floral resources, and nesting locations themselves are resources. Philopatry, the behaviour of returning to have offspring at the location of birth, could also be a driving factor in aggregations. Finally, individuals could be attracted to conspecifics, as their presence could signal good-quality habitat. The remaining 25% of bee species nest in above ground cavities. While there is evidence that Osmia bees, at least in one population in Colorado, do not consider presence of other individuals while choosing where to nest, it remains unclear how aggregation density and parasitism interact in nest-site selection of cavity-nesters.
+1.  **Do cavity-nesting bees have aggregation density preferences**? If bees have aggregation density preferences, they could prefer nesting in higher density aggregations because the presence of nesting conspecifics could indicate the presence of high-quality nesting habitat. Alternatively, bees could avoid the presence of conspecifics if density increases parasitism risk, thus prefer nesting in lower aggregation densities. If cavity-nesting bees do not consider aggregation density while selecting a nesting location, bees must use other nest-site characteristics when choosing where to build a nest.
 
-#### **Objectives**
+2.  **How does parasitism interact with nesting preferences**?
 
-I will address this research gap by studying nest-site selection of non-eusocial cavity-nesting bees by measuring their preferences for aggregations and avoidance of parasites. In the Greenbelt of Ottawa, I will test nesting preferences of orchard bees (*Osmia* spp.) and leafcutter bees (*Megachile* spp.). I have two primary questions:
+    A. I will investigate the **relation between parasites and aggregation densities**. Parasites might target higher densities of nests because the presence of many host nests indicates more opportunities for parasitism. On the other hand, parasites may target lower densities of nests because there could be fewer chances of directly encountering a host, which could interrupt the act of parasitizing a nest.
 
-1.  Do cavity-nesters have aggregation density preferences? If bees have aggregation density preferences, they could prefer nesting in higher density aggregations because the presence of nesting conspecifics could indicate the presence of high-quality nesting habitat. Alternatively, bees could avoid the presence of conspecifics if density increases parasitism risk, thus prefer nesting in lower aggregation densities.
+    B. I will measure **how parasitism rates affect nesting preferences** of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism. However, regardless if parasites are density-dependent, their presence alone may influence nest-site selection by bees directly avoiding parasites.
 
-2.  How does parasitism interact with nesting preferences? Firstly, to answer this question, I will investigate the relation between parasites and aggregation densities. Parasites might target higher densities of nests because the presence of many host nests indicates more opportunities for parasitism. On the other hand, parasites may target lower densities of nests because there could be fewer chances of directly encountering a host, which could interrupt the act of parasitizing a nest. Secondly, I will measure how parasitism rates affect nesting preferences of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism.
+    C. I will measure **how the presence of parasites effects nest investment**. If bees can detect recent parasite activity in their own nest or adjacent nests, perhaps they reduce their investment into building their nest.
 
-# **Methods**
+## Methods
 
-#### **Experimental Setup**
+I deployed trapnests containing 18 cavities each. The first half of the summer was dedicated towards the early-season orchard bees (*Osmia* spp.), while the second half was dedicated towards the later-season leafcutter bees (*Megachile* spp.). For each half of the summer, I deployed 36 trapnests spread evenly between two sites, for a total of 72. Trapnests were divided into three treatments to simulate variations in occupancy:
 
-I deployed wooden boxes with 18 cavities drilled in for bees to nest, called trapnests. The first half of the summer was dedicated towards the early-season orchard bees, while the second half was dedicated towards the later-season leafcuter bees. For each half of the summer, I deployed 36 trapnests spread evenly between two sites, for a total of 72 for spring and summer of 2023. Trapnests were divided into three treatments to simulate variations in occupancy, shown in Figure 1:
+-   **Low-occupancy treatment**: the baseline of completed nests is zero. Once a bee nest is completed, we removed it for storage at the University of Ottawa in falcon tubes. The trapnest treatment should have little to no bee activity.
 
--   Low-occupancy treatment: the baseline of completed nests is zero. Once a bee nest is completed, we removed it for storage at the University of Ottawa in falcon tubes. The trapnest treatment should have little to no bee activity.
+-   **Mid-occupancy treatment**: the baseline of completed nests was 6 out of 18 cavities occupied. Occupancy was simulated with pseudo nests built from old nesting material from real orchard or leafcutter bee nests, or the equivalent to what bees would use for building (mud for orchard bee season, leaves for leafcutter bee season). Once real nests were built, pseudo nests were removed to maintain baseline occupancy. If real nests surpassed the baseline occupancy, we removed them for storage in falcon tubes to maintain the baseline density.
 
--   Mid-occupancy treatment: the baseline of completed nests was 6 out of 18 cavities occupied. Occupancy was simulated with pseudo nests built from old nesting material from real orchard or leafcutter bee nests, or the equivalent to what bees would use for building (mud for orchard bee season, leaves for leafcutter bee season). Once real nests were built, pseudo nests were removed to maintain baseline occupancy. If real nests surpassed the baseline occupancy, we removed them for storage in falcon tubes to maintain the baseline density.
+-   **High-occupancy treatment**: the baseline of completed nests was 11 out of 18 cavities. Maintaining the baseline occupancy was identical to methods for the mid-occupancy treatment.
 
--   High-occupancy treatment: the baseline of completed nests was 11 out of 18 cavities. Maintaining the baseline occupancy was identical to methods for the mid-occupancy treatment.
+In total, I have approximately 164 *Osmia* nests and 58 *Megachile* nests (IDed based on nesting material).
+
+![Figure 1: Example of a trapnest with various types of "occupied" cavities. Pseudo nests are empty inside, but appear to be sealed nests from the outside. Bee nests may either be completed (sealed) or in progress or abandoned (unsealed). Bee nests may also be parasitized. Non-target insects may be occupying the cavties as well, such as wasps or bees other than *Osmia* or *Megachile*.](Figures_files/figure-html/Labelled_nest.png)
+
+```{r Prepping, include=FALSE}
+
+library(ggplot2)
+library(ggeffects)
+library(kableExtra)
+library(lme4)
+library(tidyverse)
+
+# If not loaded already:
+nesting <- read_csv('data/nesting_cleaned_all_bees.csv')
+nesting_os <- read_csv('data/nesting_cleaned_osmia.csv')
+nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') # three columns with parasite and cell info blank, not dissected
+investment <- read_csv('data/investment_cleaned.csv')
+obs.os <- read_csv('data/observed_data_os.csv')
+obs.meg <- read_csv('data/observed_data_meg.csv') 
+exp.os <- read_csv('data/expected_data_os.csv')
+exp.meg <- read_csv('data/expected_data_meg.csv')
+parasite_sum_os_contains_cells <- read_csv('Data/parasite_sum_os_contains_cells.csv')
 
 
-Figure 1. A set of trapnests for one subsite before deployment containing pesudo nests. On the left, the low-occupancy treatment trapnest has 0/18 cavities occupied with pseudo nests. The mid-occupancy treatment trapnest in the middle has 6/18 cavities occupied with pseudo nests. On the right, the high-occupancy treatment trapnest has 11/18 cavities occupied. I used trapnests that were previously used in other experiment which had more cavities than required, so the light-coloured patches on the trapnests are wood filler to cover extra cavities.
+# remove numbers columns to chi data 
+obs.os <- obs.os %>% select(Site, Low, Mid, High)
+obs.meg <- obs.meg %>% select(Site, Low, Mid, High)
+exp.os <- exp.os %>% select(Site, Low, Mid, High)
+exp.meg <- exp.meg %>% select(Site, Low, Mid, High)
 
-#### **Measures**
 
-1.  I measured the **choice of a bee to nest** in a given cavity. For time I visited a trapnest, which was typically three times a week, I recorded the genus of the occupant (which I can tell by the nesting material used) and new nesting activity (e.g., building nest walls, nesting cells containing pollen and an egg, or end caps to seal off the nest). Once bees emerge in the spring, I will record the species by freezing and identifying at least one specimen from each nest under the microscope. I hope to release the majority of the emerging bees back at the site in which I collected them.
+# number of nests
+nesting_os %>% filter(!is.na(Bee_choice)) %>% 
+  summarize(nests_total = sum(Bee_choice)) # 164 osmia nests for osmia through the summer
+nesting_meg %>% filter(!is.na(Bee_choice)) %>% 
+  summarize(nests_total = sum(Bee_choice)) # 58 megachile nests for osmia through the summer
 
-2.  I will record **emergence of parasites** from the nests this upcoming spring.
 
-Along with these primary measures, I will measure the potential behaviour that bees exhibit to counteract parasites:
+# making the model that isn't overdispersed that I can show
+load('mod_choice_cav_os.Rdata')
 
-3.  To measure **investment** into a nest, I will record the proportion of the volume filled with cells within each nest.
+# mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
+summary(mod_choice_cav_os)
+
+theme_set(theme_classic(base_size=15)) 
+
+
+```
+
+## Nesting per available cavities
+
+```{r Available Cavities, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+### Osmia 
+
+nesting_os %>% 
+  ggplot(aes(Available_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  scale_color_manual(values=c('steelblue3', 'plum3')) +
+  labs(x='Available cavities', y = 'Presence of new nest for each visit') +
+  theme( # removing the y axes labels
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) + 
+  xlim(0, 18)
+
+# # only model that isn't overdispered rn
+# ggpredict(mod_choice_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Plotted model for Osmia')
+
+### Megachile 
+
+nesting_meg %>% 
+  ggplot(aes(Available_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
+  labs(x='Available cavities', y = 'Presence of new nest for each visit') +
+  theme(# removing the y axes labels
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) + 
+  xlim(0, 18)
+
+
+```
+
+#### Spread of new nests across available cavities
+
+Y axis = total of new Osmia or Megachile nests per \# of available cavities / total Osmia or Megachile nests. E.g, If 9 Osmia nests were built throughout the season when there were 6 other available cavities in any trapnest-date combination, the Y axis would be 9/164 = 0.0548.
+
+The numbers above he data points are the total number of nests.
+
+Please notice for all of the proportion figures, the Y axis ranges from -0.1 to 0.5 just for illustrative purposes.
+
+```{r Available.2, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+## Make summary for proportion of new nests per number of available_prior
+
+### Osmia
+
+# sum the new nests per each Available_prior value
+summary_os_avlb <- nesting_os %>% 
+  group_by(Available_prior) %>% 
+  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of osmia nests
+summary_os_avlb <- summary_os_avlb %>%
+  mutate(Prop_new_per_available = New_nests_by_avlb/164)
+# deleting duplicates
+summary_os_avlb <- summary_os_avlb[!duplicated(summary_os_avlb[c('Available_prior','Prop_new_per_available')]),]
+
+
+### Megachile
+
+# sum the new nests per each Available_prior value
+summary_meg_avlb <- nesting_meg %>% 
+  group_by(Available_prior) %>% 
+  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of megachile nests
+summary_meg_avlb <- summary_meg_avlb %>%
+  mutate(Prop_new_per_available = New_nests_by_avlb/58)
+# deleting duplicates
+summary_meg_avlb <- summary_meg_avlb[!duplicated(summary_meg_avlb[c('Available_prior', 'Prop_new_per_available')]),]
+
+# Figures
+
+summary_os_avlb %>% 
+  ggplot(aes(Available_prior, Prop_new_per_available)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'plum', fill = 'plum') +
+  labs(y = 'Proportion of new Osmia nests', x = 'Number of available cavities prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_os_avlb$New_nests_by_avlb, nudge_y = 0.01)
+
+summary_meg_avlb %>% 
+  ggplot(aes(Available_prior, Prop_new_per_available)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
+  labs(y = 'Proportion of new Megachile nests', x = 'Number of available cavities prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_meg_avlb$New_nests_by_avlb, nudge_y = 0.01)
+
+
+
+```
+
+#### Proportion of nests built given the opportunity per available cavities
+
+Y axis = total of new Osmia or Megachile nests per \# of available cavities / total possible chances of a bee to nest per \# of available cavities. E.g., If in any given trapnest--date combination, there was 6 cavities available, this senario (of 6 cavities being available) occurred 939 times thoughtout the summer. While there was 939 opportunities for nests to be built, only 9 nests were actually built. So, this gives us 9/939 = 0.00958.
+
+```{r Available.3, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+## Make summary for proportion of new nests per number of available cavities within each X axis value
+
+### Osmia
+
+# make sum of new nests, then counts (0s and 1s)
+summary_os_avlb_2 <- nesting_os %>% 
+  group_by(Available_prior) %>% 
+  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_os_avlb_2 <- summary_os_avlb_2 %>% 
+  group_by(Available_prior) %>% 
+  mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_os_avlb_2 <- summary_os_avlb_2 %>%
+  mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
+# deleting duplicates
+summary_os_avlb_2 <- summary_os_avlb_2[!duplicated(summary_os_avlb_2[c('Available_prior','Prop_yes')]),]
+
+
+### Megachile
+
+# make sum of new nests, then counts (0s and 1s)
+summary_meg_avlb_2 <- nesting_meg %>% 
+  group_by(Available_prior) %>% 
+  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_meg_avlb_2 <- summary_meg_avlb_2 %>% 
+  group_by(Available_prior) %>% 
+  mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_meg_avlb_2 <- summary_meg_avlb_2 %>%
+  mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
+# deleting duplicates
+summary_meg_avlb_2 <- summary_meg_avlb_2[!duplicated(summary_meg_avlb_2[c('Available_prior','Prop_yes')]),]
+
+
+# Figures
+
+summary_os_avlb_2 %>% 
+  ggplot(aes(Available_prior, Prop_yes)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(color = 'plum', fill = 'plum') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
+
+summary_meg_avlb_2 %>% 
+  ggplot(aes(Available_prior, Prop_yes)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(color = 'goldenrod2', fill = 'goldenrod2') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
+
+
+
+```
+
+```{r Subsite, include=FALSE}
+
+
+nesting_os %>% 
+  filter(Subsite == 'A' | Subsite == 'A' | Subsite == 'B' | Subsite == 'C' | Subsite == 'D' | Subsite == 'E' | Subsite == 'F' | Subsite == 'G' | Subsite == 'H' | Subsite == 'I' | Subsite == 'L' |Subsite == 'M') %>% 
+  ggplot(aes(Subsite, Bee_choice)) + 
+  geom_jitter(height = 0.04, width = 0.2, alpha = 0.5, aes(colour = Occupant)) 
+
+
+nesting_meg %>% 
+  ggplot(aes(Subsite, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) 
+
+
+```
+
+## Nesting per conspecific presence (including pseudo nests)
+
+```{r Conspecifics_with_pseudo.1, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+### Osmia
+
+ # including pseudo # 
+nesting_os %>% 
+  ggplot(aes(Osmia_ps_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  labs(x = 'Osmia occupancies (including pseudo)', y = 'Presence of new nest for each visit') +
+  scale_color_manual(values=c('steelblue3', 'plum3'))  +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) +
+  xlim(0, 18)
+
+
+### Megachile 
+
+ #including pseudo #
+nesting_meg %>% 
+  ggplot(aes(Meg_ps_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  labs(x = 'Megachile occupancies (including pseudo)', y = 'Presence of new nest for each visit') +
+  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) +
+  xlim(0, 18)
+
+
+```
+
+#### Spread of new nests per conspecific presence, including pseudo nests are conspesifics
+
+```{r Conspecifics_with_pseudo.2, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+## Make summary for proportion of new nests per number of conspecifics
+
+### Osmia
+
+ # including pseudo #
+# sum the new nests per each Osmia_ps_prior value
+summary_os_cnsp_ps <- nesting_os %>% 
+  group_by(Osmia_ps_prior) %>% 
+  mutate(New_nests_by_os_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of osmia nests
+summary_os_cnsp_ps <- summary_os_cnsp_ps %>%
+  mutate(Prop_new_per_consp_ps = New_nests_by_os_ps/164)
+# deleting duplicates
+summary_os_cnsp_ps <- summary_os_cnsp_ps[!duplicated(summary_os_cnsp_ps[c('Osmia_ps_prior','Prop_new_per_consp_ps')]),]
+
+
+### Megachile
+
+ # including pseudo #
+# sum the new nests per each Available_prior value
+summary_meg_cnsp_ps <- nesting_meg %>% 
+  group_by(Meg_ps_prior) %>% 
+  mutate(New_nests_by_meg_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of osmia nests
+summary_meg_cnsp_ps <- summary_meg_cnsp_ps %>%
+  mutate(Prop_new_per_consp_ps = New_nests_by_meg_ps/58)
+# deleting duplicates
+summary_meg_cnsp_ps <- summary_meg_cnsp_ps[!duplicated(summary_meg_cnsp_ps[c('Meg_ps_prior','Prop_new_per_consp_ps')]),]
+
+
+# Figures
+
+summary_os_cnsp_ps %>% 
+  ggplot(aes(Osmia_ps_prior, Prop_new_per_consp_ps)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'plum', fill = 'plum') +
+  labs(y = 'Proportion of new Osmia nests', x = 'Number of Osmia occupancies (including pseudo) prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_os_cnsp_ps$New_nests_by_os_ps, nudge_y = 0.01)
+
+summary_meg_cnsp_ps %>% 
+  ggplot(aes(Meg_ps_prior, Prop_new_per_consp_ps)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
+  labs(y = 'Proportion of new Megachile nests', x = 'Number of Megachile occupancies (including pseudo) prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_meg_cnsp_ps$New_nests_by_meg_ps, nudge_y = 0.01)
+
+
+
+```
+
+#### Proportion of times each visit that there was a new nest per conspecific presence, including pseudo nests are conspesifics
+
+```{r Conspecifics_with_pseudo.3, echo=FALSE, warning=FALSE, message=FALSE}
+
+## Make summary for proportion of new nests per number of conspecifics within each X axis value
+
+### Osmia
+
+ # including pseudo #
+# make sum of new nests, then counts (0s and 1s)
+summary_os_cnsp_ps_2 <- nesting_os %>% 
+  group_by(Osmia_ps_prior) %>% 
+  mutate(New_nests_by_os_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_os_cnsp_ps_2 <- summary_os_cnsp_ps_2 %>% 
+  group_by(Osmia_ps_prior) %>% 
+  mutate(Possible_occurrences_by_cnsp = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_os_cnsp_ps_2 <- summary_os_cnsp_ps_2 %>%
+  mutate(Prop_yes_per_consp_ps = New_nests_by_os_ps/Possible_occurrences_by_cnsp)
+# deleting duplicates
+summary_os_cnsp_ps_2 <- summary_os_cnsp_ps_2[!duplicated(summary_os_cnsp_ps_2[c('Osmia_no_ps_prior','Prop_yes_per_consp_ps')]),]
+
+
+### Megachile
+
+ # including pseudo #
+# make sum of new nests, then counts (0s and 1s)
+summary_meg_cnsp_ps_2 <- nesting_meg %>% 
+  group_by(Meg_ps_prior) %>% 
+  mutate(New_nests_by_meg_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_meg_cnsp_ps_2 <- summary_meg_cnsp_ps_2 %>% 
+  group_by(Meg_ps_prior) %>% 
+  mutate(Possible_occurrences_by_cnsp = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_meg_cnsp_ps_2 <- summary_meg_cnsp_ps_2 %>%
+  mutate(Prop_yes_per_consp_ps = New_nests_by_meg_ps/Possible_occurrences_by_cnsp)
+# deleting duplicates
+summary_meg_cnsp_ps_2 <- summary_meg_cnsp_ps_2[!duplicated(summary_meg_cnsp_ps_2[c('Meg_no_ps_prior','Prop_yes_per_consp_ps')]),]
+
+
+# Figures
+
+summary_os_cnsp_ps_2 %>% 
+  ggplot(aes(Osmia_ps_prior, Prop_yes_per_consp_ps)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(colour = 'plum', fill = 'plum') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of Osmia occupancies (including pseudo) prior to nesting')
+
+
+summary_meg_cnsp_ps_2 %>% 
+  ggplot(aes(Meg_ps_prior, Prop_yes_per_consp_ps)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(colour = 'goldenrod2', fill = 'goldenrod2') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5)  +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of Megachile occupancies (including pseudo) prior to nesting')
+
+
+
+```
+
+## Nesting per conspecific presence (excluding pseudo nests)
+
+```{r Conspecifics_without_pseudo.1, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+### Osmia # excluding pseudo 
+nesting_os %>% 
+  ggplot(aes(Osmia_no_ps_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Presence of new nest for each visit') +
+  scale_color_manual(values=c('steelblue3', 'plum3')) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) +
+  xlim(0, 18)
+
+
+### Megachile excluding pseudo 
+nesting_meg %>% 
+  ggplot(aes(Meg_no_ps_prior, Bee_choice)) + 
+  geom_jitter(height = 0.05, alpha = 0.6, aes(colour = Occupant)) + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
+  labs(x = 'Megachile occupancies (excluding pseudo)', y = 'Presence of new nest for each visit') +
+  scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()) +
+  xlim(0, 18)
+
+
+```
+
+#### Spread of new nests per conspecific presence, excluding pseudo nests are conspesifics
+
+```{r Conspecifics_without_pseudo.2, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+## Make summary for proportion of new nests per number of conspecifics
+
+### Osmia
+
+ # excluding pseudo #
+# sum the new nests per each Osmia_no_ps_prior value
+summary_os_cnsp_no_ps <- nesting_os %>% 
+  group_by(Osmia_no_ps_prior) %>% 
+  mutate(New_nests_by_os_no_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of osmia nests
+summary_os_cnsp_no_ps <- summary_os_cnsp_no_ps %>%
+  mutate(Prop_new_per_consp_no_ps = New_nests_by_os_no_ps/164)
+# deleting duplicates
+summary_os_cnsp_no_ps <- summary_os_cnsp_no_ps[!duplicated(summary_os_cnsp_no_ps[c('Osmia_no_ps_prior','Prop_new_per_consp_no_ps')]),]
+
+
+
+### Megachile
+
+ # excluding pseudo #
+# sum the new nests per each Available_prior value
+summary_meg_cnsp_no_ps <- nesting_meg %>% 
+  group_by(Meg_no_ps_prior) %>% 
+  mutate(New_nests_by_meg_no_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+# divide by total number of osmia nests
+summary_meg_cnsp_no_ps <- summary_meg_cnsp_no_ps %>%
+  mutate(Prop_new_per_consp_no_ps = New_nests_by_meg_no_ps/58)
+# deleting duplicates
+summary_meg_cnsp_no_ps <- summary_meg_cnsp_no_ps[!duplicated(summary_meg_cnsp_no_ps[c('Meg_no_ps_prior','Prop_new_per_consp_no_ps')]),]
+
+
+# Figures
+
+summary_os_cnsp_no_ps %>% 
+  ggplot(aes(Osmia_no_ps_prior, Prop_new_per_consp_no_ps)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'plum', fill = 'plum') +
+  labs(y = 'Proportion of new Osmia nests', x = 'Number of Osmia occupancies (excluding pseudo) prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_os_cnsp_no_ps$New_nests_by_os_no_ps, nudge_y = 0.02)
+
+summary_meg_cnsp_no_ps %>% 
+  ggplot(aes(Meg_no_ps_prior, Prop_new_per_consp_no_ps)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
+  labs(y = 'Proportion of new Megachile nests', x = 'Number of Megachile occupancies (excluding pseudo) prior to nesting') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  geom_text(
+    label = summary_meg_cnsp_no_ps$New_nests_by_meg_no_ps, nudge_y = 0.02)
+
+```
+
+#### Proportion of times each visit that there was a new nest per conspecific presence, excluding pseudo nests are conspesifics
+
+```{r Conspecifics_without_pseudo.3, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+## Make summary for proportion of new nests per number of conspecifics within each X axis value
+
+### Osmia
+
+ # excluding pseudo #
+# make sum of new nests, then counts (0s and 1s)
+summary_os_cnsp_no_ps_2 <- nesting_os %>% 
+  group_by(Osmia_no_ps_prior) %>% 
+  mutate(New_nests_by_os_no_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_os_cnsp_no_ps_2 <- summary_os_cnsp_no_ps_2 %>% 
+  group_by(Osmia_no_ps_prior) %>% 
+  mutate(Possible_occurrences_by_cnsp = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_os_cnsp_no_ps_2 <- summary_os_cnsp_no_ps_2 %>%
+  mutate(Prop_yes_per_consp_no_ps = New_nests_by_os_no_ps/Possible_occurrences_by_cnsp)
+# deleting duplicates
+summary_os_cnsp_no_ps_2 <- summary_os_cnsp_no_ps_2[!duplicated(summary_os_cnsp_no_ps_2[c('Osmia_ps_prior','Prop_yes_per_consp_no_ps')]),]
+
+
+### Megachile
+
+ # excluding pseudo #
+# make sum of new nests, then counts (0s and 1s)
+summary_meg_cnsp_no_ps_2 <- nesting_meg %>% 
+  group_by(Meg_no_ps_prior) %>% 
+  mutate(New_nests_by_meg_no_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup()
+summary_meg_cnsp_no_ps_2 <- summary_meg_cnsp_no_ps_2 %>% 
+  group_by(Meg_no_ps_prior) %>% 
+  mutate(Possible_occurrences_by_cnsp = length(Bee_choice)) %>% 
+  ungroup()
+# make into a proportion of yeses
+summary_meg_cnsp_no_ps_2 <- summary_meg_cnsp_no_ps_2 %>%
+  mutate(Prop_yes_per_consp_no_ps = New_nests_by_meg_no_ps/Possible_occurrences_by_cnsp)
+# deleting duplicates
+summary_meg_cnsp_no_ps_2 <- summary_meg_cnsp_no_ps_2[!duplicated(summary_meg_cnsp_no_ps_2[c('Meg_ps_prior','Prop_yes_per_consp_no_ps')]),]
+
+
+# Figures
+
+summary_os_cnsp_no_ps_2 %>% 
+  ggplot(aes(Osmia_no_ps_prior, Prop_yes_per_consp_no_ps)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(colour = 'plum', fill = 'plum') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of Osmia occupancies (excluding pseudo) prior to nesting')
+
+
+summary_meg_cnsp_no_ps_2 %>% 
+  ggplot(aes(Meg_no_ps_prior, Prop_yes_per_consp_no_ps)) +
+  geom_jitter(height = 0, width = 0) + 
+  geom_smooth(colour = 'goldenrod2', fill = 'goldenrod2') + 
+  xlim(0, 18) +
+  ylim(-0.1, 0.5) +
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of Megachile occupancies (excluding pseudo) prior to nesting')
+
+
+
+
+
+```
+
+## Tables
+
+```{r Chi Square Tables: on-season, echo = FALSE}
+
+### Only on-season data
+
+knitr::kable(exp.os, 
+             caption = 'Table 1. Expected new nests: Osmia',
+             col.names = c('Site', 'Low', 'Mid', 'High')) %>% 
+  kable_styling()
+
+knitr::kable(obs.os, 
+             caption = 'Table 2. Observed new nests: Osmia',
+             col.names = c('Site', 'Low', 'Mid', 'High')) %>% 
+  kable_styling()
+
+knitr::kable(exp.meg, 
+             caption = 'Table 3. Expected new nests: Megachile',
+             col.names = c('Site', 'Low', 'Mid', 'High')) %>% 
+  kable_styling()
+
+knitr::kable(obs.meg, 
+             caption = 'Table 4. Observed new nests: Megachile',
+             col.names = c('Site', 'Low', 'Mid', 'High')) %>% 
+  kable_styling()
+
+```
+
+## Parasitism
+
+```{r Parasitism, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+
+# Cumulative number of parasites per osmia occupancies
+
+nesting_os %>% 
+  filter(!is.na(Cumulative_par)) %>% 
+  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
+  geom_jitter(height = 0.05, width = 0.01, alpha = 0.5) + 
+  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
+  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Cumulative number of parasites', title = 'Number of parasites per osmia occupancies (excluding pseudo)') 
+# looks nearly identical if i include pseudo
+
+
+# Proportion of cells in a nest with parasites per osmia occupancies
+
+nesting_os %>% 
+  filter(!is.na(Prop_cells_par)) %>% 
+  ggplot(aes(Osmia_no_ps_prior, Prop_cells_par)) +
+  geom_jitter(height = 0.05, width = 0.01, alpha = 0.5) + 
+  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'plum', fill = 'plum') +
+  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Proportion of cells in a nest that are parasitized', title = 'Proportion of cells in a nest with parasites per osmia occupancies (excluding pseudo)') 
+
+
+
+
+## Prop of yeses per number of unsealed parasitized nests
+
+# make column to say nest is currently not sealed and has at least one parasite
+nesting_os <- nesting_os %>% mutate(Not_sealed_with_par = ifelse(Sealed == 'not sealed' & Cumulative_par >= 1, 1, 0))
+
+# make column to count the sum by trapnest and date combo
+not_sealed_parasites <- nesting_os %>% 
+  group_by(Date, Trapnest) %>% 
+  summarise(Not_sealed_with_par_sum = sum(Not_sealed_with_par, na.rm = TRUE))
+
+# merge together
+nesting_os <- full_join(nesting_os, not_sealed_parasites)
+
+# make porporton of yeses for those trapnest and date combos
+
+# make sum of new nests, then counts (0s and 1s)
+summary_os_par <- nesting_os %>% 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup() 
+summary_os_par <- summary_os_par %>% 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(Possible_occurrences = length(Bee_choice)) %>% 
+  ungroup()
+
+# make into a proportion of yeses
+summary_os_par <- summary_os_par %>%
+  mutate(Prop_yes = New_nests_os_per_trapnests/Possible_occurrences)
+# deleting duplicates
+summary_os_par <- summary_os_par[!duplicated(summary_os_par[c('Trapnest','Date')]),]
+
+# Figure
+
+summary_os_par %>% 
+  ggplot(aes(Not_sealed_with_par_sum, Prop_yes)) +
+  geom_jitter(height = 0, width = 0) + 
+  ylim(-0.1, 0.5) + 
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of parasites in unsealed nests', title = 'Proportion of nests built given the opportunity')
+
+
+
+
+summary_os_par.1 <- nesting_os %>% 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup() 
+
+# divide by total number of osmia nests
+summary_os_par.1 <- summary_os_par.1 %>%
+  mutate(Prop_new_per_par_not_sealed = New_nests_os_per_trapnests/164)
+# deleting duplicates
+summary_os_par.1 <- summary_os_par.1[!duplicated(summary_os_par.1[c('Prop_new_per_par_not_sealed','Not_sealed_with_par_sum')]),]
+
+summary_os_par.1 %>% 
+  ggplot(aes(Not_sealed_with_par_sum, Prop_new_per_par_not_sealed)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'plum', fill = 'plum') +
+  labs(y = 'Proportion of new Osmia nests', x = 'Number of unsealed nests with parasites', title = 'Spread of new nests per unsealed nests with parasites') + 
+  ylim(0, 1) +
+  geom_text(
+    label = summary_os_par.1$New_nests_os_per_trapnests, nudge_y = 0.01)
+
+
+
+
+
+
+
+## parasites per active nest density?
+nesting_os %>% 
+  filter(Sealed== 'not sealed') %>% 
+  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) +
+  geom_jitter(height = 0.2, width = 0.02, alpha = 0.5) +
+  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
+  labs(title = 'CUMULATIVE parasite count per Osmia occupancies')
+
+
+```
+
+The most recent figure shows osmia density of unsealed nests, but shows cumulative parasites and doesn't count the current nest
+
+## Nest Investment
+
+```{r Investment, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+
+
+investment_os <- investment %>% filter(Occupant == 'osmia')
+investment_meg <- investment %>% filter(Occupant == 'megachile')
+
+
+# investment_os %>% 
+#   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
+#   geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+
+
+investment_os %>% 
+  filter(Sealed == 'not sealed') %>% 
+  ggplot(aes(Par_in_trapnest, Prop_filled)) + 
+  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
+  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
+  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in unsealed nests')
+
+investment_os %>% 
+  filter(Sealed == 'sealed') %>% 
+  ggplot(aes(Par_in_trapnest, Prop_filled)) + 
+  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
+  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
+  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in sealed nests')
+
+
+
+
+
+
+
+## plot number of unsealed nests with parasites vs number without? not enough values for x axis?
+
+```
+
+```{r Notes, include=FALSE}
+
+# Notes 
+
+# to change the colour of stat_smooth: stat_smooth(method='glm', colour = 'coral2', fill = 'coral2')
+
+```

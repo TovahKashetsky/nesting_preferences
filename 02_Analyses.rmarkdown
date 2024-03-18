@@ -4,6 +4,7 @@ format: html
 editor: visual
 ---
 
+
 ------------------------------------------------------------------------
 
 ## Statistical Models
@@ -25,6 +26,7 @@ Variables:
 -   **Available_prior**: average number of available cavities for each trapnest and date combo BEFORE the new nests for that visit have been started (i.e., how many available cavities the bees saw when arriving to the nest before building). This is the average, so there are some numbers that have .5 in there. For example, if there are 8 cavities available_post and two new nests were built when we visited that trapnest, the first bee to nest would have seen 10 available cavities, and the second would have seen 9. So we average that out to 9.5 for available_prior.
 -   **Par_in_trapnest**: number of parasites present in the trapnest when I log new bee nests (Bee_choice).
 -   **Prop_filled**: proportion of the straw filled with cells, used as a measure of investment into a nest.
+
 
 ```{r Prep}
 
@@ -59,7 +61,9 @@ investment_os <- investment %>% filter(Occupant == 'osmia')
 
 ```
 
+
 ### Nesting per Available Cavities
+
 
 ```{r Models: Nest per Available Cavities}
 
@@ -92,17 +96,11 @@ testDispersion(mod_choice_cav_meg, type = 'DHARMa') # significant
 testOutliers(mod_choice_cav_meg, type = 'bootstrap') # 
 summary(mod_choice_cav_meg)
 
-
-# Plot actual model
-ggpredict(mod_choice_cav_meg, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Megachile: available cavities (full season)')
-plot(allEffects(mod_choice_cav_meg))
-
-
-ggpredict(mod_choice_cav_meg, c('Available_prior'))
-
 ```
 
+
 ### Nesting per Conspecific Presence
+
 
 ```{r Models: Nest per Conspecifics}
 
@@ -167,22 +165,26 @@ summary(mod_choice_consp_meg_no_ps)
 
 ```
 
+
 ------------------------------------------------------------------------
 
 ### Observed and Expected values of new nests
+
 
 ```{r Chi Square, include=FALSE, echo=TRUE, results='hide'}
 
 
 ## Chi test
 
-# chisq.test(chi.os$Observed_nests, chi.os$Expected_nests)
-# fisher.test(chi.meg$Observed_nests, chi.meg$Expected_nests)
+chisq.test(chi.os$Observed_nests, chi.os$Expected_nests)
+fisher.test(chi.meg$Observed_nests, chi.meg$Expected_nests)
 
 
 ```
 
+
 ### Parasitism
+
 
 ```{r Parasitism Models}
 
@@ -197,10 +199,10 @@ plot(simulateResiduals(mod_par_os))
 summary(mod_par_os)
 
 
-# mod_par_os_2 <- glmer(Bee_choice ~ scale(Par_in_trapnest) * Sum_sealed + scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial)
+mod_par_os_2 <- glmer(Bee_choice ~ scale(Par_in_trapnest) * Sum_sealed + scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial)
 
-# plot(simulateResiduals(mod_par_os_2))
-# summary(mod_par_os_2)
+plot(simulateResiduals(mod_par_os_2))
+summary(mod_par_os_2)
 
 
 
@@ -210,7 +212,9 @@ summary(mod_par_os)
 
 ```
 
+
 ### Investment
+
 
 ```{r Investment Models, include=FALSE, echo=TRUE, results='hide'}
 
@@ -240,7 +244,7 @@ summary(mod_invest_os)
 # Plot models
 
 
-ggpredict(mod_choice_consp_meg_no_ps, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04)
+ggpredict(mod_choice_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Osmia: available cavities (full season)')
 
 
 
@@ -255,3 +259,4 @@ ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %>%
   xlim(0, 18)
 
 ```
+

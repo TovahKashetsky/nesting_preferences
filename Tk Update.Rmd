@@ -1,7 +1,7 @@
 ---
 title: "Nest-Site Selection in Non-Eusocial Cavity-Nesting Bees"
 author: "Tovah Kashetsky"
-date: "2024-03-04"
+date: "2024-03-11"
 output:
   html_document: default
   word_document: default
@@ -23,7 +23,7 @@ I began to address this research gap by studying nest-site selection of non-euso
 
     A. I will investigate the relation between parasites and aggregation densities. Parasites might target higher densities of nests because the presence of many host nests indicates more opportunities for parasitism. On the other hand, parasites may target lower densities of nests because there could be fewer chances of directly encountering a host, which could interrupt the act of parasitizing a nest.
 
-    B. I will measure how parasitism rates affect nesting preferences of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism However, regardless if parasites are desinty-dependent, their presence alone may influence nest-site selection by bees directly avoiding parasites
+    B. I will measure how parasitism rates affect nesting preferences of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism. However, regardless if parasites are density-dependent, their presence alone may influence nest-site selection by bees directly avoiding parasites
 
 ## Methods
 
@@ -121,7 +121,7 @@ nesting_meg %>%
 
 #### Spread of new nests across available cavities
 
-Y axis = total of new Osmia or Megachile nests / total Osmia or Megachile nests. E.g, If 9 Osmia nests were built throughout the season when there were 6 other available cavities in a trapnest, the Y axis would be 9/164.
+Y axis = total of new Osmia or Megachile nests per \# of available cavities / total Osmia or Megachile nests. E.g, If 9 Osmia nests were built throughout the season when there were 6 other available cavities in any trapnest-date combination, the Y axis would be 9/164 = 0.0548.
 
 The numbers above he data points are the total number of nests.
 
@@ -185,9 +185,9 @@ summary_meg_avlb %>%
 
 ```
 
-#### Proportion of times each visit that there was a new nest per available cavities
+#### Proportion of nests built given the opportunity per available cavities
 
-Y axis = total of new Osmia or Megachile nests / total visits to that cavity. E.g., If a specific cavity throughout the summer had 3 new nests (because I removed completed ones) while also having 30 zeros (times when the cavity remained empty), this value would be 3/30
+Y axis = total of new Osmia or Megachile nests per \# of available cavities / total possible chances of a bee to nest per \# of available cavities. E.g., If in any given trapnest--date combination, there was 6 cavities available, this senario (of 6 cavities being available) occurred 939 times thoughtout the summer. While there was 939 opportunities for nests to be built, only 9 nests were actually built. So, this gives us 9/939 = 0.00958.
 
 ```{r Available.3, echo=FALSE, warning=FALSE, message=FALSE, out.width="50%", out.height="50%", fig.show="hold"}
 
@@ -655,42 +655,94 @@ nesting_os %>%
   labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Proportion of cells in a nest that are parasitized', title = 'Proportion of cells in a nest with parasites per osmia occupancies (excluding pseudo)') 
 
 
+
+
+
+
+
+
+
+
 ## Prop of yeses per number of unsealed parasitized nests
 
-# SEALED = 0
-# NOT SEALED = 1
-nesting_os <- nesting_os %>% mutate(Sealed_bin = ifelse(Sealed == 'sealed', 0, 
-                                           ifelse(Sealed == 'not sealed', 1, NA)))
+# make column to say nest is currently not sealed and has at least one parasite
+nesting_os <- nesting_os %>% mutate(Not_sealed_with_par = ifelse(Sealed == 'not sealed' & Cumulative_par >= 1, 1, 0))
 
+# make column to count the sum by trapnest and date combo
 not_sealed_parasites <- nesting_os %>% 
   group_by(Date, Trapnest) %>% 
-  summarise(Parasites_not_sealed = sum(Sealed_bin, na.rm = TRUE))
-# merge back into nesting df
+  summarise(Not_sealed_with_par_sum = sum(Not_sealed_with_par, na.rm = TRUE))
+
+# merge together
 nesting_os <- full_join(nesting_os, not_sealed_parasites)
 
-## Count proportion of yeses
+# make porporton of yeses for those trapnest and date combos
 
-#### NOT DOING WHAT I WANT
 # make sum of new nests, then counts (0s and 1s)
 summary_os_par <- nesting_os %>% 
-  group_by(Parasites_not_sealed) %>% 
-  mutate(New_nests_os_not_sealed_par = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup() ## 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup() 
 summary_os_par <- summary_os_par %>% 
-  group_by(Parasites_not_sealed) %>% 
-  mutate(Possible_occurrences_by_cnsp = length(Bee_choice)) %>% 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(Possible_occurrences = length(Bee_choice)) %>% 
   ungroup()
 
-   ## yet to edit below ##
 # make into a proportion of yeses
-summary_os_cnsp_no_ps_2 <- summary_os_cnsp_no_ps_2 %>%
-  mutate(Prop_yes_per_consp_no_ps = New_nests_by_os_no_ps/Possible_occurrences_by_cnsp)
+summary_os_par <- summary_os_par %>%
+  mutate(Prop_yes = New_nests_os_per_trapnests/Possible_occurrences)
 # deleting duplicates
-summary_os_cnsp_no_ps_2 <- summary_os_cnsp_no_ps_2[!duplicated(summary_os_cnsp_no_ps_2[c('Osmia_ps_prior','Prop_yes_per_consp_no_ps')]),]
+summary_os_par <- summary_os_par[!duplicated(summary_os_par[c('Trapnest','Date')]),]
 
+# Figure
+
+summary_os_par %>% 
+  ggplot(aes(Not_sealed_with_par_sum, Prop_yes)) +
+  geom_jitter(height = 0, width = 0) + 
+  ylim(0, 0.1) + 
+  labs(y = 'Proportion of visits that are 1s', x = 'Number of parasites in unsealed nests', title = 'Proportion of nests built given the opportunity')
+
+
+
+
+summary_os_par.1 <- nesting_os %>% 
+  group_by(Not_sealed_with_par_sum) %>% 
+  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
+  ungroup() 
+
+# divide by total number of osmia nests
+summary_os_par.1 <- summary_os_par.1 %>%
+  mutate(Prop_new_per_par_not_sealed = New_nests_os_per_trapnests/164)
+# deleting duplicates
+summary_os_par.1 <- summary_os_par.1[!duplicated(summary_os_par.1[c('Prop_new_per_par_not_sealed','Not_sealed_with_par_sum')]),]
+
+summary_os_par.1 %>% 
+  ggplot(aes(Not_sealed_with_par_sum, Prop_new_per_par_not_sealed)) +
+  geom_jitter(height = 0, width = 0) +
+  stat_smooth(color = 'plum', fill = 'plum') +
+  labs(y = 'Proportion of new Osmia nests', x = 'Number of unsealed nests with parasites', title = 'Spread of new nests per unsealed nests with parasites') + 
+  ylim(-0.1, 1) +
+  geom_text(
+    label = summary_os_par.1$New_nests_os_per_trapnests, nudge_y = 0.01)
+
+
+
+
+
+
+
+## parasites per active nest density?
+nesting_os %>% 
+  filter(Sealed== 'not sealed') %>% 
+  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) +
+  geom_jitter(height = 0.2, width = 0.02, alpha = 0.5) +
+  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
+  labs(title = 'CUMULATIVE parasite count per Osmia occupancies')
 
 
 ```
+The most recent figure shows osmia density of unsealed nests, but shows cumulative parasites and doesn't count the current nest
+
 
 ## Nest Investment
 
@@ -713,7 +765,7 @@ investment_os %>%
   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
   geom_jitter(height = 0, width = 0, alpha = 0.3) + 
   stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
-  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in un-sealed nests')
+  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in unsealed nests')
 
 investment_os %>% 
   filter(Sealed == 'sealed') %>% 
@@ -723,6 +775,12 @@ investment_os %>%
   labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in sealed nests')
 
 
+
+
+
+
+
+## plot number of unsealed nests with parasites vs number without? not enough values for x axis?
 
 ```
 

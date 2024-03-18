@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-```{r Notes, include=FALSE, echo=TRUE, results='hide'}
+```{r Notes}
 
 ## To Do List ##
 
@@ -32,7 +32,7 @@ editor: visual
 
 ```
 
-```{r Cleaning Data, include=FALSE, echo=TRUE, results='hide'}
+```{r Cleaning Data}
 knitr::opts_chunk$set(echo = TRUE)
 
 
@@ -214,7 +214,7 @@ sum(long_choice$Bee_choice, na.rm = TRUE) # 270 new nests, but this is incorrect
 
 ```
 
-```{r Conspecific Presence and Available Cavities, include=FALSE, echo=TRUE, results='hide'}
+```{r Conspecific Presence and Available Cavities}
 
 ### Question 1: Nesting according to available cavities ###
 
@@ -308,7 +308,7 @@ conspecifics <- merge(conspecifics_os_2, conspecifics_meg_2)
 
 ## Cleaning required after previous steps 
 
-##### CHECK remove the unkown occuapnt 47_11a from bee_choice !!
+##### CHECK remove the unknown occuapnt 47_11a from bee_choice !!
 
 # remove rest of no_visits and non_existents (had to leave them in for the loop)
 conspecifics <- conspecifics %>% filter(Status != 'no_visit' & Status != 'non_existent')
@@ -325,7 +325,7 @@ sum(conspecifics$Bee_choice, na.rm = TRUE) # 231 new nests, real number
 
 ```
 
-```{r New Nests, include=FALSE, echo=TRUE, results='hide'}
+```{r New Nests}
 
 
 ## Counting the number of new nests
@@ -358,7 +358,7 @@ prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 
 
 ```
 
-```{r Nests Containing Cells, include=FALSE, echo=TRUE, results='hide'}
+```{r Nests Containing Cells}
 
 ## Categorize occupied nests as containing cells, or as just inner walls
 
@@ -386,8 +386,7 @@ prefs <- left_join(prefs, contains_cells)
 
 ```
 
-
-```{r Weather Data, include=FALSE, echo=TRUE, results='hide'}
+```{r Weather Data}
 
 
 ## Creating column with number of good days for bee activity based on weather between my visits to the trapnests 
@@ -453,33 +452,33 @@ length(preferences$Trapnest) # 26568
 
 ```
 
-```{r Calculating prior values, include=FALSE, echo=TRUE, results='hide'}
-
-## Dealing with multiple nests built on the same day
-# for available cavities and congenera present 
-
-
-## Changing available cavities for prior number
-
-# average the number of new nests and add that to the available nests column. 
-# e.g., if there was 4 new nests one visit to a low occupancy treatment trapnest, the Available_post column (# of available nests) should change from 14 to 16.
-
-# Available_post + Osmia_ps + Meg_ps (+ non-target cells, not pictured) = 18
-
-# 1- Add together the megachile and osmia nests on the same day 
-# if one column is NA and the other isn't, put the column that isn't NA, but if there's values in both, add them together
-preferences <- preferences %>% mutate(New_nest_sum = ifelse(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, ifelse(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
-
-# 2- Make a column to take the average of the available cavities that each bee could have encountered. E.g., if there were 2 new nests in a low-occupancy treatment with no other active nests, the first bee encountered 18 empty cavities while the second bee encountered 17 empty ones. Use (n+1)/2 which is equivalent to n+(n-1)+(n-2).../n. E.g., (3+1)/2=2, while (3+2+1)/3=2. n being the number of new nests. Then add this equation to the number of cavities available after the nest nests (number i see on the visit)
-# Use only 1 nest or more, and exclude occurences of zeros because (0+1)/2 = 0.5
-
-# A- make the equation
-# if there's more than 1 New_nest_sum, add that number in to the equation
-preferences <- preferences %>% mutate(Nest_equation = ifelse(New_nest_sum >= 1, ((New_nest_sum + 1)/2),  0))
-
-# B- add equation and available post to make available prior
-preferences$Available_prior <- (preferences$Nest_equation + preferences$Available_post)
-
+```{r Calculating prior values}
+# 
+# ## Dealing with multiple nests built on the same day
+# # for available cavities and congenera present 
+# 
+# 
+# ## Changing available cavities for prior number
+# 
+# # average the number of new nests and add that to the available nests column. 
+# # e.g., if there was 4 new nests one visit to a low occupancy treatment trapnest, the Available_post column (# of available nests) should change from 14 to 16.
+# 
+# # Available_post + Osmia_ps + Meg_ps (+ non-target cells, not pictured) = 18
+# 
+# # 1- Add together the megachile and osmia nests on the same day 
+# # if one column is NA and the other isn't, put the column that isn't NA, but if there's values in both, add them together
+# preferences <- preferences %>% mutate(New_nest_sum = ifelse(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, ifelse(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
+# 
+# # 2- Make a column to take the average of the available cavities that each bee could have encountered. E.g., if there were 2 new nests in a low-occupancy treatment with no other active nests, the first bee encountered 18 empty cavities while the second bee encountered 17 empty ones. Use (n+1)/2 which is equivalent to n+(n-1)+(n-2).../n. E.g., (3+1)/2=2, while (3+2+1)/3=2. n being the number of new nests. Then add this equation to the number of cavities available after the nest nests (number i see on the visit)
+# # Use only 1 nest or more, and exclude occurences of zeros because (0+1)/2 = 0.5
+# 
+# # A- make the equation
+# # if there's more than 1 New_nest_sum, add that number in to the equation
+# preferences <- preferences %>% mutate(Nest_equation = ifelse(New_nest_sum >= 1, ((New_nest_sum + 1)/2),  0))
+# 
+# # B- add equation and available post to make available prior
+# preferences$Available_prior <- (preferences$Nest_equation + preferences$Available_post)
+# 
 
 ## Changing occupant count for prior number
 
@@ -488,49 +487,60 @@ preferences$Available_prior <- (preferences$Nest_equation + preferences$Availabl
 # If there are multiple nests, to take the average, do Osmia_(no_)ps - (n-1)/2, n being the number of new nests per genera
 # e.g., 1 new nest, 9 Osmia_ps = 9-1 = 8
 # e.g, 3 new nests, 9 Osmia_ps (so only 6 filled the previous visit) = ((3-1)/2) + (9-3) = 7
-# Osmia_ps_prior + Available_prior should usually = 18, unless there's megachile or non-target occupants 
+# Osmia_ps_prior + Available_prior should usually = 18, unless there's megachile or non-target occupants
 
 # 1- for 0 or 1 new nests, (available_post - new nests)
   # osmia pseudo ### new
-preferences <- preferences %>% mutate(Osmia_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_ps - New_nests_os), 'TBD')) 
+preferences <- preferences %>% mutate(Osmia_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_ps - New_nests_os), 'TBD'))
   # osmia no pseudo
-preferences <- preferences %>% mutate(Osmia_no_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_no_ps - New_nests_os), 'TBD')) 
+preferences <- preferences %>% mutate(Osmia_no_ps_prior_V1 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Osmia_no_ps - New_nests_os), 'TBD'))
   # megachile pseudo
-preferences <- preferences %>% mutate(Meg_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_ps - New_nests_meg), 'TBD')) 
+preferences <- preferences %>% mutate(Meg_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_ps - New_nests_meg), 'TBD'))
   # megachile no pseudo
-preferences <- preferences %>% mutate(Meg_no_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_no_ps - New_nests_meg), 'TBD')) 
+preferences <- preferences %>% mutate(Meg_no_ps_prior_V1 = ifelse(New_nests_meg == 1 | New_nests_meg == 0, (Meg_no_ps - New_nests_meg), 'TBD'))
 
 # 2 A- for multiple new nests, (n-1)/2
   # osmia
-preferences <- preferences %>% mutate(Osmia_equ = ifelse(New_nests_os > 1, ((New_nests_os - 1)/2), NA)) 
+preferences <- preferences %>% mutate(Osmia_equ = ifelse(New_nests_os > 1, ((New_nests_os - 1)/2), NA))
   # megachile
-preferences <- preferences %>% mutate(Meg_equ = ifelse(New_nests_meg > 1, ((New_nests_meg - 1)/2), NA)) 
+preferences <- preferences %>% mutate(Meg_equ = ifelse(New_nests_meg > 1, ((New_nests_meg - 1)/2), NA))
 
 # B- add equation + (available_post - new nests)
   # osmia pseudo
-preferences <- preferences %>% mutate(Osmia_ps_prior = ifelse(Osmia_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_ps_prior_V1) | Osmia_ps_prior_V1 != 'TBD', Osmia_ps_prior_V1, 'leftover' ))) 
+preferences <- preferences %>% mutate(Osmia_ps_prior = ifelse(Osmia_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_ps_prior_V1) | Osmia_ps_prior_V1 != 'TBD', Osmia_ps_prior_V1, 'leftover' )))
   # osmia no pseudo
-preferences <- preferences %>% mutate(Osmia_no_ps_prior = ifelse(Osmia_no_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_no_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_no_ps_prior_V1) | Osmia_no_ps_prior_V1 != 'TBD', Osmia_no_ps_prior_V1, 'leftover' ))) 
+preferences <- preferences %>% mutate(Osmia_no_ps_prior = ifelse(Osmia_no_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_no_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_no_ps_prior_V1) | Osmia_no_ps_prior_V1 != 'TBD', Osmia_no_ps_prior_V1, 'leftover' )))
   # megachile pseudo
-preferences <- preferences %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == 'TBD', (Meg_equ + Meg_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_ps_prior_V1) | Meg_ps_prior_V1 != 'TBD', Meg_ps_prior_V1, 'leftover' ))) 
+preferences <- preferences %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == 'TBD', (Meg_equ + Meg_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_ps_prior_V1) | Meg_ps_prior_V1 != 'TBD', Meg_ps_prior_V1, 'leftover' )))
   # megachile no pseudo
-preferences <- preferences %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V1 == 'TBD', (Meg_equ + Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_no_ps_prior_V1) | Meg_no_ps_prior_V1 != 'TBD', Meg_no_ps_prior_V1, 'leftover' ))) 
+preferences <- preferences %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V1 == 'TBD', (Meg_equ + Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_no_ps_prior_V1) | Meg_no_ps_prior_V1 != 'TBD', Meg_no_ps_prior_V1, 'leftover' )))
 
 # take only columns I need
-preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Contains_cells, Occupant, Good_days, Bee_choice, Available_prior, New_nests_os, New_nests_meg, New_nest_sum, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
-
-
-# filter out wasps and non-targets from choices, after we counted them as occupied cavities
-preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unkown' & Occupant !='masked bee')
-table(preferences$Occupant)
-
-sum(preferences$Bee_choice, na.rm = TRUE) # 231 nests
+preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, Cavity_number, Straw_ID, Cavity_size, Filled_length_mm, Straw_length_mm, Nest_ID, Cavity_ID, Status, Contains_cells, Occupant, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior)
 
 # since I'm lookg at new nests, I'm not going to make the other colums like osmia_ps_prior etc "NA" is Bee-choice is NA, because there shouldnt be a time where I'm using those values if Bee_choice isn't 1 or 0
 
 ```
 
-```{r Parasitism Data, include=FALSE, echo=TRUE, results='hide'}
+```{r Available Cavities}
+
+## Making column for the number of available cavities
+
+# Available_cavities_prior = Available_post - New_nests_sum
+
+# Sum the megachile and osmia nests on the same day
+# if one column is NA and the other isn't, put the column that isn't NA, but if there's values in both, add them together
+preferences <- preferences %>% mutate(New_nests_sum = ifelse(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, ifelse(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
+
+preferences <- preferences %>% mutate(Available_cavities_prior = Available_post-New_nests_sum)
+
+# filter out wasps and non-targets from choices, after we counted them as occupied cavities
+preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unknown' & Occupant !='masked bee')
+table(preferences$Occupant)
+
+```
+
+```{r Parasitism Data}
 
 
 # Columns
@@ -583,7 +593,7 @@ os_par_v3 <- os_par_v2 %>%
 # bind parasite counts with preferences data
 os_par_v3 <- os_par_v3 %>% 
   select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
-os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Contains_cells, Available_prior, New_nests_os:Meg_no_ps_prior) 
+os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Contains_cells, Available_cavities_prior, New_nests_os:Meg_no_ps_prior) 
 os_par_v3$Date <- as.Date(os_par_v3$Date)
 os_par_v3$Trapnest <- paste('trapnest', os_par_v3$Trapnest, sep = '_')
 os_parasites <- full_join(os_par_v3, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
@@ -623,7 +633,7 @@ os_parasites_v2 <- rbind(os_parasites_exclude, os_parasites_include) # 26031
 os_parasites_v2 <- os_parasites_v2 %>% arrange(Nest_ID, Date)
 # remove unnecessary columns
 os_parasites_v2 <- ungroup(os_parasites_v2)
-os_parasites_v2 <- os_parasites_v2 %>% select( -Cumulative_par, -Cumulative_par_max)
+os_parasites_v2 <- os_parasites_v2 %>% select(-Cumulative_par, -Cumulative_par_max)
 # rename column and df
 os_parasites_v2 <- os_parasites_v2 %>% rename(Cumulative_par = Cumulative_par_V2)
 
@@ -746,7 +756,7 @@ table(nesting_0$Sealed_V2)
 table(nesting_0$Sealed_V3)
 
 # clean up df
-nesting <- nesting_0 %>% select(Trapnest, Date, Site, Subsite, Treatment, Cavity_number, Straw_ID, Cavity_ID, Nest_ID, Filled_length_mm, Straw_length_mm, Status:Par_in_trapnest, Sealed_V3)
+nesting <- nesting_0 %>% select(Trapnest, Date, Site, Subsite, Treatment, Cavity_number, Straw_ID, Cavity_ID, Nest_ID, Filled_length_mm, Straw_length_mm, Status:Par_in_trapnest, Available_cavities_prior, Sealed_V3)
 nesting <- rename(nesting, Sealed = Sealed_V3)
 nesting$Sealed <- replace(nesting$Sealed, nesting$Sealed == 'NA_', NA)
 
@@ -787,7 +797,7 @@ parasite_sum_os <- full_join(sealed_sum_os, parasite_bin_os)
 parasite_sum_os <- parasite_sum_os %>% select(-Sealed_bin_max)
 
 
-#### REMOVE NESTS THAT DONT HAVE ANY CELLS
+#### CHECK - REMOVE NESTS THAT DONT HAVE ANY CELLS
 
 contains_cells <- contains_cells %>% filter(Contains_cells == 1)
 
@@ -800,9 +810,15 @@ parasite_sum_os_contains_cells %>%
   geom_bar()
 
 
+
+##### CHECK - Make the parasitesin trapnest not include the new nests 
+
+
+
+
 ```
 
-```{r Investment Data, include=FALSE, echo=TRUE, results='hide'}
+```{r Investment Data}
 
 
 ### Question 4: Does parasitism affect nest investment ###
@@ -822,7 +838,21 @@ investment <- nesting %>%
 
 ```
 
-```{r Editing data for models, include=FALSE, echo=TRUE, results='hide'}
+```{r Summing by Trapnest}
+
+nesting %>% 
+  group_by(Date, Trapnest) 
+  
+# remove duplicates of date-trapnest combo
+nesting_xs <- distinct(nesting, Date, Trapnest, .keep_all= TRUE)
+
+# keep only rows that makes sense when summed by trapnest
+
+nesting_xs <- nesting_xs %>% select(Date, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_os:Meg_no_ps_prior, Par_in_trapnest)
+
+```
+
+```{r Editing data for models}
 
 ## Putting preferences, parasites, and investment into one dataframe 
 
@@ -885,9 +915,7 @@ write.csv(investment, 'data/investment_cleaned.csv')
 
 ```
 
-### Observed and Expected values of new nests
-
-```{r Chi Square, include=FALSE, echo=TRUE, results='hide'}
+```{r Chi Square}
 
 ### Only on-season data
 
@@ -981,7 +1009,6 @@ write.csv(exp.os, 'data/expected_data_os.csv')
 write.csv(exp.meg, 'data/expected_data_meg.csv')
 
 ```
-
 
 ```{r Example code}
  
