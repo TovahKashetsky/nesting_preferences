@@ -532,7 +532,7 @@ preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, 
 # if one column is NA and the other isn't, put the column that isn't NA, but if there's values in both, add them together
 preferences <- preferences %>% mutate(New_nests_sum = ifelse(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, ifelse(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
 
-preferences <- preferences %>% mutate(Available_cavities_prior = Available_post-New_nests_sum)
+preferences <- preferences %>% mutate(Available_cavities_prior = Available_post + New_nests_sum)
 
 # filter out wasps and non-targets from choices, after we counted them as occupied cavities
 preferences <- filter(preferences, Occupant != 'wasp' & Occupant !='unknown' & Occupant !='masked bee')
@@ -599,7 +599,7 @@ os_par_v3$Trapnest <- paste('trapnest', os_par_v3$Trapnest, sep = '_')
 os_parasites <- full_join(os_par_v3, os_par_pref) # extra rows from 29_4a because cell order and thus date are unknown
 # os_parasites should have the values for number_of_cells and cumulative_par(_max) for only the dates with activity. The loop will make those values consistent throughout the time the nest is in the trapnest
 
-# missing statuses would be mistakes/ extras or 29_4a ?
+### CHECK  missing statuses would be mistakes/ extras or 29_4a ?
 
 
 ## Loop 1 for making the cumulative_par_max value for the duration the nest is in the trapnest 
@@ -764,6 +764,13 @@ nesting$Sealed <- replace(nesting$Sealed, nesting$Sealed == 'NA_', NA)
 ### CHECK - nests that are the current Bee_choice, if parasitized, are counted in the number of par in trapnest. Fix this. Leads to impossible values in parasite figures 
 
 
+## Make column to say nest is parasitized or not, binary
+
+nesting <- nesting %>% mutate(Parasitized = ifelse(is.na(Cumulative_par), NA, 
+                                                   ifelse(Cumulative_par == 0, 'not parasitized',
+                                                          ifelse(Cumulative_par >= 1, 'parasitized', 'leftover'))))
+
+
 ## Calculate how many nests are parasitized and make parasitized binary
 
 # for all nests, take max number of cumulative parasites
@@ -779,13 +786,26 @@ table(parasite_bin_os$Parasitized)
 # 69 No, 46 Yes, 50 NAs
 
 # make binary sealed column
-nesting <- nesting %>% mutate(Sealed_bin = ifelse(Sealed == 'sealed', '1', ifelse(Sealed == 'not sealed', '0', NA)))
+nesting <- nesting %>% 
+  mutate(Sealed_bin = ifelse(Sealed == 'sealed', '1', ifelse(Sealed == 'not sealed', '0', NA)))
 nesting$Sealed_bin <- as.numeric(nesting$Sealed_bin)
+
+
+## Count the number of unsealed parasitized nests for trapnest-date combo
+
+# first say parasizited and unsealed
+
+
+# then sum them
+
+
+
+
 
 # make column to say sealed or not
 sealed_sum_os <- nesting %>%
   filter(Status != 'empty' & Status != 'pseudo' & Occupant == 'osmia') %>%
-  group_by(Nest_ID) %>%
+  group_by(Trapnest, Nest_ID) %>%
   summarise(Sealed_bin_max = max(Sealed_bin)) %>%
   ungroup()
 # make column to say if the nest was ever sealed
@@ -795,6 +815,19 @@ sealed_sum_os <- sealed_sum_os %>% mutate(Sealed_or_not = ifelse(Sealed_bin_max 
 # join together
 parasite_sum_os <- full_join(sealed_sum_os, parasite_bin_os)
 parasite_sum_os <- parasite_sum_os %>% select(-Sealed_bin_max)
+
+
+## Create a column to count the number of unsealed parasitized nests
+
+
+
+
+
+
+
+
+
+
 
 
 #### CHECK - REMOVE NESTS THAT DONT HAVE ANY CELLS
@@ -811,7 +844,16 @@ parasite_sum_os_contains_cells %>%
 
 
 
-##### CHECK - Make the parasitesin trapnest not include the new nests 
+
+
+
+
+
+
+
+
+
+##### CHECK - Make the parasites in trapnest not include the new nests 
 
 
 
@@ -838,19 +880,6 @@ investment <- nesting %>%
 
 ```
 
-```{r Summing by Trapnest}
-
-nesting %>% 
-  group_by(Date, Trapnest) 
-  
-# remove duplicates of date-trapnest combo
-nesting_xs <- distinct(nesting, Date, Trapnest, .keep_all= TRUE)
-
-# keep only rows that makes sense when summed by trapnest
-
-nesting_xs <- nesting_xs %>% select(Date, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_os:Meg_no_ps_prior, Par_in_trapnest)
-
-```
 
 ```{r Editing data for models}
 
@@ -897,7 +926,22 @@ nesting_meg %>% filter(!is.na(Bee_choice)) %>%
   summarize(nests_total = sum(Bee_choice)) # 58 osmia nests for osmia through the summer
 nesting %>% filter(!is.na(Bee_choice)) %>% 
   summarize(nests_total = sum(Bee_choice))
-# 222 instead of 231, but missing confirmed occupants (unsure what they are before they emerge)
+# still missing confirmed occupants (unsure what they are before they emerge) ### CHECK
+
+
+## Summing by trapnest
+
+# remove duplicates of date-trapnest combo
+nesting_os_xs <- distinct(nesting_os, Date, Trapnest, .keep_all= TRUE)
+nesting_meg_xs <- distinct(nesting_meg, Date, Trapnest, .keep_all= TRUE)
+
+# keep only rows that makes sense when summed by trapnest
+nesting_os_xs <- nesting_os_xs %>% select(Date, Day_of_year, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_os:Meg_no_ps_prior, Par_in_trapnest)
+nesting_meg_xs <- nesting_meg_xs %>% select(Date, Day_of_year, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_os:Meg_no_ps_prior, Par_in_trapnest)
+
+nesting_os_xs <- nesting_os_xs %>% mutate(Prop_new_os = New_nests_os/Available_cavities_prior)
+nesting_meg_xs <- nesting_meg_xs %>% mutate(Prop_new_meg = New_nests_meg/Available_cavities_prior)
+
 
 
 ## Saving wrangled data
@@ -905,6 +949,8 @@ nesting %>% filter(!is.na(Bee_choice)) %>%
 write.csv(nesting, 'data/nesting_cleaned_all_bees.csv')
 write.csv(nesting_os, 'data/nesting_cleaned_osmia.csv')
 write.csv(nesting_meg, 'data/nesting_cleaned_megachile.csv')
+write.csv(nesting_os_xs, 'data/nesting_cleaned_osmia_xs.csv')
+write.csv(nesting_meg_xs, 'data/nesting_cleaned_megachile_xs.csv')
 write.csv(investment, 'data/investment_cleaned.csv')
 
 

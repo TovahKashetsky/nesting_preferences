@@ -56,6 +56,8 @@ library(tidyverse)
 nesting <- read_csv('data/nesting_cleaned_all_bees.csv')
 nesting_os <- read_csv('data/nesting_cleaned_osmia.csv')
 nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') # three columns with parasite and cell info blank, not dissected
+nesting_os_xs <- read_csv('data/nesting_cleaned_osmia_xs.csv')
+nesting_meg_xs <- read_csv('data/nesting_cleaned_megachile_xs.csv')
 investment <- read_csv('data/investment_cleaned.csv')
 obs.os <- read_csv('data/observed_data_os.csv')
 obs.meg <- read_csv('data/observed_data_meg.csv') 
@@ -81,7 +83,7 @@ nesting_meg %>% filter(!is.na(Bee_choice)) %>%
 # making the model that isn't overdispersed that I can show
 load('mod_choice_cav_os.Rdata')
 
-# mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
+# mod_choice_cav_os <- glmer(Bee_choice ~ Available_cavities_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
 summary(mod_choice_cav_os)
 
 theme_set(theme_classic(base_size=15)) 
@@ -97,7 +99,7 @@ theme_set(theme_classic(base_size=15))
 ### Osmia 
 
 nesting_os %>% 
-  ggplot(aes(Available_prior, Bee_choice)) + 
+  ggplot(aes(Available_cavities_prior, Bee_choice)) + 
   geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
   stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
   scale_color_manual(values=c('steelblue3', 'plum3')) +
@@ -108,12 +110,12 @@ nesting_os %>%
   xlim(0, 18)
 
 # # only model that isn't overdispered rn
-# ggpredict(mod_choice_cav_os, c('Available_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Plotted model for Osmia')
+# ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = TRUE, jitter = .04) + labs(x = 'Available cavities', y = 'Presence of new nest for each visit', title = 'Plotted model for Osmia')
 
 ### Megachile 
 
 nesting_meg %>% 
-  ggplot(aes(Available_prior, Bee_choice)) + 
+  ggplot(aes(Available_cavities_prior, Bee_choice)) + 
   geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) +
   stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'grey75') +
   scale_color_manual(values=c('darkgoldenrod2', 'steelblue3')) +
@@ -137,39 +139,39 @@ Please notice for all of the proportion figures, the Y axis ranges from -0.1 to 
 ```{r Available.2, echo=FALSE, warning=FALSE, message=FALSE}
 
 
-## Make summary for proportion of new nests per number of available_prior
+## Make summary for proportion of new nests per number of Available_cavities_prior
 
 ### Osmia
 
-# sum the new nests per each Available_prior value
+# sum the new nests per each Available_cavities_prior value
 summary_os_avlb <- nesting_os %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
   ungroup()
 # divide by total number of osmia nests
 summary_os_avlb <- summary_os_avlb %>%
   mutate(Prop_new_per_available = New_nests_by_avlb/164)
 # deleting duplicates
-summary_os_avlb <- summary_os_avlb[!duplicated(summary_os_avlb[c('Available_prior','Prop_new_per_available')]),]
+summary_os_avlb <- summary_os_avlb[!duplicated(summary_os_avlb[c('Available_cavities_prior','Prop_new_per_available')]),]
 
 
 ### Megachile
 
-# sum the new nests per each Available_prior value
+# sum the new nests per each Available_cavities_prior value
 summary_meg_avlb <- nesting_meg %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
   ungroup()
 # divide by total number of megachile nests
 summary_meg_avlb <- summary_meg_avlb %>%
   mutate(Prop_new_per_available = New_nests_by_avlb/58)
 # deleting duplicates
-summary_meg_avlb <- summary_meg_avlb[!duplicated(summary_meg_avlb[c('Available_prior', 'Prop_new_per_available')]),]
+summary_meg_avlb <- summary_meg_avlb[!duplicated(summary_meg_avlb[c('Available_cavities_prior', 'Prop_new_per_available')]),]
 
 # Figures
 
 summary_os_avlb %>% 
-  ggplot(aes(Available_prior, Prop_new_per_available)) +
+  ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
   geom_jitter(height = 0, width = 0) +
   stat_smooth(color = 'plum', fill = 'plum') +
   labs(y = 'Proportion of new Osmia nests', x = 'Number of available cavities prior to nesting') + 
@@ -179,7 +181,7 @@ summary_os_avlb %>%
     label = summary_os_avlb$New_nests_by_avlb, nudge_y = 0.01)
 
 summary_meg_avlb %>% 
-  ggplot(aes(Available_prior, Prop_new_per_available)) +
+  ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
   geom_jitter(height = 0, width = 0) +
   stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
   labs(y = 'Proportion of new Megachile nests', x = 'Number of available cavities prior to nesting') + 
@@ -205,42 +207,42 @@ Y axis = total of new Osmia or Megachile nests per \# of available cavities / to
 
 # make sum of new nests, then counts (0s and 1s)
 summary_os_avlb_2 <- nesting_os %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
   ungroup()
 summary_os_avlb_2 <- summary_os_avlb_2 %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
   ungroup()
 # make into a proportion of yeses
 summary_os_avlb_2 <- summary_os_avlb_2 %>%
   mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
 # deleting duplicates
-summary_os_avlb_2 <- summary_os_avlb_2[!duplicated(summary_os_avlb_2[c('Available_prior','Prop_yes')]),]
+summary_os_avlb_2 <- summary_os_avlb_2[!duplicated(summary_os_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
 
 
 ### Megachile
 
 # make sum of new nests, then counts (0s and 1s)
 summary_meg_avlb_2 <- nesting_meg %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
   ungroup()
 summary_meg_avlb_2 <- summary_meg_avlb_2 %>% 
-  group_by(Available_prior) %>% 
+  group_by(Available_cavities_prior) %>% 
   mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
   ungroup()
 # make into a proportion of yeses
 summary_meg_avlb_2 <- summary_meg_avlb_2 %>%
   mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
 # deleting duplicates
-summary_meg_avlb_2 <- summary_meg_avlb_2[!duplicated(summary_meg_avlb_2[c('Available_prior','Prop_yes')]),]
+summary_meg_avlb_2 <- summary_meg_avlb_2[!duplicated(summary_meg_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
 
 
 # Figures
 
 summary_os_avlb_2 %>% 
-  ggplot(aes(Available_prior, Prop_yes)) +
+  ggplot(aes(Available_cavities_prior, Prop_yes)) +
   geom_jitter(height = 0, width = 0) + 
   geom_smooth(color = 'plum', fill = 'plum') + 
   xlim(0, 18) +
@@ -248,7 +250,7 @@ summary_os_avlb_2 %>%
   labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
 
 summary_meg_avlb_2 %>% 
-  ggplot(aes(Available_prior, Prop_yes)) +
+  ggplot(aes(Available_cavities_prior, Prop_yes)) +
   geom_jitter(height = 0, width = 0) + 
   geom_smooth(color = 'goldenrod2', fill = 'goldenrod2') + 
   xlim(0, 18) +
@@ -259,18 +261,54 @@ summary_meg_avlb_2 %>%
 
 ```
 
-```{r Subsite, include=FALSE}
+```{r NEW FIGS, echo=FALSE, warning=FALSE, message=FALSE}
 
 
-nesting_os %>% 
-  filter(Subsite == 'A' | Subsite == 'A' | Subsite == 'B' | Subsite == 'C' | Subsite == 'D' | Subsite == 'E' | Subsite == 'F' | Subsite == 'G' | Subsite == 'H' | Subsite == 'I' | Subsite == 'L' |Subsite == 'M') %>% 
-  ggplot(aes(Subsite, Bee_choice)) + 
-  geom_jitter(height = 0.04, width = 0.2, alpha = 0.5, aes(colour = Occupant)) 
+nesting_os_xs %>% 
+  ggplot(aes(Available_cavities_prior, New_nests_os)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Osmia nests per avalable cavities') + 
+  xlim(0, 18)
+
+nesting_meg_xs %>% 
+  ggplot(aes(Available_cavities_prior, New_nests_meg)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Megachile nests per avalable cavities') + 
+  xlim(0, 18)
 
 
-nesting_meg %>% 
-  ggplot(aes(Subsite, Bee_choice)) + 
-  geom_jitter(height = 0.05, alpha = 0.5, aes(colour = Occupant)) 
+
+nesting_os_xs %>% 
+  ggplot(aes(Osmia_ps_prior, New_nests_os)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Osmia nests per conspecifics (including pseudo)') + 
+  xlim(0, 18)
+
+nesting_meg_xs %>% 
+  ggplot(aes(Meg_ps_prior, New_nests_meg)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Megachile nests per conspecifics (including pseudo)') + 
+  xlim(0, 18)
+
+
+
+nesting_os_xs %>% 
+  ggplot(aes(Osmia_no_ps_prior, New_nests_os)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Osmia nests per conspecifics (excluding pseudo)') + 
+  xlim(0, 18)
+
+nesting_meg_xs %>% 
+  ggplot(aes(Meg_no_ps_prior, New_nests_meg)) +
+  geom_jitter(height = 0.03, width = 0.1, alpha = 0.5) +
+  stat_smooth() +
+  labs(title = 'New Megachile nests per conspecifics (excluding pseudo)') + 
+  xlim(0, 18)
 
 
 ```
@@ -337,7 +375,7 @@ summary_os_cnsp_ps <- summary_os_cnsp_ps[!duplicated(summary_os_cnsp_ps[c('Osmia
 ### Megachile
 
  # including pseudo #
-# sum the new nests per each Available_prior value
+# sum the new nests per each Available_cavities_prior value
 summary_meg_cnsp_ps <- nesting_meg %>% 
   group_by(Meg_ps_prior) %>% 
   mutate(New_nests_by_meg_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
@@ -501,7 +539,7 @@ summary_os_cnsp_no_ps <- summary_os_cnsp_no_ps[!duplicated(summary_os_cnsp_no_ps
 ### Megachile
 
  # excluding pseudo #
-# sum the new nests per each Available_prior value
+# sum the new nests per each Available_cavities_prior value
 summary_meg_cnsp_no_ps <- nesting_meg %>% 
   group_by(Meg_no_ps_prior) %>% 
   mutate(New_nests_by_meg_no_ps = sum(Bee_choice, na.rm = TRUE)) %>% 
