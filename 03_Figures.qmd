@@ -86,7 +86,6 @@ nesting_meg %>% filter(!is.na(Bee_choice)) %>%
 
 theme_set(theme_classic(base_size=15)) 
 
-
 ```
 
 ## Nesting per available cavities
