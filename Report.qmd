@@ -78,7 +78,7 @@ nesting_meg %>% filter(!is.na(Bee_choice)) %>%
 
 
 # making the model that isn't overdispersed that I can show
-load('mod_choice_cav_os.Rdata')
+# load('mod_choice_cav_os.Rdata')
 
 # mod_choice_cav_os <- glmer(Bee_choice ~ Available_prior + Good_days + Day_of_year + Site + (1|Subsite/Trapnest/Cavity_ID), data = nesting_os, family = binomial) # boundary singular warning
 summary(mod_choice_cav_os)
