@@ -9,7 +9,6 @@ editor: visual
 bibliography: references.bib
 ---
 
-
 ## Background
 
 Strategies for raising offspring exist on a spectrum from cooperative breeding in tightly knit social groups to raising young in isolation who may not even encounter their parents or siblings after emerging. Raising young in proximity with others has benefits such as increased protection from predators and enhanced knowledge of local resources. However, proximity can increase the circulation of pathogens and foster competition if resources become scarce. Bees have adopted the entirety of this spectrum, as species range from solitary (e.g., most leafcutter bees: *Megachile* spp.) to advanced eusociality (e.g., honeybees: *Apis* spp.). Some species along this spectrum are facultatively social, meaning that within a population, they exhibit social polymorphism for their nesting strategy and thus can be solitary or social (e.g., some carpenter bees: *Xylocopa* spp.)
@@ -109,9 +108,6 @@ nesting_os_xs %>%
 
 ```
 
-
-
-
 ## Nesting per conspecific presence (including pseudo nests)
 
 ```{r Conspecifics_with_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
@@ -119,7 +115,6 @@ nesting_os_xs %>%
 
 
 ```
-
 
 ## Nesting per conspecific presence (excluding pseudo nests)
 
@@ -253,6 +248,15 @@ investment_meg <- investment %>% filter(Occupant == 'megachile')
 # investment_os %>% 
 #   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
 #   geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
+
+
+investment_os %>% 
+  ggplot(aes(Par_nests_unsealed_os, Prop_nest_filled,colour = Nest_parasitized)) + 
+  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
+  stat_smooth()
+  
+
+
 
 
 investment_os %>% 

@@ -43,25 +43,30 @@ library(ggeffects)
 library(effects)
 library(tidyverse)
 library(interactions) # for interact_plot
+library(betareg)
 
-# nesting <- read_csv('data/nesting_cleaned_all_bees.csv')
+nesting <- read_csv('data/nesting_cleaned_all_bees.csv')
 # nesting_os <- read_csv('data/nesting_cleaned_osmia.csv')
 # nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') # three columns with parasite and cell info blank, not dissected
 nesting_os_xs <- read_csv('data/nesting_cleaned_osmia_xs.csv')
 nesting_meg_xs <- read_csv('data/nesting_cleaned_megachile_xs.csv')
-investment <- read_csv('data/investment_cleaned.csv')
-investment_os <- investment %>% filter(Occupant == 'osmia')
+nesting_cells_os <- read_csv('data/nesting_cells_cleaned_osia.csv')
+nesting_investment <- read_csv('data/investment_cleaned.csv')
+investment_os <- nesting_investment %>% filter(Occupant == 'osmia') 
+
+nesting_cells_os$Last_cell <- as.factor(nesting_cells_os$Last_cell)
+
 
 ```
 
 ### Nesting per Available Cavities
 
-```{r Models: Nest per Available Cavities, include=FALSE}
+```{r Models: Nest per Available Cavities, include=TRUE}
 
 
 # MODEL 1 
 ### New nests per available cavities Osmia ###
-mod_choice_cav_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial) 
+mod_choice_cav_os <- glmer(New_nests_os ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = poisson()) 
 
 plot(simulateResiduals(mod_choice_cav_os)) # great
 check_model(mod_choice_cav_os) # fine
@@ -69,7 +74,6 @@ testDispersion(mod_choice_cav_os, type = 'DHARMa') # good
 testZeroInflation(mod_choice_cav_os) # good
 summary(mod_choice_cav_os) # Site significant
  # anova to see site differences
-save(mod_choice_cav_os, file='Models/mod_choice_cav_os.Rdata') 
 
 # Plot model
 ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = TRUE, jitter = .04)
@@ -77,24 +81,23 @@ ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = T
 
 # MODEL 2
 ### New nests per available cavities Megachile ###
-mod_choice_cav_meg <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum)  ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial) 
+mod_choice_cav_meg <- glmer(New_nests_meg ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = poisson()) 
 
-plot(simulateResiduals(mod_choice_cav_meg)) # great
-testDispersion(mod_choice_cav_meg, type = 'DHARMa') # good
+plot(simulateResiduals(mod_choice_cav_meg)) # good
+testDispersion(mod_choice_cav_meg, type = 'DHARMa') # fine
 testZeroInflation(mod_choice_cav_meg) # good
 check_model(mod_choice_cav_meg) # fine
 summary(mod_choice_cav_meg) # Day of year and Site significant
 # anova
-save(mod_choice_cav_meg, file='Models/mod_choice_cav_meg.Rdata')
 
 # Plot model
-ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = TRUE, jitter = .04) # + labs(x = 'Available cavities', y = 'Presence of new nest for each visit')
+ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
 
 ```
 
 ### Nesting per Conspecific Presence
 
-```{r Models: Nest per Conspecifics Osmia, include=FALSE}
+```{r Models: Nest per Conspecifics Osmia, include=TRUE}
 
 
 # MODEL 3 
@@ -107,7 +110,6 @@ check_model(mod_choice_consp_os_ps) # fine
 testDispersion(mod_choice_consp_os_ps, type = 'DHARMa')  
 testZeroInflation(mod_choice_consp_os_ps) # zero-inflation, but not detrimental
 summary(mod_choice_consp_os_ps) # more osmia nests when there's higher osmia densities
-save(mod_choice_consp_os_ps, file='Models/mod_choice_consp_os_ps.Rdata')
 
 
 ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
@@ -116,7 +118,26 @@ ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %>% plot(rawdata = TRUE, 
 # MODEL 4 
 ### New nests per conspecifics Osmia, without pseudo ###
 
-mod_choice_consp_os_no_ps <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial())
+mod_choice_consp_os_no_ps_BINOMIAL <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Trapnest), data = nesting_os_xs, family = binomial(),control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=1000000)))
+
+mod_choice_consp_os_no_ps_POISSON <- glmer(New_nests_os ~ offset(log(Available_cavities_prior - New_nests_sum))+ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Trapnest), data = nesting_os_xs, family = poisson())
+
+mod_choice_consp_os_no_ps_POISSON_subsite <- glmer(New_nests_os ~ offset(log(Available_cavities_prior - New_nests_sum))+ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite) + (1|Trapnest), data = nesting_os_xs, family = poisson(), control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=1000000)))
+
+
+plot(simulateResiduals(mod_choice_consp_os_no_ps_BINOMIAL)) # 
+plot(simulateResiduals(mod_choice_consp_os_no_ps_POISSON)) # 
+plot(simulateResiduals(mod_choice_consp_os_no_ps_POISSON_subsite)) # 
+
+summary(mod_choice_consp_os_no_ps_BINOMIAL)
+summary(mod_choice_consp_os_no_ps_POISSON)
+summary(mod_choice_consp_os_no_ps_POISSON_subsite)
+
+ggpredict(mod_choice_consp_os_no_ps_BINOMIAL, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_choice_consp_os_no_ps_POISSON, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_choice_consp_os_no_ps_POISSON_subsite, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
+
+
 
 plot(simulateResiduals(mod_choice_consp_os_no_ps)) # fine
 check_model(mod_choice_consp_os_no_ps) # good
@@ -124,15 +145,17 @@ testDispersion(mod_choice_consp_os_no_ps, type = 'DHARMa') # some overdispersion
 testZeroInflation(mod_choice_consp_os_no_ps) # some zero inflation
 summary(mod_choice_consp_os_no_ps) #### HELP
 # anova
-save(mod_choice_consp_os_no_ps, file='Models/mod_choice_consp_os_no_ps.Rdata')
 
-
-ggpredict(mod_choice_consp_os_no_ps, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
-####### HELP
-
+ggpredict(mod_choice_consp_os_no_ps_BINOMIAL, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_choice_consp_os_no_ps_POISSON, c('Osmia_no_ps_prior')) %>% plot(rawdata = TRUE, jitter = .04) 
 
 
 
+
+
+
+
+plot(allEffects(mod_choice_consp_os_no_ps))
 
 ```
 
@@ -158,7 +181,16 @@ ggpredict(mod_choice_consp_meg_ps, c('Meg_ps_prior')) %>% plot(rawdata = TRUE, j
 
 # MODEL 6
 ### New nests per conspecifics Megachile, without pseudo ###
-mod_choice_consp_meg_no_ps <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial())
+mod_choice_consp_meg_no_ps_BINOMIAL <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial())
+
+mod_choice_consp_meg_no_ps_POISSON <- glmer(New_nests_meg ~ offset(log(Available_cavities_prior - New_nests_sum))+ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Trapnest), data = nesting_os_xs, family = poisson())
+
+plot(simulateResiduals(mod_choice_consp_meg_no_ps_BINOMIAL))
+plot(simulateResiduals(mod_choice_consp_meg_no_ps_POISSON))
+
+summary(mod_choice_consp_meg_no_ps_BINOMIAL) 
+summary(mod_choice_consp_meg_no_ps_POISSON) 
+
 
 plot(simulateResiduals(mod_choice_consp_meg_no_ps)) # great
 check_model(mod_choice_consp_meg_no_ps) # fine
@@ -174,108 +206,132 @@ ggpredict(mod_choice_consp_meg_no_ps, c('Meg_no_ps_prior')) %>% plot(rawdata = T
 
 ### Parasitism
 
-```{r Parasites and Aggregations, include=FALSE}
+```{r Parasites and Aggregations, include=TRUE}
 
 # Relation between parasites and aggregation densities
 
 # MODEL 7
 # Relation between parasites and aggregation densities, with pseudo
 
-mod_par_agg_ps <- glmer(Cell_parasitized ~ scale(Osmia_ps_post) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_par_agg_ps <- glmer(Cell_parasitized ~ scale(Osmia_ps_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_ps)) # 
-check_model(mod_par_agg_ps) # 
-testDispersion(mod_par_agg_ps, type = 'DHARMa') #  
-testZeroInflation(mod_par_agg_ps) # 
-summary(mod_par_agg_ps) # 
+plot(simulateResiduals(mod_par_agg_ps)) # good
+check_model(mod_par_agg_ps) # fine
+testDispersion(mod_par_agg_ps, type = 'DHARMa') # good
+testZeroInflation(mod_par_agg_ps) # good
+summary(mod_par_agg_ps) # no detected effects
 
-ggpredict(mod_par_agg_ps, c('Osmia_ps_post')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_par_agg_ps, c('Osmia_ps_no_iw')) %>% plot(rawdata = TRUE, jitter = .04) 
 
 
 # MODEL 8
 # Relation between parasites and aggregation densities, without pseudo
 
-mod_par_agg_no_ps <- glmer(Cell_parasitized ~ scale(Osmia_no_ps_post) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_par_agg_no_ps <- glmer(Cell_parasitized ~ scale(Osmia_no_ps_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_no_ps)) # 
-check_model(mod_par_agg_no_ps) # 
-testDispersion(mod_par_agg_no_ps, type = 'DHARMa') #  
-testZeroInflation(mod_par_agg_no_ps) # 
-summary(mod_par_agg_no_ps) # 
+plot(simulateResiduals(mod_par_agg_no_ps)) # good
+check_model(mod_par_agg_no_ps) # fine
+testDispersion(mod_par_agg_no_ps, type = 'DHARMa') # good
+testZeroInflation(mod_par_agg_no_ps) # good
+summary(mod_par_agg_no_ps) # no detected effects
 
-ggpredict(mod_par_agg_no_ps, c('Osmia_no_ps_post')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_par_agg_no_ps, c('Osmia_no_ps_no_iw')) %>% plot(rawdata = TRUE, jitter = .04) 
 
 
 # MODEL 9
 # Relation between parasites and aggregation densities, unsealed
 
-mod_par_agg_unsealed <- glmer(Cell_parasitized ~ scale(Sum_unsealed) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_par_agg_unsealed_os <- glmer(Cell_parasitized ~ scale(Sum_unsealed_os_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_unsealed)) # 
-check_model(mod_par_agg_unsealed) # 
-testDispersion(mod_par_agg_unsealed, type = 'DHARMa') #  
-testZeroInflation(mod_par_agg_unsealed) # 
-summary(mod_par_agg_unsealed) # 
+plot(simulateResiduals(mod_par_agg_unsealed_os)) # good
+check_model(mod_par_agg_unsealed_os) # fine
+testDispersion(mod_par_agg_unsealed_os, type = 'DHARMa') # good
+testZeroInflation(mod_par_agg_unsealed_os) # good
+summary(mod_par_agg_unsealed_os) 
 
-ggpredict(mod_par_agg_unsealed, c('Sum_unsealed')) %>% plot(rawdata = TRUE, jitter = .04) 
+ggpredict(mod_par_agg_unsealed_os, c('Sum_unsealed_os_no_iw')) %>% plot(rawdata = TRUE, jitter = .04) 
 
-#### CBIND TO ACCOUNT FOR THE TOTAL NESTS?
+```
 
-
-
+```{r Preferences and Parasites, include=TRUE}
 
 
 # MODEL 10
 # How the presence of parasites effects nesting preferences, with pseudo
 
-mod_choice_par_ps <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed) * scale(Osmia_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_1, family = binomial)
+mod_choice_par_ps_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed_os) * scale(Osmia_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting, family = binomial, control = glmerControl(optimizer ="nloptwrap")) ### MODEL FAILED TO CONVERGE
 
-plot(simulateResiduals(mod_choice_par_ps)) # 
-check_model(mod_choice_par_ps) # 
-testDispersion(mod_choice_par_ps, type = 'DHARMa') #  
-testZeroInflation(mod_choice_par_ps) # 
-summary(mod_choice_par_ps) # 
 
-interact_plot(mod_choice_par_ps, pred = Osmia_ps_prior, modx = Par_nests_unsealed, data = nesting_1)
+plot(simulateResiduals(mod_choice_par_ps_os)) # help
+check_model(mod_choice_par_ps_os) # HELP 
+testDispersion(mod_choice_par_ps_os, type = 'DHARMa') # 
+testZeroInflation(mod_choice_par_ps_os) # 
+summary(mod_choice_par_ps_os) #  almost everything sig, how to interpret interaction?
+
+interact_plot(mod_choice_par_ps_os, pred = Osmia_ps_prior, modx = Par_nests_unsealed_os, data = nesting)
 
 
 # Model 11
 # How the presence of parasites effects nesting preferences, without pseudo
 
-mod_choice_par_no_ps <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed) * scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_1, family = binomial)
+mod_choice_par_no_ps_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed_os) * scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting, family = binomial)
 
-plot(simulateResiduals(mod_choice_par_no_ps)) # 
-check_model(mod_choice_par_no_ps) # 
-testDispersion(mod_choice_par_no_ps, type = 'DHARMa') #  
-testZeroInflation(mod_choice_par_no_ps) # 
-summary(mod_choice_par_no_ps) # 
+plot(simulateResiduals(mod_choice_par_no_ps_os)) # 
+check_model(mod_choice_par_no_ps_os) # HELP  
+testDispersion(mod_choice_par_no_ps_os, type = 'DHARMa') # fine
+testZeroInflation(mod_choice_par_no_ps_os) # fine
+summary(mod_choice_par_no_ps_os) # almost everything sig
 
-interact_plot(mod_choice_par_no_ps, pred = Osmia_no_ps_prior, modx = Par_nests_unsealed, data = nesting_1)
-
+interact_plot(mod_choice_par_no_ps_os, pred = Osmia_no_ps_prior, modx = Par_nests_unsealed_os, data = nesting)
 
 ```
 
-
-
-```{r Investment, include=FALSE}
+```{r Investment, include=TRUE}
 
 
 # MODEL 12
 # How the presence of parasites effects nest investment
-# Likelyhood of abandoning a nest after a cell was parasitized
+# Likelyhood of  of terminating nest investment after a cell was parasitized
 # position of cell (last or not) ~ if cell is parasitized + day of year + site + (1|Subsite/Trapnest/Nest_ID)
+
+mod_last_cell <- glmer(Last_cell ~ Cell_parasitized + Day_of_year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
+
+plot(simulateResiduals(mod_last_cell)) # good
+# check_model(mod_last_cell) # HELP doesnt work
+summary(mod_last_cell) # site and day of year
+
+ggpredict(mod_last_cell, c('Cell_parasitized')) %>% plot(rawdata = TRUE, jitter = .04) 
+
+
+
+
+plot(I(New_nests_os/ (Available_cavities_prior)) ~ (Day_of_year), data=nesting)
+plot(I(New_nests_os/ (Available_cavities_prior)) ~ (Day_of_year), data=nesting)
+
+mod_choice_par_ps_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed_os) * scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting, family = binomial, control = glmerControl(optimizer ="nloptwrap"))
+
+
+
+
 
 
 
 
 # MODEL 13
-# Investment into a nest if other active nests are parasitized
+# Investment into a nest if other active nests or the nest itself is parasitized
 
-mod_invest_filled <- glmer(cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed) * Nest_parasitized + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_investment, family = binomial)
+mod_invest_filled <- glmer(cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os) * Nest_parasitized + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = investment_os, family = binomial)
 
-plot(simulateResiduals(mod_invest_filled)) # weird
-check_model(mod_invest_filled) # high variability?
+## MAKING PROP
+investment_os <- investment_os %>% mutate(Prop_nest_filled = Filled_length_mm/Straw_length_mm)
+
+# mod_invest_filled_2 <- glmer(Prop_nest_filled ~ scale(Par_nests_unsealed_os) * Nest_parasitized + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = investment_os, family = ordbeta(link = "logit"))
+
+plot(simulateResiduals(mod_invest_filled)) # 
+check_model(mod_invest_filled) # 
 summary(mod_invest_filled) # 
+
+ggpredict(mod_invest_filled, c('Par_nests_unsealed_os')) %>% plot(rawdata = TRUE, jitter = .04) 
 
 
 ```
