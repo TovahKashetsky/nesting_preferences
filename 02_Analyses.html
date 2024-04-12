@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Osmia_no_ps_prior: number of existing osmia in each trapnest per date, excluding pseudo nests.</li>
 <li>Meg_ps_prior: number of existing megachile in each trapnest per date, including pseudo nests.</li>
 <li>Meg_no_ps_prior: number of existing megachile in each trapnest per date, excluding pseudo nests.</li>
-<li>Par_in_trapnest: number of parasites present in the trapnest when I log new bee nests (Bee_choice). #######</li>
+<li>Par_in_trapnest: number of parasites present in the trapnest when I log new bee nests (Bee_choice).</li>
 </ul>
 <p><strong>Additional variables:</strong></p>
 <ul>
@@ -124,9 +124,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 1 </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per available cavities Osmia </span><span class="al">###</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod_choice_cav_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Available_cavities_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> binomial) </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod_choice_cav_os_POISSON <span class="ot">&lt;-</span> <span class="fu">glmer</span>(New_nests_os <span class="sc">~</span> <span class="fu">scale</span>(Available_cavities_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">poisson</span>()) </span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_cav_os)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mod_choice_cav_os_BINOMIAL <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Available_cavities_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">binomial</span>()) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_cav_os_POISSON)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -134,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_cav_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_cav_os_BINOMIAL)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -142,41 +144,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_cav_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_cav_os_POISSON)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
-    simulated
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: poisson  ( log )
+Formula: New_nests_os ~ scale(Available_cavities_prior) + scale(Good_days) +  
+    scale(Day_of_year) + Site + (1 | Subsite/Trapnest)
+   Data: nesting_os_xs
 
-data:  simulationOutput
-dispersion = 1.1799, p-value = 0.496
-alternative hypothesis: two.sided</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_cav_os) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa zero-inflation test via comparison to expected zeros with
-    simulation under H0 = fitted model
+     AIC      BIC   logLik deviance df.resid 
+  1100.2   1142.6   -542.1   1084.2     1468 
 
-data:  simulationOutput
-ratioObsSim = 1.0203, p-value = 0.464
-alternative hypothesis: two.sided</code></pre>
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-0.9523 -0.3621 -0.1718 -0.1127  8.0680 
+
+Random effects:
+ Groups           Name        Variance Std.Dev.
+ Trapnest:Subsite (Intercept) 1.2391   1.1131  
+ Subsite          (Intercept) 0.7615   0.8726  
+Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
+
+Fixed effects:
+                                 Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                     -2.856786   0.440293  -6.488 8.68e-11 ***
+scale(Available_cavities_prior)  0.162395   0.184241   0.881  0.37809    
+scale(Good_days)                 0.105687   0.073954   1.429  0.15298    
+scale(Day_of_year)              -0.175353   0.154048  -1.138  0.25500    
+SiteCP                          -2.687297   0.971663  -2.766  0.00568 ** 
+SiteNN                           0.001869   0.659179   0.003  0.99774    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(A__) sc(G_) s(D__) SiteCP
+scl(Avlb__) -0.143                            
+scl(Gd_dys) -0.057 -0.005                     
+scl(Dy_f_y) -0.258  0.334  0.139              
+SiteCP      -0.231 -0.133 -0.022 -0.222       
+SiteNN      -0.655  0.070  0.045  0.289  0.145</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_cav_os) <span class="co"># Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_cav_os_BINOMIAL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -218,38 +227,31 @@ scl(Dy_f_y) -0.250  0.319  0.139
 SiteCP      -0.240 -0.127 -0.023 -0.221       
 SiteNN      -0.653  0.064  0.045  0.281  0.149</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a> <span class="co"># anova to see site differences</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_cav_os, <span class="at">file=</span><span class="st">'Models/mod_choice_cav_os.Rdata'</span>) </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot model</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_cav_os, <span class="fu">c</span>(<span class="st">'Available_cavities_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Raw data not available.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check_model(mod_choice_cav_os)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># testDispersion(mod_choice_cav_os, type = 'DHARMa') # good</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># testZeroInflation(mod_choice_cav_os) # good</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(mod_choice_cav_os) # Site significant # anova to see site differences</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # Plot model</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %&gt;% plot(rawdata = TRUE, jitter = .04)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 2</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per available cavities Megachile </span><span class="al">###</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>mod_choice_cav_meg <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Available_cavities_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_cav_meg)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-5.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 2</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per available cavities Megachile </span><span class="al">###</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mod_choice_cav_meg <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum)  <span class="sc">~</span> <span class="fu">scale</span>(Available_cavities_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> binomial) </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_cav_meg)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_cav_meg, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-6.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_cav_meg, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-7.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -262,11 +264,11 @@ data:  simulationOutput
 dispersion = 0.10287, p-value = 0.152
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_cav_meg) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_cav_meg) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-8.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -279,15 +281,15 @@ data:  simulationOutput
 ratioObsSim = 1.0213, p-value = 0.352
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_cav_meg) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_cav_meg) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-9.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-6.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_cav_meg) <span class="co"># Day of year and Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_cav_meg) <span class="co"># Day of year and Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -329,18 +331,17 @@ scl(Dy_f_y) -0.329  0.312 -0.290
 SiteCP      -0.173 -0.148  0.054 -0.237       
 SiteNN      -0.275  0.010  0.001  0.049  0.250</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># anova</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_cav_meg, <span class="at">file=</span><span class="st">'Models/mod_choice_cav_meg.Rdata'</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot model</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_cav_os, <span class="fu">c</span>(<span class="st">'Available_cavities_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) <span class="co"># + labs(x = 'Available cavities', y = 'Presence of new nest for each visit')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># anova</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot model</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_cav_meg, <span class="fu">c</span>(<span class="st">'Available_cavities_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Raw data not available.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-10.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Available%20Cavities-7.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -349,14 +350,42 @@ SiteNN      -0.275  0.010  0.001  0.049  0.250</code></pre>
 <section id="nesting-per-conspecific-presence" class="level3">
 <h3 class="anchored" data-anchor-id="nesting-per-conspecific-presence">Nesting per Conspecific Presence</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 3 </span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Osmia, with pseudo </span><span class="al">###</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> binomial) <span class="co"># ignore boundary singular warning, means little to no influence of random effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 3 </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Osmia, with pseudo </span><span class="al">###</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> binomial) <span class="co"># ignore boundary singular warning, means little to no influence of random effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_ps)) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(simulateResiduals(mod_choice_consp_os_ps)) # fine</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check_model(mod_choice_consp_os_ps) # fine</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># testDispersion(mod_choice_consp_os_ps, type = 'DHARMa')  </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># testZeroInflation(mod_choice_consp_os_ps) # zero-inflation, but not detrimental</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(mod_choice_consp_os_ps) # more osmia nests when there's higher osmia densities</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ggpredict(mod_choice_consp_os_ps, c('Osmia_ps_prior')) %&gt;% plot(rawdata = TRUE, jitter = .04) </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 4 </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Osmia, without pseudo </span><span class="al">###</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_no_ps_BINOMIAL <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">"bobyqa"</span>, <span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="dv">1000000</span>)))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_no_ps_BINOMIAL_subsite <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">"bobyqa"</span>, <span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="dv">1000000</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Model failed to converge with max|grad| = 0.0494324 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_no_ps_POISSON <span class="ot">&lt;-</span> <span class="fu">glmer</span>(New_nests_os <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Available_cavities_prior <span class="sc">-</span> New_nests_sum)) <span class="sc">+</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">poisson</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Model failed to converge with max|grad| = 0.0050936 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_no_ps_POISSON_subsite <span class="ot">&lt;-</span> <span class="fu">glmer</span>(New_nests_os <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Available_cavities_prior <span class="sc">-</span> New_nests_sum))<span class="sc">+</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">poisson</span>(), <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">"bobyqa"</span>,<span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="dv">1000000</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_no_ps_BINOMIAL)) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -364,7 +393,7 @@ SiteNN      -0.275  0.010  0.001  0.049  0.250</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_consp_os_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_no_ps_BINOMIAL_subsite)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -372,7 +401,7 @@ SiteNN      -0.275  0.010  0.001  0.049  0.250</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_consp_os_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_no_ps_POISSON)) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -380,16 +409,10 @@ SiteNN      -0.275  0.010  0.001  0.049  0.250</code></pre>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
-    simulated
-
-data:  simulationOutput
-dispersion = 0.5032, p-value = 0.264
-alternative hypothesis: two.sided</code></pre>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_no_ps_POISSON_subsite)) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>DHARMa:testOutliers with type = binomial may have inflated Type I error rates for integer-valued distributions. To get a more exact result, it is recommended to re-run testOutliers with type = 'bootstrap'. See ?testOutliers for details</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_consp_os_ps) <span class="co"># zero-inflation, but not detrimental</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -397,66 +420,200 @@ alternative hypothesis: two.sided</code></pre>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa zero-inflation test via comparison to expected zeros with
-    simulation under H0 = fitted model
-
-data:  simulationOutput
-ratioObsSim = 1.0588, p-value = 0.016
-alternative hypothesis: two.sided</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_ps) <span class="co"># more osmia nests when there's higher osmia densities</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_no_ps_BINOMIAL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
 Formula: cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~  
-    scale(Osmia_ps_prior) + scale(Good_days) + scale(Day_of_year) +  
-        Site + (1 | Subsite/Trapnest)
+    scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+        2) + Site + (1 | Trapnest)
    Data: nesting_os_xs
+Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+06))
 
      AIC      BIC   logLik deviance df.resid 
-  1050.7   1093.1   -517.3   1034.7     1468 
+   949.4    991.8   -466.7    933.4     1468 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--1.1819 -0.3657 -0.1499 -0.0677  7.8821 
+-1.3041 -0.3191 -0.1239 -0.0057 17.5257 
 
 Random effects:
- Groups           Name        Variance Std.Dev.
- Trapnest:Subsite (Intercept) 2.322    1.524   
- Subsite          (Intercept) 0.000    0.000   
-Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
+ Groups   Name        Variance Std.Dev.
+ Trapnest (Intercept) 0.6241   0.79    
+Number of obs: 1476, groups:  Trapnest, 72
 
 Fixed effects:
-                      Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)           -5.36374    0.38480 -13.939  &lt; 2e-16 ***
-scale(Osmia_ps_prior)  1.72121    0.29568   5.821 5.84e-09 ***
-scale(Good_days)       0.13573    0.07653   1.774   0.0761 .  
-scale(Day_of_year)    -0.10198    0.13434  -0.759   0.4478    
-SiteCP                -1.44559    0.95729  -1.510   0.1310    
-SiteNN                -0.78408    0.53469  -1.466   0.1425    
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                -7.72946    0.57869 -13.357  &lt; 2e-16 ***
+scale(Osmia_no_ps_prior)    0.30890    0.08757   3.528 0.000419 ***
+scale(Good_days)            0.34627    0.08492   4.078 4.55e-05 ***
+poly(Day_of_year, 2)1    -174.89613   24.67646  -7.088 1.36e-12 ***
+poly(Day_of_year, 2)2    -100.31114   14.05479  -7.137 9.53e-13 ***
+SiteCP                      1.90310    1.01456   1.876 0.060684 .  
+SiteNN                     -0.99350    0.35040  -2.835 0.004577 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) s(O__) sc(G_) s(D__) SiteCP
-scl(Osm_p_) -0.432                            
-scl(Gd_dys) -0.049  0.072                     
-scl(Dy_f_y)  0.035  0.091  0.131              
-SiteCP      -0.354  0.190 -0.008 -0.173       
-SiteNN      -0.494 -0.090  0.006  0.100  0.163
+            (Intr) s(O___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Osm___) -0.036                                         
+scl(Gd_dys) -0.145 -0.017                                  
+ply(D__,2)1  0.924  0.044 -0.131                           
+ply(D__,2)2  0.857  0.266 -0.189  0.923                    
+SiteCP      -0.645  0.186  0.089 -0.605    -0.495          
+SiteNN      -0.169  0.276 -0.050  0.073     0.123     0.162</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_no_ps_BINOMIAL_subsite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~  
+    scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+        2) + Site + (1 | Subsite/Trapnest)
+   Data: nesting_os_xs
+Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+06))
+
+     AIC      BIC   logLik deviance df.resid 
+   951.5    999.1   -466.7    933.5     1467 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.3044 -0.3192 -0.1251 -0.0058 17.1823 
+
+Random effects:
+ Groups           Name        Variance  Std.Dev. 
+ Trapnest:Subsite (Intercept) 6.169e-01 0.7854238
+ Subsite          (Intercept) 5.061e-07 0.0007114
+Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
+
+Fixed effects:
+                           Estimate Std. Error   z value Pr(&gt;|z|)    
+(Intercept)              -7.714e+00  1.445e-03   -5337.4   &lt;2e-16 ***
+scale(Osmia_no_ps_prior)  3.113e-01  1.445e-03     215.5   &lt;2e-16 ***
+scale(Good_days)          3.480e-01  1.444e-03     241.0   &lt;2e-16 ***
+poly(Day_of_year, 2)1    -1.735e+02  1.444e-03 -120095.7   &lt;2e-16 ***
+poly(Day_of_year, 2)2    -9.965e+01  1.444e-03  -68999.5   &lt;2e-16 ***
+SiteCP                    2.006e+00  1.444e-03    1388.6   &lt;2e-16 ***
+SiteNN                   -9.789e-01  1.445e-03    -677.5   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(O___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Osm___) -0.001                                         
+scl(Gd_dys)  0.000  0.000                                  
+ply(D__,2)1  0.000  0.000  0.000                           
+ply(D__,2)2  0.000  0.000  0.000  0.000                    
+SiteCP       0.000  0.000  0.000  0.000     0.000          
+SiteNN       0.000 -0.001  0.000  0.000     0.000     0.000
+optimizer (bobyqa) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.0494324 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_no_ps_POISSON)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: poisson  ( log )
+Formula: 
+New_nests_os ~ offset(log(Available_cavities_prior - New_nests_sum)) +  
+    scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+    2) + Site + (1 | Trapnest)
+   Data: nesting_os_xs
+
+     AIC      BIC   logLik deviance df.resid 
+  1006.3   1048.7   -495.1    990.3     1468 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.2958 -0.3188 -0.1220 -0.0054 19.0758 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Trapnest (Intercept) 0.6568   0.8104  
+Number of obs: 1476, groups:  Trapnest, 72
+
+Fixed effects:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                -7.79073    0.55140 -14.129  &lt; 2e-16 ***
+scale(Osmia_no_ps_prior)    0.29506    0.08469   3.484 0.000494 ***
+scale(Good_days)            0.35041    0.08269   4.238 2.26e-05 ***
+poly(Day_of_year, 2)1    -178.07878   23.22314  -7.668 1.74e-14 ***
+poly(Day_of_year, 2)2    -102.14370   13.31413  -7.672 1.70e-14 ***
+SiteCP                      1.95294    0.99358   1.966 0.049349 *  
+SiteNN                     -1.01355    0.35499  -2.855 0.004301 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(O___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Osm___) -0.036                                         
+scl(Gd_dys) -0.131 -0.014                                  
+ply(D__,2)1  0.913  0.046 -0.115                           
+ply(D__,2)2  0.842  0.279 -0.176  0.916                    
+SiteCP      -0.625  0.188  0.077 -0.580    -0.464          
+SiteNN      -0.189  0.269 -0.048  0.069     0.119     0.172
 optimizer (Nelder_Mead) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.0050936 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_no_ps_POISSON_subsite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: poisson  ( log )
+Formula: 
+New_nests_os ~ offset(log(Available_cavities_prior - New_nests_sum)) +  
+    scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+    2) + Site + (1 | Subsite) + (1 | Trapnest)
+   Data: nesting_os_xs
+Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+06))
+
+     AIC      BIC   logLik deviance df.resid 
+  1008.3   1056.0   -495.1    990.3     1467 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.2956 -0.3187 -0.1219 -0.0054 19.0770 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Trapnest (Intercept) 0.6574   0.8108  
+ Subsite  (Intercept) 0.0000   0.0000  
+Number of obs: 1476, groups:  Trapnest, 72; Subsite, 24
+
+Fixed effects:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                -7.79011    0.56394 -13.814  &lt; 2e-16 ***
+scale(Osmia_no_ps_prior)    0.29474    0.08468   3.481  0.00050 ***
+scale(Good_days)            0.35071    0.08272   4.240 2.24e-05 ***
+poly(Day_of_year, 2)1    -178.08644   23.85616  -7.465 8.33e-14 ***
+poly(Day_of_year, 2)2    -102.16281   13.62792  -7.497 6.55e-14 ***
+SiteCP                      1.95215    1.00250   1.947  0.05150 .  
+SiteNN                     -1.01495    0.35529  -2.857  0.00428 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(O___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Osm___) -0.032                                         
+scl(Gd_dys) -0.134 -0.015                                  
+ply(D__,2)1  0.917  0.048 -0.119                           
+ply(D__,2)2  0.849  0.276 -0.178  0.920                    
+SiteCP      -0.633  0.185  0.080 -0.590    -0.478          
+SiteNN      -0.181  0.270 -0.048  0.072     0.121     0.168
+optimizer (bobyqa) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_consp_os_ps, <span class="at">file=</span><span class="st">'Models/mod_choice_consp_os_ps.Rdata'</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_ps, <span class="fu">c</span>(<span class="st">'Osmia_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_no_ps_BINOMIAL, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Data were 'prettified'. Consider using `terms="Osmia_ps_prior [all]"` to
-  get smooth plots.</code></pre>
+<pre><code>Model contains splines or polynomial terms. Consider using
+  `terms="Osmia_no_ps_prior [all]"` to get smooth plots. See also
+  package-vignette 'Marginal Effects at Specific Values'.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Could not compute variance-covariance matrix of predictions. No
+  confidence intervals are returned.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Raw data not available.</code></pre>
@@ -468,17 +625,18 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 4 </span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Osmia, without pseudo </span><span class="al">###</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_os_no_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_no_ps_BINOMIAL_subsite, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
-Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</code></pre>
+<pre><code>Model contains splines or polynomial terms. Consider using
+  `terms="Osmia_no_ps_prior [all]"` to get smooth plots. See also
+  package-vignette 'Marginal Effects at Specific Values'.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_os_no_ps)) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>DHARMa:testOutliers with type = binomial may have inflated Type I error rates for integer-valued distributions. To get a more exact result, it is recommended to re-run testOutliers with type = 'bootstrap'. See ?testOutliers for details</code></pre>
+<pre><code>Could not compute variance-covariance matrix of predictions. No
+  confidence intervals are returned.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Raw data not available.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -487,7 +645,19 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_consp_os_no_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_no_ps_POISSON, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Some model terms could not be found in model data.
+  You probably need to load the data into the environment.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Model contains splines or polynomial terms. Consider using
+  `terms="Osmia_no_ps_prior [all]"` to get smooth plots. See also
+  package-vignette 'Marginal Effects at Specific Values'.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Error: Confidence intervals could not be computed.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -495,7 +665,19 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_consp_os_no_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># some overdispersion, not detrimental</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_no_ps_POISSON_subsite, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Some model terms could not be found in model data.
+  You probably need to load the data into the environment.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Model contains splines or polynomial terms. Consider using
+  `terms="Osmia_no_ps_prior [all]"` to get smooth plots. See also
+  package-vignette 'Marginal Effects at Specific Values'.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Error: Confidence intervals could not be computed.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -503,16 +685,33 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
-    simulated
-
-data:  simulationOutput
-dispersion = 1.7465, p-value &lt; 2.2e-16
-alternative hypothesis: two.sided</code></pre>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(simulateResiduals(mod_choice_consp_os_no_ps)) # fine</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check_model(mod_choice_consp_os_no_ps) # good</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># testDispersion(mod_choice_consp_os_no_ps, type = 'DHARMa') # some overdispersion, not detrimental</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># testZeroInflation(mod_choice_consp_os_no_ps) # some zero inflation</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(mod_choice_consp_os_no_ps) #### HELP</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># anova</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">allEffects</span>(mod_choice_consp_os_no_ps_BINOMIAL))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_consp_os_no_ps) <span class="co"># some zero inflation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors
+
+Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors
+
+Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -520,66 +719,23 @@ alternative hypothesis: two.sided</code></pre>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa zero-inflation test via comparison to expected zeros with
-    simulation under H0 = fitted model
-
-data:  simulationOutput
-ratioObsSim = 1.0207, p-value = 0.04
-alternative hypothesis: two.sided</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_os_no_ps) <span class="do">#### HELP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
-  Approximation) [glmerMod]
- Family: binomial  ( logit )
-Formula: cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~  
-    scale(Osmia_no_ps_prior) + scale(Good_days) + scale(Day_of_year) +  
-        Site + (1 | Subsite/Trapnest)
-   Data: nesting_os_xs
-
-     AIC      BIC   logLik deviance df.resid 
-  1043.6   1086.0   -513.8   1027.6     1468 
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--1.1730 -0.3569 -0.1794 -0.0939  9.8011 
-
-Random effects:
- Groups           Name        Variance  Std.Dev.
- Trapnest:Subsite (Intercept) 3.073e-01 0.554336
- Subsite          (Intercept) 8.804e-05 0.009383
-Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
-
-Fixed effects:
-                          Estimate Std. Error  z value Pr(&gt;|z|)    
-(Intercept)              -5.012953   0.001739 -2882.17   &lt;2e-16 ***
-scale(Osmia_no_ps_prior)  0.643628   0.001737   370.51   &lt;2e-16 ***
-scale(Good_days)          0.161139   0.001738    92.74   &lt;2e-16 ***
-scale(Day_of_year)       -0.905303   0.001738  -520.75   &lt;2e-16 ***
-SiteCP                   -1.303192   0.001738  -749.95   &lt;2e-16 ***
-SiteNN                   -0.609947   0.001739  -350.84   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Correlation of Fixed Effects:
-            (Intr) s(O___ sc(G_) s(D__) SiteCP
-scl(Osm___)  0.000                            
-scl(Gd_dys)  0.000  0.000                     
-scl(Dy_f_y)  0.000  0.000  0.000              
-SiteCP       0.000  0.000  0.000  0.000       
-SiteNN       0.000  0.000  0.000 -0.001  0.000
-optimizer (Nelder_Mead) convergence code: 0 (OK)
-Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># anova</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_consp_os_no_ps, <span class="at">file=</span><span class="st">'Models/mod_choice_consp_os_no_ps.Rdata'</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_os_no_ps, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">allEffects</span>(mod_choice_consp_os_no_ps_POISSON))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Raw data not available.</code></pre>
+<pre><code>Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors
+
+Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors
+
+Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors
+
+Warning in Analyze.model(focal.predictors, mod, xlevels, default.levels, : the
+predictors scale(Osmia_no_ps_prior), scale(Good_days) are one-column matrices
+that were converted to vectors</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -588,15 +744,14 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">####### HELP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 5</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Megachile, with pseudo </span><span class="al">###</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Meg_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_ps)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 5</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Megachile, with pseudo </span><span class="al">###</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Meg_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_ps)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -604,7 +759,7 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_consp_meg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_consp_meg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -612,7 +767,7 @@ Model failed to converge with max|grad| = 0.0521047 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_consp_meg_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_consp_meg_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -629,7 +784,7 @@ data:  simulationOutput
 dispersion = 0.09139, p-value = 0.136
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_consp_meg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_consp_meg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -646,7 +801,7 @@ data:  simulationOutput
 ratioObsSim = 1.0243, p-value = 0.256
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_ps) <span class="co"># Day of year and Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_ps) <span class="co"># Day of year and Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -688,9 +843,9 @@ scl(Dy_f_y) -0.202 -0.358 -0.302
 SiteCP      -0.223 -0.134  0.020 -0.134       
 SiteNN      -0.303  0.136  0.020 -0.004  0.237</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_consp_meg_ps, <span class="at">file=</span><span class="st">'Models/mod_choice_consp_meg_ps.Rdata'</span>)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_meg_ps, <span class="fu">c</span>(<span class="st">'Meg_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_consp_meg_ps, <span class="at">file=</span><span class="st">'Models/mod_choice_consp_meg_ps.Rdata'</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_meg_ps, <span class="fu">c</span>(<span class="st">'Meg_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Raw data not available.</code></pre>
 </div>
@@ -701,11 +856,23 @@ SiteNN      -0.303  0.136  0.020 -0.004  0.237</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 6</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Megachile, without pseudo </span><span class="al">###</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_no_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Meg_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_no_ps)) <span class="co"># great</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 6</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="do">### New nests per conspecifics Megachile, without pseudo </span><span class="al">###</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_no_ps_BINOMIAL <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Meg_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_no_ps_BINOMIAL_subsite <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_meg, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Meg_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_meg_xs, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_no_ps_POISSON <span class="ot">&lt;-</span> <span class="fu">glmer</span>(New_nests_meg <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Available_cavities_prior <span class="sc">-</span> New_nests_sum))<span class="sc">+</span> <span class="fu">scale</span>(Meg_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">poisson</span>())</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>mod_choice_consp_meg_no_ps_POISSON_subsite <span class="ot">&lt;-</span> <span class="fu">glmer</span>(New_nests_meg <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Available_cavities_prior <span class="sc">-</span> New_nests_sum))<span class="sc">+</span> <span class="fu">scale</span>(Meg_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> <span class="fu">poisson</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Model failed to converge with max|grad| = 0.455026 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_no_ps_BINOMIAL))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>DHARMa:testOutliers with type = binomial may have inflated Type I error rates for integer-valued distributions. To get a more exact result, it is recommended to re-run testOutliers with type = 'bootstrap'. See ?testOutliers for details</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -713,7 +880,7 @@ SiteNN      -0.303  0.136  0.020 -0.004  0.237</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_consp_meg_no_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_no_ps_BINOMIAL_subsite))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -721,7 +888,7 @@ SiteNN      -0.303  0.136  0.020 -0.004  0.237</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_consp_meg_no_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_no_ps_POISSON))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -729,16 +896,7 @@ SiteNN      -0.303  0.136  0.020 -0.004  0.237</code></pre>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa nonparametric dispersion test via sd of residuals fitted vs.
-    simulated
-
-data:  simulationOutput
-dispersion = 0.10354, p-value = 0.168
-alternative hypothesis: two.sided</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_consp_meg_no_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_consp_meg_no_ps_POISSON_subsite))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -746,16 +904,48 @@ alternative hypothesis: two.sided</code></pre>
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_no_ps_BINOMIAL) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-    DHARMa zero-inflation test via comparison to expected zeros with
-    simulation under H0 = fitted model
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~  
+    scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) +  
+        Site + (1 | Trapnest)
+   Data: nesting_meg_xs
 
-data:  simulationOutput
-ratioObsSim = 1.021, p-value = 0.336
-alternative hypothesis: two.sided</code></pre>
+     AIC      BIC   logLik deviance df.resid 
+   422.2    459.3   -204.1    408.2     1469 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.1633 -0.0692 -0.0210 -0.0110  7.4822 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Trapnest (Intercept) 13.07    3.615   
+Number of obs: 1476, groups:  Trapnest, 72
+
+Fixed effects:
+                       Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)            -8.32084    1.25569  -6.627 3.44e-11 ***
+scale(Meg_no_ps_prior)  0.02973    0.07967   0.373   0.7091    
+scale(Good_days)        0.04628    0.11377   0.407   0.6842    
+scale(Day_of_year)      1.65081    0.40981   4.028 5.62e-05 ***
+SiteCP                 -3.63982    1.43049  -2.544   0.0109 *  
+SiteNN                 -2.37621    1.57657  -1.507   0.1318    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(M___ sc(G_) s(D__) SiteCP
+scl(Mg_n__)  0.403                            
+scl(Gd_dys)  0.164  0.310                     
+scl(Dy_f_y) -0.485 -0.713 -0.400              
+SiteCP      -0.091  0.246  0.113 -0.311       
+SiteNN      -0.248 -0.020 -0.007  0.061  0.206</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_no_ps) <span class="co"># Day of year and Site significant</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_no_ps_BINOMIAL_subsite) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -797,34 +987,125 @@ scl(Dy_f_y) -0.456 -0.708 -0.403
 SiteCP      -0.083  0.270  0.121 -0.329       
 SiteNN      -0.245  0.012  0.005  0.029  0.246</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mod_choice_consp_meg_no_ps, <span class="at">file=</span><span class="st">'Models/mod_choice_consp_meg_no_ps.Rdata'</span>)</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_choice_consp_meg_no_ps, <span class="fu">c</span>(<span class="st">'Meg_no_ps_prior'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Raw data not available.</code></pre>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_no_ps_POISSON) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: poisson  ( log )
+Formula: 
+New_nests_meg ~ offset(log(Available_cavities_prior - New_nests_sum)) +  
+    scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+    2) + Site + (1 | Trapnest)
+   Data: nesting_os_xs
+
+     AIC      BIC   logLik deviance df.resid 
+   422.0    464.4   -203.0    406.0     1468 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.5018 -0.0750 -0.0242 -0.0081  6.3637 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Trapnest (Intercept) 11.09    3.33    
+Number of obs: 1476, groups:  Trapnest, 72
+
+Fixed effects:
+                        Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)             -8.51021    1.18719  -7.168 7.59e-13 ***
+scale(Meg_no_ps_prior)   0.05339    0.07209   0.741   0.4590    
+scale(Good_days)         0.20432    0.12010   1.701   0.0889 .  
+poly(Day_of_year, 2)1   82.91693   18.29915   4.531 5.87e-06 ***
+poly(Day_of_year, 2)2  -30.26322    7.25378  -4.172 3.02e-05 ***
+SiteCP                  -3.33401    1.33996  -2.488   0.0128 *  
+SiteNN                  -2.70333    1.48927  -1.815   0.0695 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(M___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Mg_n__)  0.375                                         
+scl(Gd_dys)  0.126  0.318                                  
+ply(D__,2)1 -0.479 -0.557 -0.253                           
+ply(D__,2)2  0.164 -0.044 -0.168 -0.476                    
+SiteCP      -0.092  0.215  0.113 -0.239     0.003          
+SiteNN      -0.193  0.016  0.005  0.003     0.032     0.220</code></pre>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_Analyses_files/figure-html/Models-%20Nest%20per%20Conspecifics%20Megachile-10.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_consp_meg_no_ps_POISSON_subsite) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: poisson  ( log )
+Formula: 
+New_nests_meg ~ offset(log(Available_cavities_prior - New_nests_sum)) +  
+    scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,  
+    2) + Site + (1 | Subsite/Trapnest)
+   Data: nesting_os_xs
+
+     AIC      BIC   logLik deviance df.resid 
+   423.2    470.8   -202.6    405.2     1467 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.5078 -0.0955 -0.0377 -0.0121  6.8868 
+
+Random effects:
+ Groups           Name        Variance Std.Dev.
+ Trapnest:Subsite (Intercept) 4.167    2.041   
+ Subsite          (Intercept) 2.253    1.501   
+Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
+
+Fixed effects:
+                        Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)             -7.75473    0.87958  -8.816  &lt; 2e-16 ***
+scale(Meg_no_ps_prior)   0.07433    0.07113   1.045   0.2960    
+scale(Good_days)         0.22598    0.11927   1.895   0.0581 .  
+poly(Day_of_year, 2)1   82.42244   17.91528   4.601 4.21e-06 ***
+poly(Day_of_year, 2)2  -31.64116    7.33719  -4.312 1.61e-05 ***
+SiteCP                  -3.26208    1.33528  -2.443   0.0146 *  
+SiteNN                  -2.71797    1.41962  -1.915   0.0555 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) s(M___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP
+scl(Mg_n__)  0.307                                         
+scl(Gd_dys)  0.081  0.309                                  
+ply(D__,2)1 -0.463 -0.514 -0.230                           
+ply(D__,2)2  0.227 -0.053 -0.170 -0.501                    
+SiteCP      -0.113  0.265  0.128 -0.270     0.004          
+SiteNN      -0.207  0.082  0.029 -0.046     0.031     0.281
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.455026 (tol = 0.002, component 1)</code></pre>
 </div>
-</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(simulateResiduals(mod_choice_consp_meg_no_ps)) # great</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check_model(mod_choice_consp_meg_no_ps) # fine</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="co"># testDispersion(mod_choice_consp_meg_no_ps, type = 'DHARMa') # good </span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co"># testZeroInflation(mod_choice_consp_meg_no_ps) # good</span></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(mod_choice_consp_meg_no_ps) # Day of year and Site significant</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a><span class="co"># save(mod_choice_consp_meg_no_ps, file='Models/mod_choice_consp_meg_no_ps.Rdata')</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ggpredict(mod_choice_consp_meg_no_ps, c('Meg_no_ps_prior')) %&gt;% plot(rawdata = TRUE, jitter = .04) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="parasitism" class="level3">
 <h3 class="anchored" data-anchor-id="parasitism">Parasitism</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 7</span></span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, with pseudo</span></span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>mod_par_agg_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(Cell_parasitized <span class="sc">~</span> <span class="fu">scale</span>(Osmia_ps_post) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 7</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, with pseudo</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>mod_par_agg_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Sum_cell_parasitized, Sum_cell_not_parasitized) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_ps_no_iw) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+unable to evaluate scaled gradient</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_ps)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Hessian is numerically singular: parameters are not uniquely determined</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_ps)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -832,7 +1113,7 @@ SiteNN      -0.245  0.012  0.005  0.029  0.246</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -840,7 +1121,7 @@ SiteNN      -0.245  0.012  0.005  0.029  0.246</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -854,10 +1135,10 @@ SiteNN      -0.245  0.012  0.005  0.029  0.246</code></pre>
     simulated
 
 data:  simulationOutput
-dispersion = 0.86531, p-value = 0.336
+dispersion = 0.78794, p-value = 0.792
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -871,10 +1152,10 @@ alternative hypothesis: two.sided</code></pre>
     simulation under H0 = fitted model
 
 data:  simulationOutput
-ratioObsSim = 1.0374, p-value = 0.36
+ratioObsSim = 1.0131, p-value = 1
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_ps) <span class="co"># no detected effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_ps) <span class="co"># no detected effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in vcov.merMod(object, use.hessian = use.hessian): variance-covariance matrix computed from finite-difference Hessian is
 not positive definite or contains NA values: falling back to var-cov estimated from RX</code></pre>
@@ -887,45 +1168,50 @@ not positive definite or contains NA values: falling back to var-cov estimated f
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
-Formula: Cell_parasitized ~ scale(Osmia_ps_post) + scale(Day_of_year) +  
-    Site + (1 | Subsite/Trapnest/Nest_ID)
+Formula: 
+cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_ps_no_iw) +  
+    scale(Day_of_year) + Site + (1 | Subsite/Trapnest/Nest_ID)
    Data: nesting_cells_os
 
      AIC      BIC   logLik deviance df.resid 
-   488.4    525.0   -236.2    472.4      710 
+    74.4     89.8    -29.2     58.4       43 
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--1.6864 -0.1793 -0.1242 -0.1005  3.4672 
+     Min       1Q   Median       3Q      Max 
+-1.05369 -0.18242 -0.08254 -0.00001  1.20138 
 
 Random effects:
- Groups                     Name        Variance Std.Dev.
- Nest_ID:(Trapnest:Subsite) (Intercept) 7.364    2.714   
- Trapnest:Subsite           (Intercept) 0.000    0.000   
- Subsite                    (Intercept) 0.000    0.000   
-Number of obs: 718, groups:  
-Nest_ID:(Trapnest:Subsite), 130; Trapnest:Subsite, 30; Subsite, 15
+ Groups                     Name        Variance  Std.Dev.
+ Nest_ID:(Trapnest:Subsite) (Intercept) 9.868e+00 3.141371
+ Trapnest:Subsite           (Intercept) 1.956e-06 0.001398
+ Subsite                    (Intercept) 9.725e+00 3.118433
+Number of obs: 51, groups:  
+Nest_ID:(Trapnest:Subsite), 30; Trapnest:Subsite, 12; Subsite, 11
 
 Fixed effects:
-                       Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)          -3.305e+00  3.896e-01  -8.484   &lt;2e-16 ***
-scale(Osmia_ps_post) -2.581e-01  3.017e-01  -0.856   0.3922    
-scale(Day_of_year)    1.891e-01  3.116e-01   0.607   0.5439    
-SiteCP               -2.996e+01  2.624e+06   0.000   1.0000    
-SiteNN                1.346e+00  6.948e-01   1.938   0.0527 .  
+                        Estimate Std. Error z value Pr(&gt;|z|)   
+(Intercept)              -6.0653     2.1579  -2.811  0.00494 **
+scale(Osmia_ps_no_iw)     0.1208     0.6327   0.191  0.84864   
+scale(Day_of_year)        1.3478     1.2155   1.109  0.26751   
+SiteCP                  -20.6914 36681.1230  -0.001  0.99955   
+SiteNN                    5.5976     3.0095   1.860  0.06289 . 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) s(O__) s(D__) SiteCP
-scl(Osm_p_)  0.033                     
-scl(Dy_f_y)  0.043  0.091              
+            (Intr) s(O___ s(D__) SiteCP
+scl(Osm___) -0.120                     
+scl(Dy_f_y) -0.198  0.212              
 SiteCP       0.000  0.000  0.000       
-SiteNN      -0.570 -0.016 -0.243  0.000
+SiteNN      -0.708  0.126  0.075  0.000
 optimizer (Nelder_Mead) convergence code: 0 (OK)
-boundary (singular) fit: see help('isSingular')</code></pre>
+unable to evaluate scaled gradient
+ Hessian is numerically singular: parameters are not uniquely determined</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_ps, <span class="fu">c</span>(<span class="st">'Osmia_ps_post'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_ps, <span class="fu">c</span>(<span class="st">'Osmia_ps_no_iw'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Raw data not available.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -933,14 +1219,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 8</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, without pseudo</span></span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>mod_par_agg_no_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(Cell_parasitized <span class="sc">~</span> <span class="fu">scale</span>(Osmia_no_ps_post) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 8</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, without pseudo</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>mod_par_agg_no_ps <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Sum_cell_parasitized, Sum_cell_not_parasitized) <span class="sc">~</span> <span class="fu">scale</span>(Osmia_no_ps_no_iw) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_no_ps)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_no_ps)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -948,7 +1234,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_no_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_no_ps) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -956,7 +1242,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_no_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_no_ps, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -970,10 +1256,10 @@ boundary (singular) fit: see help('isSingular')</code></pre>
     simulated
 
 data:  simulationOutput
-dispersion = 0.86335, p-value = 0.368
+dispersion = 0.64828, p-value = 0.208
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_no_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_no_ps) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -987,10 +1273,10 @@ alternative hypothesis: two.sided</code></pre>
     simulation under H0 = fitted model
 
 data:  simulationOutput
-ratioObsSim = 1.0384, p-value = 0.36
+ratioObsSim = 1.0027, p-value = 1
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_no_ps) <span class="co"># no detected effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_no_ps) <span class="co"># no detected effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in vcov.merMod(object, use.hessian = use.hessian): variance-covariance matrix computed from finite-difference Hessian is
 not positive definite or contains NA values: falling back to var-cov estimated from RX
@@ -1002,45 +1288,49 @@ not positive definite or contains NA values: falling back to var-cov estimated f
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
-Formula: Cell_parasitized ~ scale(Osmia_no_ps_post) + scale(Day_of_year) +  
-    Site + (1 | Subsite/Trapnest/Nest_ID)
+Formula: 
+cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_no_ps_no_iw) +  
+    scale(Day_of_year) + Site + (1 | Subsite/Trapnest/Nest_ID)
    Data: nesting_cells_os
 
      AIC      BIC   logLik deviance df.resid 
-   488.6    525.2   -236.3    472.6      710 
+   234.2    258.4   -109.1    218.2      143 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--1.6776 -0.1806 -0.1236 -0.1053  3.4883 
+-1.1671 -0.2862 -0.1979  0.1116  1.9503 
 
 Random effects:
  Groups                     Name        Variance  Std.Dev. 
- Nest_ID:(Trapnest:Subsite) (Intercept) 7.282e+00 2.699e+00
- Trapnest:Subsite           (Intercept) 0.000e+00 0.000e+00
- Subsite                    (Intercept) 5.035e-09 7.096e-05
-Number of obs: 718, groups:  
-Nest_ID:(Trapnest:Subsite), 130; Trapnest:Subsite, 30; Subsite, 15
+ Nest_ID:(Trapnest:Subsite) (Intercept) 6.609e+00 2.571e+00
+ Trapnest:Subsite           (Intercept) 1.894e-14 1.376e-07
+ Subsite                    (Intercept) 1.264e-15 3.555e-08
+Number of obs: 151, groups:  
+Nest_ID:(Trapnest:Subsite), 90; Trapnest:Subsite, 29; Subsite, 15
 
 Fixed effects:
-                          Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                -3.2574     0.3887  -8.380   &lt;2e-16 ***
-scale(Osmia_no_ps_post)    -0.1890     0.2633  -0.718   0.4730    
-scale(Day_of_year)          0.2498     0.3114   0.802   0.4225    
-SiteCP                    -20.5288 22551.5422  -0.001   0.9993    
-SiteNN                      1.2587     0.6987   1.801   0.0716 .  
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -3.074e+00  4.700e-01  -6.541 6.13e-11 ***
+scale(Osmia_no_ps_no_iw) -5.180e-01  3.988e-01  -1.299    0.194    
+scale(Day_of_year)        1.370e-01  4.558e-01   0.301    0.764    
+SiteCP                   -1.240e+02  1.794e+07   0.000    1.000    
+SiteNN                    1.299e+00  8.148e-01   1.594    0.111    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) s(O___ s(D__) SiteCP
-scl(Osm___) -0.080                     
-scl(Dy_f_y)  0.050 -0.161              
+scl(Os____) -0.059                     
+scl(Dy_f_y)  0.180 -0.289              
 SiteCP       0.000  0.000  0.000       
-SiteNN      -0.572  0.132 -0.260  0.000
+SiteNN      -0.608  0.113 -0.275  0.000
 optimizer (Nelder_Mead) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_no_ps, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_post'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_no_ps, <span class="fu">c</span>(<span class="st">'Osmia_no_ps_no_iw'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Raw data not available.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1048,14 +1338,19 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 9</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, unsealed</span></span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>mod_par_agg_unsealed_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(Cell_parasitized <span class="sc">~</span> <span class="fu">scale</span>(Sum_unsealed_os) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 9</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between parasites and aggregation densities, unsealed</span></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a>mod_par_agg_unsealed_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Sum_cell_parasitized, Sum_cell_not_parasitized) <span class="sc">~</span> <span class="fu">scale</span>(Sum_unsealed_os_no_iw) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+unable to evaluate scaled gradient</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_unsealed_os)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Hessian is numerically singular: parameters are not uniquely determined</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_par_agg_unsealed_os)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1063,7 +1358,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_unsealed_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_par_agg_unsealed_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1071,7 +1366,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_unsealed_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_par_agg_unsealed_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1085,10 +1380,10 @@ boundary (singular) fit: see help('isSingular')</code></pre>
     simulated
 
 data:  simulationOutput
-dispersion = 0.86514, p-value = 0.304
+dispersion = 0.70017, p-value = 0.328
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_unsealed_os) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_par_agg_unsealed_os) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1102,60 +1397,66 @@ alternative hypothesis: two.sided</code></pre>
     simulation under H0 = fitted model
 
 data:  simulationOutput
-ratioObsSim = 1.0375, p-value = 0.32
+ratioObsSim = 1.0073, p-value = 1
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_unsealed_os) <span class="do">### HELP warning</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_par_agg_unsealed_os) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in vcov.merMod(object, use.hessian = use.hessian): variance-covariance matrix computed from finite-difference Hessian is
-not positive definite or contains NA values: falling back to var-cov estimated from RX
-
-Warning in vcov.merMod(object, use.hessian = use.hessian): variance-covariance matrix computed from finite-difference Hessian is
+not positive definite or contains NA values: falling back to var-cov estimated from RX</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in vcov.merMod(object, correlation = correlation, sigm = sig): variance-covariance matrix computed from finite-difference Hessian is
 not positive definite or contains NA values: falling back to var-cov estimated from RX</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
-Formula: Cell_parasitized ~ scale(Sum_unsealed_os) + scale(Day_of_year) +  
-    Site + (1 | Subsite/Trapnest/Nest_ID)
+Formula: 
+cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Sum_unsealed_os_no_iw) +  
+    scale(Day_of_year) + Site + (1 | Subsite/Trapnest/Nest_ID)
    Data: nesting_cells_os
 
      AIC      BIC   logLik deviance df.resid 
-   485.8    522.4   -234.9    469.8      710 
+   233.2    257.3   -108.6    217.2      143 
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--2.0376 -0.1857 -0.1288 -0.1002  3.7717 
+     Min       1Q   Median       3Q      Max 
+-1.20807 -0.30281 -0.21869  0.04079  1.66269 
 
 Random effects:
  Groups                     Name        Variance Std.Dev.
- Nest_ID:(Trapnest:Subsite) (Intercept) 7.029    2.651   
- Trapnest:Subsite           (Intercept) 0.000    0.000   
- Subsite                    (Intercept) 0.000    0.000   
-Number of obs: 718, groups:  
-Nest_ID:(Trapnest:Subsite), 130; Trapnest:Subsite, 30; Subsite, 15
+ Nest_ID:(Trapnest:Subsite) (Intercept) 5.599110 2.36624 
+ Trapnest:Subsite           (Intercept) 0.005179 0.07197 
+ Subsite                    (Intercept) 0.007012 0.08373 
+Number of obs: 151, groups:  
+Nest_ID:(Trapnest:Subsite), 90; Trapnest:Subsite, 29; Subsite, 15
 
 Fixed effects:
-                         Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)            -3.315e+00  3.864e-01  -8.580   &lt;2e-16 ***
-scale(Sum_unsealed_os) -4.360e-01  2.427e-01  -1.796   0.0725 .  
-scale(Day_of_year)      6.640e-02  3.184e-01   0.209   0.8348    
-SiteCP                 -8.773e+01  1.794e+07   0.000   1.0000    
-SiteNN                  1.454e+00  6.902e-01   2.106   0.0352 *  
+                               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                  -3.049e+00  4.429e-01  -6.884 5.82e-12 ***
+scale(Sum_unsealed_os_no_iw) -4.668e-01  2.716e-01  -1.719   0.0857 .  
+scale(Day_of_year)           -1.079e-01  4.228e-01  -0.255   0.7986    
+SiteCP                       -7.624e+01  1.794e+07   0.000   1.0000    
+SiteNN                        1.485e+00  7.632e-01   1.946   0.0517 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) s(S__) s(D__) SiteCP
-scl(Sm_ns_)  0.142                     
-scl(Dy_f_y)  0.081  0.263              
+            (Intr) s(S___ s(D__) SiteCP
+scl(Sm____)  0.127                     
+scl(Dy_f_y)  0.197  0.158              
 SiteCP       0.000  0.000  0.000       
-SiteNN      -0.577 -0.131 -0.272  0.000
+SiteNN      -0.612 -0.107 -0.270  0.000
 optimizer (Nelder_Mead) convergence code: 0 (OK)
-boundary (singular) fit: see help('isSingular')</code></pre>
+unable to evaluate scaled gradient
+ Hessian is numerically singular: parameters are not uniquely determined</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_unsealed_os, <span class="fu">c</span>(<span class="st">'Sum_unsealed_os'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_par_agg_unsealed_os, <span class="fu">c</span>(<span class="st">'Sum_unsealed_os_no_iw'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Raw data not available.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1165,18 +1466,19 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 10</span></span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nesting preferences, with pseudo</span></span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>mod_choice_par_ps_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os) <span class="sc">*</span> <span class="fu">scale</span>(Osmia_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting, <span class="at">family =</span> binomial) <span class="do">### MODEL FAILED TO CONVERGE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 10</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nesting preferences, with pseudo</span></span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a>mod_choice_par_ps_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os) <span class="sc">*</span> <span class="fu">scale</span>(Osmia_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> binomial) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
-Model failed to converge with max|grad| = 0.0099852 (tol = 0.002, component 1)</code></pre>
+Model failed to converge with max|grad| = 0.0460468 (tol = 0.002, component 1)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_par_ps_os)) <span class="co"># help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>DHARMa:testOutliers with type = binomial may have inflated Type I error rates for integer-valued distributions. To get a more exact result, it is recommended to re-run testOutliers with type = 'bootstrap'. See ?testOutliers for details</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co"># having subsite doesnt change model</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Warning: Model failed to converge with max|grad| = 0.0460468 (tol = 0.002, component 1)</span></span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_par_ps_os)) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1184,7 +1486,7 @@ Model failed to converge with max|grad| = 0.0099852 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_par_ps_os) <span class="co"># HELP </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_par_ps_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1192,7 +1494,7 @@ Model failed to converge with max|grad| = 0.0099852 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_par_ps_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_par_ps_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1206,10 +1508,10 @@ Model failed to converge with max|grad| = 0.0099852 (tol = 0.002, component 1)</
     simulated
 
 data:  simulationOutput
-dispersion = 0.10151, p-value = 0.008
+dispersion = 1.1786, p-value = 0.456
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_par_ps_os) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_par_ps_os) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1223,69 +1525,72 @@ alternative hypothesis: two.sided</code></pre>
     simulation under H0 = fitted model
 
 data:  simulationOutput
-ratioObsSim = 1.0796, p-value = 0.032
+ratioObsSim = 1.0244, p-value = 0.096
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_par_ps_os) <span class="co">#  almost everything sig, how to interpret interaction?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_par_ps_os) <span class="co"># everything sig except interaction</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
 Formula: cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~  
     scale(Par_nests_unsealed_os) * scale(Osmia_ps_prior) + scale(Good_days) +  
-        scale(Day_of_year) + Site + (1 | Subsite/Trapnest)
-   Data: nesting
+        poly(Day_of_year, 2) + Site + (1 | Subsite/Trapnest)
+   Data: nesting_os_xs
 
      AIC      BIC   logLik deviance df.resid 
- 15808.7  15890.4  -7894.4  15788.7    26050 
+   932.2    990.4   -455.1    910.2     1465 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--1.6509 -0.3596 -0.0309 -0.0120  6.4584 
+-1.1816 -0.3137 -0.1272 -0.0055 17.0499 
 
 Random effects:
  Groups           Name        Variance  Std.Dev.
- Trapnest:Subsite (Intercept) 1.285e+01 3.584476
- Subsite          (Intercept) 6.774e-05 0.008231
-Number of obs: 26060, groups:  Trapnest:Subsite, 72; Subsite, 24
+ Trapnest:Subsite (Intercept) 6.909e-01 0.83119 
+ Subsite          (Intercept) 5.976e-05 0.00773 
+Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
 
 Fixed effects:
-                                                   Estimate Std. Error z value
-(Intercept)                                        -7.44174    0.75341  -9.877
-scale(Par_nests_unsealed_os)                        0.15706    0.01354  11.597
-scale(Osmia_ps_prior)                               2.62651    0.08908  29.485
-scale(Good_days)                                    0.18361    0.01862   9.858
-scale(Day_of_year)                                 -0.13633    0.03703  -3.682
-SiteCP                                             -2.55371    1.27860  -1.997
-SiteNN                                             -0.19046    1.12560  -0.169
-scale(Par_nests_unsealed_os):scale(Osmia_ps_prior)  0.01260    0.01177   1.070
-                                                   Pr(&gt;|z|)    
-(Intercept)                                         &lt; 2e-16 ***
-scale(Par_nests_unsealed_os)                        &lt; 2e-16 ***
-scale(Osmia_ps_prior)                               &lt; 2e-16 ***
-scale(Good_days)                                    &lt; 2e-16 ***
-scale(Day_of_year)                                 0.000231 ***
-SiteCP                                             0.045796 *  
-SiteNN                                             0.865633    
-scale(Par_nests_unsealed_os):scale(Osmia_ps_prior) 0.284523    
+                                                     Estimate Std. Error
+(Intercept)                                          -7.79191    0.54514
+scale(Par_nests_unsealed_os)                          0.23591    0.05656
+scale(Osmia_ps_prior)                                 0.69293    0.17560
+scale(Good_days)                                      0.37076    0.08579
+poly(Day_of_year, 2)1                              -165.17859   22.49869
+poly(Day_of_year, 2)2                              -102.71361   12.79876
+SiteCP                                                2.25465    0.98409
+SiteNN                                               -1.08874    0.34843
+scale(Par_nests_unsealed_os):scale(Osmia_ps_prior)   -0.08868    0.05228
+                                                   z value Pr(&gt;|z|)    
+(Intercept)                                        -14.293  &lt; 2e-16 ***
+scale(Par_nests_unsealed_os)                         4.171 3.04e-05 ***
+scale(Osmia_ps_prior)                                3.946 7.95e-05 ***
+scale(Good_days)                                     4.322 1.55e-05 ***
+poly(Day_of_year, 2)1                               -7.342 2.11e-13 ***
+poly(Day_of_year, 2)2                               -8.025 1.01e-15 ***
+SiteCP                                               2.291  0.02196 *  
+SiteNN                                              -3.125  0.00178 ** 
+scale(Par_nests_unsealed_os):scale(Osmia_ps_prior)  -1.696  0.08986 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) sc(P___) s(O__) sc(G_) s(D__) SiteCP SiteNN
-scl(Pr_n__)  0.014                                            
-scl(Osm_p_) -0.054 -0.215                                     
-scl(Gd_dys) -0.006  0.169    0.006                            
-scl(Dy_f_y)  0.001 -0.067   -0.124  0.123                     
-SiteCP      -0.404 -0.002    0.049 -0.003 -0.041              
-SiteNN      -0.610 -0.001   -0.015  0.003  0.025  0.284       
-s(P___):(O_ -0.007 -0.625    0.060 -0.092 -0.027  0.000 -0.001
+            (Intr) sc(P___) s(O__) sc(G_) p(D__,2)1 p(D__,2)2 SiteCP SiteNN
+scl(Pr_n__) -0.050                                                         
+scl(Osm_p_) -0.112 -0.103                                                  
+scl(Gd_dys) -0.140  0.144   -0.015                                         
+ply(D__,2)1  0.890 -0.042    0.083 -0.121                                  
+ply(D__,2)2  0.852 -0.012    0.094 -0.183  0.935                           
+SiteCP      -0.626  0.073    0.159  0.087 -0.562    -0.499                 
+SiteNN      -0.220  0.062   -0.031 -0.030  0.030     0.034     0.149       
+s(P___):(O_  0.122 -0.638   -0.034 -0.136  0.115     0.128    -0.103 -0.053
 optimizer (Nelder_Mead) convergence code: 0 (OK)
-Model failed to converge with max|grad| = 0.0099852 (tol = 0.002, component 1)</code></pre>
+Model failed to converge with max|grad| = 0.0460468 (tol = 0.002, component 1)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interact_plot</span>(mod_choice_par_ps_os, <span class="at">pred =</span> Osmia_ps_prior, <span class="at">modx =</span> Par_nests_unsealed_os, <span class="at">data =</span> nesting)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interact_plot</span>(mod_choice_par_ps_os, <span class="at">pred =</span> Osmia_ps_prior, <span class="at">modx =</span> Par_nests_unsealed_os, <span class="at">data =</span> nesting_os_xs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: -0.257946227875293 is outside the observed range of
+<pre><code>Warning: -0.257056930707301 is outside the observed range of
 Par_nests_unsealed_os</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1295,18 +1600,21 @@ Par_nests_unsealed_os</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 11</span></span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nesting preferences, without pseudo</span></span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>mod_choice_par_no_ps_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os) <span class="sc">*</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 11</span></span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nesting preferences, without pseudo</span></span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>mod_choice_par_no_ps_os <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(New_nests_os, Available_cavities_prior <span class="sc">-</span> New_nests_sum) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os) <span class="sc">*</span> <span class="fu">scale</span>(Osmia_no_ps_prior) <span class="sc">+</span> <span class="fu">scale</span>(Good_days) <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_os_xs, <span class="at">family =</span> binomial) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
-Model failed to converge with max|grad| = 0.0399156 (tol = 0.002, component 1)</code></pre>
+Model failed to converge with max|grad| = 0.0448252 (tol = 0.002, component 1)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_par_no_ps_os)) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>DHARMa:testOutliers with type = binomial may have inflated Type I error rates for integer-valued distributions. To get a more exact result, it is recommended to re-run testOutliers with type = 'bootstrap'. See ?testOutliers for details</code></pre>
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: large eigenvalue ratio
+ - Rescale variables?</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Warning: Model failed to converge with max|grad| = 0.0448252 (tol = 0.002, component 1)Warning: Model is nearly unidentifiable: large eigenvalue ratio - Rescale variables?</span></span>
+<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_choice_par_no_ps_os)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1314,7 +1622,7 @@ Model failed to converge with max|grad| = 0.0399156 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_par_no_ps_os) <span class="co"># HELP  </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_choice_par_no_ps_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1322,7 +1630,7 @@ Model failed to converge with max|grad| = 0.0399156 (tol = 0.002, component 1)</
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_par_no_ps_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testDispersion</span>(mod_choice_par_no_ps_os, <span class="at">type =</span> <span class="st">'DHARMa'</span>) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1336,10 +1644,10 @@ Model failed to converge with max|grad| = 0.0399156 (tol = 0.002, component 1)</
     simulated
 
 data:  simulationOutput
-dispersion = 0.21707, p-value = 0.344
+dispersion = 1.3005, p-value = 0.184
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_par_no_ps_os) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">testZeroInflation</span>(mod_choice_par_no_ps_os) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1353,69 +1661,75 @@ alternative hypothesis: two.sided</code></pre>
     simulation under H0 = fitted model
 
 data:  simulationOutput
-ratioObsSim = 1.0176, p-value = 0.64
+ratioObsSim = 1.0185, p-value = 0.08
 alternative hypothesis: two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_par_no_ps_os) <span class="co"># almost everything sig</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_choice_par_no_ps_os) <span class="co"># almost everything sig</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
 Formula: cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~  
     scale(Par_nests_unsealed_os) * scale(Osmia_no_ps_prior) +  
-        scale(Good_days) + scale(Day_of_year) + Site + (1 | Subsite/Trapnest)
-   Data: nesting
+        scale(Good_days) + poly(Day_of_year, 2) + Site + (1 |  
+        Subsite/Trapnest)
+   Data: nesting_os_xs
 
      AIC      BIC   logLik deviance df.resid 
- 15846.0  15927.7  -7913.0  15826.0    26050 
+   913.8    972.0   -445.9    891.8     1465 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--1.2294 -0.3418 -0.0407 -0.0176  8.8085 
+-1.4488 -0.3028 -0.1296 -0.0064 20.2094 
 
 Random effects:
- Groups           Name        Variance Std.Dev.
- Trapnest:Subsite (Intercept) 5.103    2.259   
- Subsite          (Intercept) 2.812    1.677   
-Number of obs: 26060, groups:  Trapnest:Subsite, 72; Subsite, 24
+ Groups           Name        Variance  Std.Dev. 
+ Trapnest:Subsite (Intercept) 3.496e-01 0.5912281
+ Subsite          (Intercept) 7.748e-07 0.0008802
+Number of obs: 1476, groups:  Trapnest:Subsite, 72; Subsite, 24
 
 Fixed effects:
-                                                       Estimate Std. Error
-(Intercept)                                           -7.155655   0.743690
-scale(Par_nests_unsealed_os)                           0.490137   0.016053
-scale(Osmia_no_ps_prior)                               0.478614   0.020856
-scale(Good_days)                                       0.185186   0.018268
-scale(Day_of_year)                                    -0.715187   0.050684
-SiteCP                                                -3.168032   1.272521
-SiteNN                                                 0.550638   1.133739
-scale(Par_nests_unsealed_os):scale(Osmia_no_ps_prior) -0.185190   0.008624
+                                                        Estimate Std. Error
+(Intercept)                                             -7.78477    0.52756
+scale(Par_nests_unsealed_os)                             0.45233    0.06487
+scale(Osmia_no_ps_prior)                                 0.45953    0.09371
+scale(Good_days)                                         0.33841    0.08417
+poly(Day_of_year, 2)1                                 -170.51603   22.32119
+poly(Day_of_year, 2)2                                  -91.44987   12.70625
+SiteCP                                                   2.41692    0.97029
+SiteNN                                                  -0.72896    0.29367
+scale(Par_nests_unsealed_os):scale(Osmia_no_ps_prior)   -0.18995    0.03675
                                                       z value Pr(&gt;|z|)    
-(Intercept)                                            -9.622   &lt;2e-16 ***
-scale(Par_nests_unsealed_os)                           30.533   &lt;2e-16 ***
-scale(Osmia_no_ps_prior)                               22.948   &lt;2e-16 ***
-scale(Good_days)                                       10.137   &lt;2e-16 ***
-scale(Day_of_year)                                    -14.111   &lt;2e-16 ***
-SiteCP                                                 -2.490   0.0128 *  
-SiteNN                                                  0.486   0.6272    
-scale(Par_nests_unsealed_os):scale(Osmia_no_ps_prior) -21.474   &lt;2e-16 ***
+(Intercept)                                           -14.756  &lt; 2e-16 ***
+scale(Par_nests_unsealed_os)                            6.973 3.10e-12 ***
+scale(Osmia_no_ps_prior)                                4.903 9.42e-07 ***
+scale(Good_days)                                        4.020 5.81e-05 ***
+poly(Day_of_year, 2)1                                  -7.639 2.19e-14 ***
+poly(Day_of_year, 2)2                                  -7.197 6.14e-13 ***
+SiteCP                                                  2.491   0.0127 *  
+SiteNN                                                 -2.482   0.0131 *  
+scale(Par_nests_unsealed_os):scale(Osmia_no_ps_prior)  -5.168 2.36e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) sc(P___) s(O___ sc(G_) s(D__) SiteCP SiteNN
-scl(Pr_n__)  0.014                                            
-scl(Osm___)  0.030  0.212                                     
-scl(Gd_dys) -0.006  0.071    0.049                            
-scl(Dy_f_y) -0.037 -0.258   -0.667  0.089                     
-SiteCP      -0.380  0.023    0.052 -0.002 -0.061              
-SiteNN      -0.624 -0.019   -0.040  0.003  0.056  0.266       
-s(P___):(O_ -0.015 -0.764   -0.320  0.007  0.283 -0.023  0.018
+            (Intr) sc(P___) s(O___ sc(G_) p(D__,2)1 p(D__,2)2 SiteCP SiteNN
+scl(Pr_n__) -0.066                                                         
+scl(Osm___) -0.142  0.224                                                  
+scl(Gd_dys) -0.103  0.017   -0.046                                         
+ply(D__,2)1  0.935 -0.005   -0.035 -0.084                                  
+ply(D__,2)2  0.838  0.074    0.219 -0.164  0.902                           
+SiteCP      -0.639  0.096    0.242  0.054 -0.600    -0.465                 
+SiteNN      -0.211  0.090    0.349 -0.063  0.010     0.091     0.186       
+s(P___):(O_  0.108 -0.764   -0.304  0.019  0.066    -0.016    -0.118 -0.112
 optimizer (Nelder_Mead) convergence code: 0 (OK)
-Model failed to converge with max|grad| = 0.0399156 (tol = 0.002, component 1)</code></pre>
+Model failed to converge with max|grad| = 0.0448252 (tol = 0.002, component 1)
+Model is nearly unidentifiable: large eigenvalue ratio
+ - Rescale variables?</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interact_plot</span>(mod_choice_par_no_ps_os, <span class="at">pred =</span> Osmia_no_ps_prior, <span class="at">modx =</span> Par_nests_unsealed_os, <span class="at">data =</span> nesting)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interact_plot</span>(mod_choice_par_no_ps_os, <span class="at">pred =</span> Osmia_no_ps_prior, <span class="at">modx =</span> Par_nests_unsealed_os, <span class="at">data =</span> nesting_os_xs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: -0.257946227875293 is outside the observed range of
+<pre><code>Warning: -0.257056930707301 is outside the observed range of
 Par_nests_unsealed_os</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1427,16 +1741,16 @@ Par_nests_unsealed_os</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 12</span></span>
-<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nest investment</span></span>
-<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Likelyhood of  of terminating nest investment after a cell was parasitized</span></span>
-<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a><span class="co"># position of cell (last or not) ~ if cell is parasitized + day of year + site + (1|Subsite/Trapnest/Nest_ID)</span></span>
-<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>mod_last_cell <span class="ot">&lt;-</span> <span class="fu">glmer</span>(Last_cell <span class="sc">~</span> Cell_parasitized <span class="sc">+</span> Day_of_year <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest<span class="sc">/</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 12</span></span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="co"># How the presence of parasites effects nest investment</span></span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Likelyhood of  of terminating nest investment after a cell was parasitized</span></span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a><span class="co"># position of cell (last or not) ~ if cell is parasitized + day of year + site + (1|Subsite/Trapnest/Nest_ID)</span></span>
+<span id="cb153-5"><a href="#cb153-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-6"><a href="#cb153-6" aria-hidden="true" tabindex="-1"></a>mod_last_cell <span class="ot">&lt;-</span> <span class="fu">glmer</span>(Last_cell <span class="sc">~</span> Cell_parasitized <span class="sc">+</span> Day_of_year <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Nest_ID), <span class="at">data =</span> nesting_cells_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_last_cell)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_last_cell)) <span class="co"># good</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1444,56 +1758,46 @@ Par_nests_unsealed_os</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check_model(mod_last_cell) # HELP doesnt work</span></span>
-<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_last_cell) <span class="co"># site and day of year</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_last_cell) <span class="co"># day of year</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
-Formula: 
-Last_cell ~ Cell_parasitized + Day_of_year + Site + (1 | Subsite/Trapnest/Nest_ID)
+Formula: Last_cell ~ Cell_parasitized + Day_of_year + Site + (1 | Nest_ID)
    Data: nesting_cells_os
 
      AIC      BIC   logLik deviance df.resid 
-   670.6    707.2   -327.3    654.6      710 
+   160.7    178.8    -74.3    148.7      145 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--0.9950 -0.4602 -0.4118 -0.3684  2.9668 
+-1.1423 -0.5072 -0.4296 -0.2655  3.8068 
 
 Random effects:
- Groups                     Name        Variance Std.Dev.
- Nest_ID:(Trapnest:Subsite) (Intercept) 0        0       
- Trapnest:Subsite           (Intercept) 0        0       
- Subsite                    (Intercept) 0        0       
-Number of obs: 718, groups:  
-Nest_ID:(Trapnest:Subsite), 130; Trapnest:Subsite, 30; Subsite, 15
+ Groups  Name        Variance  Std.Dev. 
+ Nest_ID (Intercept) 1.544e-16 1.242e-08
+Number of obs: 151, groups:  Nest_ID, 90
 
 Fixed effects:
                   Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -8.492423   1.525043  -5.569 2.57e-08 ***
-Cell_parasitized  0.338456   0.258026   1.312   0.1896    
-Day_of_year       0.044489   0.009806   4.537 5.70e-06 ***
-SiteCP           -1.678583   0.840555  -1.997   0.0458 *  
-SiteNN            0.091417   0.227177   0.402   0.6874    
+(Intercept)      -10.77781    2.77453  -3.885 0.000103 ***
+Cell_parasitized  -0.14130    0.53385  -0.265 0.791253    
+Day_of_year        0.06019    0.01748   3.442 0.000577 ***
+SiteCP            -1.91515    1.26450  -1.515 0.129887    
+SiteNN             0.29146    0.44737   0.651 0.514734    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) Cll_pr Dy_f_y SiteCP
-Cell_prstzd  0.056                     
-Day_of_year -0.997 -0.083              
-SiteCP       0.376  0.082 -0.390       
-SiteNN       0.118 -0.085 -0.156  0.128
+Cell_prstzd  0.098                     
+Day_of_year -0.995 -0.126              
+SiteCP       0.392  0.112 -0.415       
+SiteNN       0.103 -0.162 -0.151  0.168
 optimizer (Nelder_Mead) convergence code: 0 (OK)
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 13</span></span>
-<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Investment into a nest if other active nests or the nest itself is parasitized</span></span>
-<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>mod_invest_filled <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Filled_length, Straw_length) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os) <span class="sc">*</span> Nest_parasitized <span class="sc">+</span> <span class="fu">scale</span>(Day_of_year) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> nesting_investment, <span class="at">family =</span> binomial)</span>
-<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_invest_filled)) <span class="co"># weird</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpredict</span>(mod_last_cell, <span class="fu">c</span>(<span class="st">'Cell_parasitized'</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">rawdata =</span> <span class="cn">TRUE</span>, <span class="at">jitter =</span> .<span class="dv">04</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1501,7 +1805,15 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_invest_filled) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL 13</span></span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Investment into a nest if other active nests or the nest itself is parasitized</span></span>
+<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a>mod_invest_filled <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Filled_length, Straw_length) <span class="sc">~</span> <span class="fu">scale</span>(Par_nests_unsealed_os_calc) <span class="sc">*</span> Nest_parasitized <span class="sc">+</span> <span class="fu">poly</span>(Day_of_year,<span class="dv">2</span>) <span class="sc">+</span> Site <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subsite<span class="sc">/</span>Trapnest), <span class="at">data =</span> investment_os, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
+Model failed to converge with max|grad| = 0.00356242 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb161"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(mod_invest_filled)) <span class="co"># fine</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1509,53 +1821,96 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_invest_filled) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_invest_filled) <span class="co"># best i can do</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_Analyses_files/figure-html/Investment-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_invest_filled) <span class="co"># almsot everything</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
  Family: binomial  ( logit )
-Formula: cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os) *  
-    Nest_parasitized + scale(Day_of_year) + Site + (1 | Subsite/Trapnest)
-   Data: nesting_investment
+Formula: 
+cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os_calc) *  
+    Nest_parasitized + poly(Day_of_year, 2) + Site + (1 | Subsite/Trapnest)
+   Data: investment_os
 
      AIC      BIC   logLik deviance df.resid 
-   173.7    179.8    -78.8    157.7        8 
+  1752.5   1779.8   -866.3   1732.5      103 
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--3.3233 -0.7994  0.0072  0.6471  3.0745 
+   Min     1Q Median     3Q    Max 
+-6.423 -2.321 -0.203  1.782 10.246 
 
 Random effects:
- Groups           Name        Variance Std.Dev.
- Trapnest:Subsite (Intercept) 0.03885  0.1971  
- Subsite          (Intercept) 0.33879  0.5821  
-Number of obs: 16, groups:  Trapnest:Subsite, 11; Subsite, 7
+ Groups           Name        Variance  Std.Dev. 
+ Trapnest:Subsite (Intercept) 4.103e-01 0.6405619
+ Subsite          (Intercept) 2.978e-07 0.0005457
+Number of obs: 113, groups:  Trapnest:Subsite, 29; Subsite, 15
 
 Fixed effects:
-                                                         Estimate Std. Error
-(Intercept)                                              -0.59609    0.36071
-scale(Par_nests_unsealed_os)                             -0.01345    0.10619
-Nest_parasitizedparasitized                              -0.38052    0.32930
-scale(Day_of_year)                                       -2.10341    0.36151
-SiteNN                                                    0.01658    0.49703
-scale(Par_nests_unsealed_os):Nest_parasitizedparasitized  0.23932    0.11452
-                                                         z value Pr(&gt;|z|)    
-(Intercept)                                               -1.653   0.0984 .  
-scale(Par_nests_unsealed_os)                              -0.127   0.8992    
-Nest_parasitizedparasitized                               -1.156   0.2479    
-scale(Day_of_year)                                        -5.818 5.94e-09 ***
-SiteNN                                                     0.033   0.9734    
-scale(Par_nests_unsealed_os):Nest_parasitizedparasitized   2.090   0.0366 *  
+                                                              Estimate
+(Intercept)                                                   -1.18545
+scale(Par_nests_unsealed_os_calc)                             -0.14803
+Nest_parasitizedparasitized                                   -0.16604
+poly(Day_of_year, 2)1                                         -6.46200
+poly(Day_of_year, 2)2                                         -0.99279
+SiteCP                                                         1.96697
+SiteNN                                                        -0.15694
+scale(Par_nests_unsealed_os_calc):Nest_parasitizedparasitized  0.11597
+                                                              Std. Error
+(Intercept)                                                      0.15980
+scale(Par_nests_unsealed_os_calc)                                0.02398
+Nest_parasitizedparasitized                                      0.04181
+poly(Day_of_year, 2)1                                            0.35791
+poly(Day_of_year, 2)2                                            0.32335
+SiteCP                                                           0.51343
+SiteNN                                                           0.26411
+scale(Par_nests_unsealed_os_calc):Nest_parasitizedparasitized    0.03862
+                                                              z value Pr(&gt;|z|)
+(Intercept)                                                    -7.418 1.19e-13
+scale(Par_nests_unsealed_os_calc)                              -6.173 6.69e-10
+Nest_parasitizedparasitized                                    -3.971 7.16e-05
+poly(Day_of_year, 2)1                                         -18.055  &lt; 2e-16
+poly(Day_of_year, 2)2                                          -3.070 0.002138
+SiteCP                                                          3.831 0.000128
+SiteNN                                                         -0.594 0.552359
+scale(Par_nests_unsealed_os_calc):Nest_parasitizedparasitized   3.003 0.002677
+                                                                 
+(Intercept)                                                   ***
+scale(Par_nests_unsealed_os_calc)                             ***
+Nest_parasitizedparasitized                                   ***
+poly(Day_of_year, 2)1                                         ***
+poly(Day_of_year, 2)2                                         ** 
+SiteCP                                                        ***
+SiteNN                                                           
+scale(Par_nests_unsealed_os_calc):Nest_parasitizedparasitized ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) sc(P___) Nst_pr s(D__) SiteNN
-scl(Pr_n__) -0.368                              
-Nst_prstzdp -0.198 -0.015                       
-scl(Dy_f_y) -0.302  0.224   -0.207              
-SiteNN      -0.665  0.172    0.169  0.087       
-sc(P___):N_  0.149 -0.131   -0.820  0.108 -0.112</code></pre>
+            (Intr) sc(P____) Nst_pr p(D__,2)1 p(D__,2)2 SiteCP SiteNN
+scl(Pr____)  0.019                                                   
+Nst_prstzdp -0.070  0.035                                            
+ply(D__,2)1 -0.018 -0.002    -0.134                                  
+ply(D__,2)2 -0.035  0.198    -0.047  0.467                           
+SiteCP      -0.302 -0.014     0.052 -0.235    -0.220                 
+SiteNN      -0.601  0.005    -0.016  0.004     0.041     0.180       
+s(P____):N_  0.000 -0.582    -0.151 -0.096    -0.056     0.012  0.003
+optimizer (Nelder_Mead) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00356242 (tol = 0.002, component 1)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interact_plot</span>(mod_invest_filled, <span class="at">pred =</span> Par_nests_unsealed_os_calc, <span class="at">modx =</span> Nest_parasitized, <span class="at">data =</span> investment_os)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_Analyses_files/figure-html/Investment-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
