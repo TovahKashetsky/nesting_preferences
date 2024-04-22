@@ -93,7 +93,7 @@ nesting_cells_os$Last_cell <- as.factor(nesting_cells_os$Last_cell)
 nesting_os %>% filter(!is.na(Bee_choice)) %>% 
   summarize(nests_total = sum(Bee_choice)) # 164 osmia nests for osmia through the summer
 nesting_meg %>% filter(!is.na(Bee_choice)) %>% 
-  summarize(nests_total = sum(Bee_choice)) # 58 megachile nests for osmia through the summer
+  summarize(nests_total = sum(Bee_choice)) # 58 megachile nests for osmia through the summer, now 42??
 
 
 theme_set(theme_classic(base_size=15)) 
@@ -107,7 +107,7 @@ theme_set(theme_classic(base_size=15))
 
 #### Model 1: New nests per available cavities, Osmia
 
-```{r Available cavities Osmia, echo=FALSE}
+```{r Available cavities Osmia, include = FALSE, echo=FALSE}
 
 mod_choice_cav_os_POISSON <- glmer(New_nests_os ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = poisson()) 
 
@@ -123,7 +123,7 @@ summary(mod_choice_cav_os_BINOMIAL)
 
 #### Model 2: New nests per available cavities, Megachile
 
-```{r Available cavities Megachile, echo=FALSE}
+```{r Available cavities Megachile, include = FALSE, echo=FALSE}
 
 mod_choice_cav_meg <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial())
 
@@ -137,7 +137,7 @@ summary(mod_choice_cav_meg)
 
 #### Model 3: New nests per conspecifics Osmia, including pseudo
 
-```{r Conspecifics with pseudo Osmia, echo=FALSE}
+```{r Conspecifics with pseudo Osmia, include = FALSE, echo=FALSE}
 
 mod_choice_consp_os_ps <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Osmia_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial)
 
@@ -149,7 +149,7 @@ summary(mod_choice_consp_os_ps)
 
 #### Model 4: New nests per conspecifics Osmia, excluding pseudo
 
-```{r Conspecifics without pseudo Osmia, echo=FALSE}
+```{r Conspecifics without pseudo Osmia, include = FALSE, echo=FALSE}
 
 mod_choice_consp_os_no_ps_BINOMIAL <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Trapnest), data = nesting_os_xs, family = binomial(), control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
 
@@ -172,7 +172,7 @@ summary(mod_choice_consp_os_no_ps_POISSON_subsite)
 
 #### Model 5: New nests per conspecifics Megachile, including pseudo
 
-```{r Conspecifics with pseudo Megachile, echo=FALSE}
+```{r Conspecifics with pseudo Megachile, include = FALSE, echo=FALSE}
 
 mod_choice_consp_meg_ps <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Meg_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial())
 
@@ -186,7 +186,7 @@ summary(mod_choice_consp_meg_ps)
 
 #### Model 6: New nests per conspecifics Megachile, excluding pseudo
 
-```{r Conspecifics without pseudo Megachile, echo=FALSE}
+```{r Conspecifics without pseudo Megachile, include = FALSE, echo=FALSE}
 
 mod_choice_consp_meg_no_ps_BINOMIAL <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Meg_no_ps_prior) + scale(Good_days) + scale(Day_of_year) + Site + (1|Trapnest), data = nesting_meg_xs, family = binomial())
 
@@ -212,7 +212,7 @@ summary(mod_choice_consp_meg_no_ps_POISSON_subsite)
 
 #### Model 7: Relation between parasites and aggregation densities, including pseudo
 
-```{r Parasites/Aggregations with pseudo, echo=FALSE}
+```{r Parasites/Aggregations with pseudo, include = FALSE, echo=FALSE}
 
 mod_par_agg_ps <- glmer(cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_ps_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
@@ -224,7 +224,7 @@ summary(mod_par_agg_ps)
 
 #### Model 8: Relation between parasites and aggregation densities, excluding pseudo
 
-```{r Parasites/Aggregations without pseudo, echo=FALSE}
+```{r Parasites/Aggregations without pseudo, include = FALSE, echo=FALSE}
 
 mod_par_agg_no_ps <- glmer(cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_no_ps_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
@@ -236,7 +236,7 @@ ggpredict(mod_par_agg_no_ps, c('Osmia_no_ps_no_iw')) %>% plot(rawdata = TRUE, ji
 
 #### Model 9: Relation between parasites and aggregation densities, only unsealed
 
-```{r Parasites/Aggregations unsealed, echo=FALSE}
+```{r Parasites/Aggregations unsealed, include = FALSE, echo=FALSE}
 
 mod_par_agg_unsealed_os <- glmer(cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Sum_unsealed_os_no_iw) + scale(Day_of_year) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
@@ -250,7 +250,7 @@ ggpredict(mod_par_agg_unsealed_os, c('Sum_unsealed_os_no_iw')) %>% plot(rawdata 
 
 #### Model 10: How the presence of parasites effects nesting preferences, including pseudo
 
-```{r Parasites/Preferences with pseudo, echo=FALSE}
+```{r Parasites/Preferences with pseudo, include = FALSE, echo=FALSE}
 
 mod_choice_par_ps_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed_os) * scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial) 
 
@@ -262,7 +262,7 @@ interact_plot(mod_choice_par_ps_os, pred = Osmia_ps_prior, modx = Par_nests_unse
 
 #### Model 11: How the presence of parasites effects nesting preferences, excluding pseudo
 
-```{r Parasites/Preferences without pseudo, echo=FALSE}
+```{r Parasites/Preferences without pseudo, include = FALSE, echo=FALSE}
 
 mod_choice_par_no_ps_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Par_nests_unsealed_os) * scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial) 
 
@@ -276,7 +276,7 @@ interact_plot(mod_choice_par_no_ps_os, pred = Osmia_no_ps_prior, modx = Par_nest
 
 #### Model 12: Likelihood of terminating nest investment after a cell was parasitized
 
-```{r Last cell, echo=FALSE}
+```{r Last cell, include = FALSE, echo=FALSE}
 
 mod_last_cell <- glmer(Last_cell ~ Cell_parasitized + Day_of_year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
 
@@ -288,7 +288,7 @@ ggpredict(mod_last_cell, c('Cell_parasitized')) %>% plot(rawdata = TRUE, jitter 
 
 #### Model 13: Investment into a nest if other active nests or the nest itself is parasitized
 
-```{r Parasites/Investment, echo=FALSE}
+```{r Parasites/Investment, include = FALSE, echo=FALSE}
 
 mod_invest_filled <- glmer(cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os_calc) * Nest_parasitized + scale(Day_of_year) + Site + (1|Subsite/Trapnest), data = investment_os, family = binomial)
 

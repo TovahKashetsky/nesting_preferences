@@ -51,7 +51,7 @@ library(kableExtra)
 library(lme4)
 library(tidyverse)
 
-# If not loaded already:
+
 nesting <- read_csv('data/nesting_cleaned_all_bees.csv')
 nesting_os <- read_csv('data/nesting_cleaned_osmia.csv')
 nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') # three columns with parasite and cell info blank, not dissected
@@ -63,13 +63,6 @@ obs.meg <- read_csv('data/observed_data_meg.csv')
 exp.os <- read_csv('data/expected_data_os.csv')
 exp.meg <- read_csv('data/expected_data_meg.csv')
 parasite_sum_os_contains_cells <- read_csv('Data/parasite_sum_os_contains_cells.csv')
-
-
-# remove numbers columns to chi data 
-obs.os <- obs.os %>% select(Site, Low, Mid, High)
-obs.meg <- obs.meg %>% select(Site, Low, Mid, High)
-exp.os <- exp.os %>% select(Site, Low, Mid, High)
-exp.meg <- exp.meg %>% select(Site, Low, Mid, High)
 
 
 # number of nests
@@ -232,6 +225,33 @@ nesting_os %>%
 
 ```
 
+```{r}
+
+
+# How the presence of parasites effects nesting preferences
+
+nesting_os_xs_fig <- nesting_os_xs %>% mutate(Proportion_new_nests_os = (New_nests_os/(Available_cavities_prior - New_nests_sum)))
+
+nesting_os_xs_fig %>% 
+  ggplot(aes(Par_nests_unsealed_os, Proportion_new_nests_os)) +
+  geom_jitter() 
+
+
+
+# How the presence of parasites effects nest investment
+
+mod_invest_filled <- glmer(cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os_calc) * Nest_parasitized + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = investment_os, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
+
+investment_os_fig <- investment_os %>% mutate(Prop_straw_filled = (Filled_length/Straw_length))
+
+investment_os_fig %>% 
+  ggplot(aes(Par_nests_unsealed_os_calc, Prop_straw_filled)) +
+  geom_jitter() 
+
+
+
+```
+
 The most recent figure shows osmia density of unsealed nests, but shows cumulative parasites and doesn't count the current nest
 
 ## Nest Investment
@@ -239,24 +259,20 @@ The most recent figure shows osmia density of unsealed nests, but shows cumulati
 ```{r Investment, echo=FALSE, warning=FALSE, message=FALSE}
 
 
-
+investment <- investment %>% mutate(Prop_filled = (Filled_length_mm/Straw_length_mm))
 
 investment_os <- investment %>% filter(Occupant == 'osmia')
 investment_meg <- investment %>% filter(Occupant == 'megachile')
 
 
-# investment_os %>% 
-#   ggplot(aes(Par_in_trapnest, Prop_filled)) + 
-#   geom_jitter(height = 0, alpha = 0.4) + stat_smooth()
-
 
 investment_os %>% 
-  ggplot(aes(Par_nests_unsealed_os, Prop_nest_filled,colour = Nest_parasitized)) + 
+  ggplot(aes(Par_nests_unsealed_os_calc, Prop_filled)) + 
   geom_jitter(height = 0, width = 0, alpha = 0.3) + 
-  stat_smooth()
+  stat_smooth() 
   
 
-
+str(investment_os)
 
 
 investment_os %>% 
