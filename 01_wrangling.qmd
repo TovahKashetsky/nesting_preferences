@@ -670,8 +670,6 @@ os_par_v2 <- os_par_v2 %>%
 #   ungroup()
 
 # bind parasite counts with preferences data
-# os_par_v3 <- os_par_v3 
-#   select(Trapnest, Date, Nest_ID, Number_of_cells, Cumulative_par, Cumulative_par_max)
 os_par_pref <- select(preferences, Trapnest, Site:Straw_ID, Date, Filled_length_mm:Bee_choice, Contains_cells, Available_cavities_prior, New_nests_os:New_nests_sum) 
 os_par_v2$Date <- as.Date(os_par_v2$Date)
 os_par_v2$Trapnest <- paste('trapnest', os_par_v2$Trapnest, sep = '_')
@@ -948,41 +946,6 @@ nesting_cells_os <- distinct(nesting_cells_os, Date, Trapnest, .keep_all= TRUE)
 nesting_cells_os <- nesting_cells_os %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
 nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
 
-
-## Make df for just nest investment
-nesting_investment_0 <- nesting_1 %>% filter(Occupant!= 'none' & Status != 'pseudo')
-nesting_investment_0 <- distinct(nesting_investment_0, Nest_ID, .keep_all= TRUE)
-# make numeric
-nesting_investment_0$Straw_length_mm <- as.numeric(nesting_investment_0$Straw_length_mm)
-nesting_investment_0$Filled_length_mm <- as.numeric(nesting_investment_0$Filled_length_mm)
-# round to nearest integer
-nesting_investment_0$Straw_length <- round(nesting_investment_0$Straw_length_mm)
-nesting_investment_0$Filled_length <- round(nesting_investment_0$Filled_length_mm)
-# remove NAs 
-nesting_investment_0 <- nesting_investment_0 %>% filter(!is.na(Filled_length_mm))
-
-# exclude nests that were built in the last day of each experimental chunk if they weren't sealed because I removed them so they were unfinished
-nesting_investment_0 %>% filter(Date == '2023-06-29' & Sealed == 'not sealed' | Date == '2023-08-09' & Sealed == 'not sealed') # only three removed
-Nest_ID_exclude <- c('44_3b', '7_11b', '8_13c')
-
-nesting_investment_0 <- nesting_investment_0 %>%
-  filter(!Nest_ID %in% Nest_ID_exclude)
-
-
-## Remove the focal nest from Par_nests_unsealed_os for model 13 
-
-# # because this model is about the bees choice to invest into her nest based on other nests around, not from the parasites choice of all unsealed nests
-# 
-# # how many times did we have more than one Par_nests_unsealed_os when the focal nest was parasitized (meaning we need to minus one from the column)
-# df_parasitized_unsealed_os <- nesting_investment_0 %>% filter(Nest_parasitized == 'parasitized' & Sealed == 'not sealed')
-# # make list of these nest IDs
-# list_parasitized_unsealed_os <- df_parasitized_unsealed_os$Nest_ID
-# # make column to say Par_nests_unsealed_os minus one for these parasitized nests, otherwise stay as the same
-# nesting_investment <- nesting_investment_0 %>% 
-#   mutate(Par_nests_unsealed_os_calc = ifelse(Nest_ID %in% list_parasitized_unsealed_os, 
-#                                              (Par_nests_unsealed_os - 1), Par_nests_unsealed_os))
-# 
-
 ```
 
 |                     | Sealed                      | Active |
@@ -994,6 +957,8 @@ nesting_investment_0 <- nesting_investment_0 %>%
 ```{r Detectable and No Detectable Parasite Nests}
 
 ### do the same with megachile once they emerge
+
+### CHECK - April 24th 2024, NAs for parasites are not counted for either DP or NDP. How should NAs be counted?
 
 # In order to measure nesting preferences of bees to see if affected by parasites, I need to separate the nests with detectable parasites (DP) from the nests with no detectable parasites (NDP), see the table above
 # this is about to get messy, so I'm making a smaller df 
@@ -1024,7 +989,7 @@ nesting_2 <- nesting_2 %>%
 # Step 2) Making nests with total no detectable parasites without pseudo (NDP) nests
 
 # first, count unsealed and not parasitized
-nesting_2 <- nesting_2 %>% mutate(No_par_and_unsealed_os = ifelse(Occupant == 'osmia' & Active_bin == 1 & Nest_parasitized == 'not parasitized', 1, 0))
+nesting_2 <- nesting_2 %>% mutate(No_par_and_unsealed_os = ifelse(Occupant == 'osmia' & Active_bin == 1 & Nest_parasitized == 'not parasitized' | Occupant == 'osmia' & Active_bin == 1 & Status == 'inner wall', 1, 0))
 
 # second, count sealed, regardless of parasites
 nesting_2 <- nesting_2 %>% mutate(Sealed_os = ifelse(Occupant == 'osmia' & Active_bin == 0, 1, 0))
@@ -1037,7 +1002,7 @@ nesting_2 <- nesting_2 %>%
 # NDP_nests_os: number of nests that are unsealed and not parasitized, or sealed, during my visit (totals including all new nests)
 
 
-# Step 3) Making nests with total no detectable parasites with pseudo (NDP_ps) #### NEW NESTS ARE NOT COUNTING ALL OF THEM??
+# Step 3) Making nests with total no detectable parasites with pseudo (NDP_ps) 
 
 # already have the count of unsealed and not parasitized (No_par_and_unsealed_os)
 
@@ -1070,7 +1035,7 @@ nesting_2 <- nesting_2 %>%
 # Step 5) Make nests with the number of new nests for NDP (and NDP_ps, since no pseudo nests are ever new nests)
 
 # first, count unsealed and no parasites
-nesting_2 <- nesting_2 %>% mutate(NDP_1_os_new = ifelse(Bee_choice == 1 & Occupant == 'osmia' & Active_bin == 1 & Nest_parasitized == 'not parasitized', 1, 0))
+nesting_2 <- nesting_2 %>% mutate(NDP_1_os_new = ifelse(Bee_choice == 1 & Occupant == 'osmia' & Active_bin == 1 & Nest_parasitized == 'not parasitized' | Bee_choice == 1 & Occupant == 'osmia' & Status == 'inner wall', 1, 0))
 # second, sealed
 nesting_2 <- nesting_2 %>% mutate(NDP_2_os_new = ifelse(Bee_choice == 1 & Occupant == 'osmia' & Active_bin == 0, 1, 0))
 
@@ -1081,146 +1046,98 @@ nesting_2 <- nesting_2 %>%
 # NDP_os_new_nests: sum of the new NDP nests for trapnest - date combination
 
 
-# Step 7) make the calculations for when one new nest is added to the same group
+# Step 6) make the calculations for when one new nest is added 
 
-# when 1 new nest is added to the same group, we remove 1 from the total (..._post) 
-# when there are no new nests to the same group, keep regular number
+# when there's 1 new nest, we remove 1 from the total (_post) 
+# when there are no new nests, keep regular number
 
 nesting_2 <- nesting_2 %>% mutate(DP_os_one = ifelse(DP_os_new_nests == 1, (DP_os_post - 1), 
-                                                     ifelse(DP_os_new_nests == 0, DP_os_post, 'TBD')))
-
+                                                     ifelse(DP_os_new_nests == 0, DP_os_post, NA)))
 nesting_2 <- nesting_2 %>% mutate(NDP_os_one = ifelse(NDP_os_new_nests == 1, (NDP_os_post - 1), 
-                                                     ifelse(NDP_os_new_nests == 0, NDP_os_post, 'TBD')))
-
-nesting_2 <- nesting_2 %>% mutate(NDP_ps_os_one = ifelse(NDP_ps_os_new_nests == 1, (NDP_ps_os_post - 1), 
-                                                     ifelse(NDP_ps_os_new_nests == 0, NDP_ps_os_post, 'TBD')))
+                                                     ifelse(NDP_os_new_nests == 0, NDP_os_post, NA)))
+nesting_2 <- nesting_2 %>% mutate(NDP_ps_os_one = ifelse(NDP_os_new_nests == 1, (NDP_ps_os_post - 1), 
+                                                     ifelse(NDP_os_new_nests == 0, NDP_ps_os_post, NA)))
 
 # DP_os_one: the prior value for DP_os when only 0 or 1 new nest was made 
 # NDP_os_one: the prior value for NDP_os when only 0 or 1 new nest was made 
 # NDP_ps_os_one: the prior value for NDP_ps_os when only 0 or 1 new nest was made 
 
 
-# Step 8) make the calculations for when multiple new nests are added to the same group
+# Step 7) make the calculations for when multiple new nests are added 
 
-# when multiple new nests are added to that group, we calculate the average number of conspecifics of that group the new nests would have seen with (total nests in that group - new nests) + (n-1)/2
+# total of DP or NDP - (1/2 * new DP or NDP nests)
 
-# A- first, make (n-1)/2 column
-nesting_2 <- nesting_2 %>% mutate(DP_os_equation = ifelse(DP_os_new_nests > 1, ((DP_os_post - 1) /2), NA))
-nesting_2 <- nesting_2 %>% mutate(NDP_os_equation = ifelse(NDP_os_new_nests > 1, ((NDP_os_post - 1) /2), NA))
-nesting_2 <- nesting_2 %>% mutate(NDP_ps_os_equation = ifelse(NDP_ps_os_new_nests > 1, ((NDP_ps_os_post - 1) /2), NA))
+nesting_2 <- nesting_2 %>% mutate(DP_mult_new_os = ifelse(DP_os_new_nests > 1, (DP_os_post - (1/2 * DP_os_new_nests)), NA))
+nesting_2 <- nesting_2 %>% mutate(NDP_mult_new_os = ifelse(NDP_os_new_nests > 1, (NDP_os_post - (1/2 * NDP_os_new_nests)), NA))
+nesting_2 <- nesting_2 %>% mutate(NDP_ps_mult_new_os = ifelse(NDP_os_new_nests > 1, (NDP_ps_os_post - (1/2 * NDP_os_new_nests)), NA))
 
-# B- second, add the equation to total nests in that group - new nests
-nesting_2 <- nesting_2 %>% mutate(DP_os_calc = ifelse(DP_os_new_nests > 1, ((DP_os_post - DP_os_new_nests) + DP_os_equation), NA))
-nesting_2 <- nesting_2 %>% mutate(NDP_os_calc = ifelse(NDP_os_new_nests > 1, ((NDP_os_post - NDP_os_new_nests) + NDP_os_equation), NA))
-nesting_2 <- nesting_2 %>% mutate(NDP_ps_os_calc = ifelse(NDP_ps_os_new_nests > 1, ((NDP_ps_os_post - NDP_ps_os_new_nests) + NDP_ps_os_equation), NA))
-
-# Step 9) make the calculations for when a new nest is added to the other group
-
-# total of the other group - (1/2 * new other nests)
-
-nesting_2 <- nesting_2 %>% mutate(DP_is_other = DP_os_post - (1/2 * DP_os_new_nests))
-nesting_2 <- nesting_2 %>% mutate(NDP_is_other = NDP_os_post - (1/2 * NDP_os_new_nests))
-nesting_2 <- nesting_2 %>% mutate(NDP_ps_is_other = NDP_ps_os_post - (1/2 * NDP_ps_os_new_nests))
-
-# DP_is_other: the average number of nests a new nests from NOT the DP nest would see. Use this when there are new DP nests from the perspective of new NDP or NDP_ps nests
-# NDP_is_other: the average number of nests a new nests from NOT the NDP nest would see. Use this when there are new NDP nests from the perspective of new DP nests in models excluding pseudo
-# NDP_ps_is_other: the average number of nests a new nests from NOT the NDP_ps nest would see. Use this when there are new NDP_ps nests from the perspective of new DP nests in models including pseudo
+# DP_mult_new_os: the average number of nests a new nests that DP or NDP nests would see. 
+# NDP_mult_new_os: the average number of nests a new nests that DP or NDP nests would see. 
+# NDP_ps_mult_new_os: the average number of nests a new nests that DP or NDP nests would see, when NDP includes pseudo
 
 
-# Step 10) Create columns to use
+# Step 8) Create columns to use
 
-# If there's 1 DP, use X, if there more than 1 DP use Y, 
-
-
-
-
+# if theres 1 new nest of DP, use DP_os_one. If there's more than one new nest of DP, use DP_mult_new_os
+# if theres 1 new nest of NDP, use NDP_os_one. If there's more than one new nest of NDP, use NDP_mult_new_os
+# if theres 1 new nest of NDP, use NDP_ps_os_one. If there's more than one new nest of NDP, use NDP_ps_mult_new_os
 
 
-# testing out some instances 
-testing_36_June <- nesting_2 %>% filter(Trapnest == 'trapnest_36' & Date == '2023-06-04') 
-testing_36_May <- nesting_2 %>% filter(Trapnest == 'trapnest_36' & Date == '2023-05-31') 
-testing_1 <- nesting_2 %>% filter(Trapnest == 'trapnest_1' & Date == '2023-06-14') 
-
-## Remove the focal nest from Par_nests_unsealed_os for model 13 
-
-# because this model is about the bees choice to invest into her nest based on other nests around, not from the parasites choice of all unsealed nests
-
-# how many times did we have more than one Par_nests_unsealed_os when the focal nest was parasitized (meaning we need to minus one from the column)
-df_parasitized_unsealed_os <- nesting_investment_0 %>% filter(Nest_parasitized == 'parasitized' & Sealed == 'not sealed')
-# make list of these nest IDs
-list_parasitized_unsealed_os <- df_parasitized_unsealed_os$Nest_ID
-# make column to say Par_nests_unsealed_os minus one for these parasitized nests, otherwise stay as the same
-nesting_investment <- nesting_investment_0 %>% 
-  mutate(Par_nests_unsealed_os_calc = ifelse(Nest_ID %in% list_parasitized_unsealed_os, 
-                                             (Par_nests_unsealed_os - 1), Par_nests_unsealed_os))
+nesting_2 <- nesting_2 %>% mutate(DP_os_prior = ifelse(DP_os_new_nests <= 1, DP_os_one,
+                                                       ifelse(DP_os_new_nests > 1, DP_mult_new_os, NA)))
+nesting_2 <- nesting_2 %>% mutate(NDP_os_prior = ifelse(NDP_os_new_nests <= 1, NDP_os_one,
+                                                       ifelse(NDP_os_new_nests > 1, NDP_mult_new_os, NA)))
+nesting_2 <- nesting_2 %>% mutate(NDP_ps_os_prior = ifelse(NDP_os_new_nests <= 1, NDP_ps_os_one,
+                                                       ifelse(NDP_os_new_nests > 1, NDP_ps_mult_new_os, NA)))
 
 
-# # # Making nests with no detectable parasites (NDP) # # #
+# # testing out some instances 
+# testing_36_June <- nesting_2 %>% filter(Trapnest == 'trapnest_36' & Date == '2023-06-04') 
+# testing_36_May <- nesting_2 %>% filter(Trapnest == 'trapnest_36' & Date == '2023-05-31') 
+# testing_1 <- nesting_2 %>% filter(Trapnest == 'trapnest_1' & Date == '2023-05-29') 
 
-
-## Make column for all nests(unsealed & not-parasitized, and sealed, regardless of parasitism)
-
-# first, count the sealed nests, and unparasitized nests
-### do this for megachile after emergence
-nesting_2 <- nesting_2 %>% mutate(Other_nests_ps_os_indv = ifelse(Occupant == 'osmia' & Active_bin == 0 | Occupant == 'osmia' & Active_bin == 1 & Nest_parasitized == 'not parasitized' | Occupant == 'osmia' & Status == 'pseudo', 1, 0))
-nesting_2 <- nesting_2 %>% mutate(Other_nests_no_ps_os_indv = ifelse(Occupant == 'osmia' & !is.na(Active_bin) & Nest_parasitized == 'not parasitized', 1, 0 ))
-
-# then sum by trapnest - date combo
-nesting_2 <- nesting_2 %>%
-  group_by(Date, Trapnest) %>%
-  mutate(Other_nests_ps_os_V1 = sum(Other_nests_ps_os_indv, na.rm=TRUE)) %>%
-  ungroup()
-nesting_2 <- nesting_2 %>%
-  group_by(Date, Trapnest) %>%
-  mutate(Other_nests_no_ps_os_V1 = sum(Other_nests_no_ps_os_indv, na.rm=TRUE)) %>%
-  ungroup()
-
-
-# now, I need to make take the average, depending on if the new nests fit into the categories
-
-
-# if bee_choice == 1, and Other_nests_ps_os_indv == 1, then do Other_nests_ps_os - 1
-
-
-
-# if bee_choice == 0, and Other_nests_ps_os_indv == 1, then do Other_nests_ps_os - 1
-
-
-# Other_nests_no_ps_os_indv, Other_nests_ps_os_indv, Par_and_unsealed_os
-
-
-# 1- for 0 or 1 new nests, (available_post - new nests)
-  # osmia pseudo ### new
-nesting_3 <- nesting_2 %>% mutate(Other_nests_ps_os_V2 = ifelse(New_nests_os == 1 | New_nests_os == 0, (Other_nests_ps_os_V1 - New_nests_os), 'TBD'))
-# 2 A- for multiple new nests, (n-1)/2
-  # osmia
-nesting_3 <- nesting_3 %>% mutate(Osmia_equ_ = ifelse(New_nests_os > 1, ((New_nests_os - 1)/2), NA))
-# B- add equation + (available_post - new nests)
-  # osmia pseudo
-nesting_3 <- nesting_3 %>% mutate(Osmia_ps_prior = ifelse(Osmia_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_ps_prior_V1) | Osmia_ps_prior_V1 != 'TBD', Osmia_ps_prior_V1, 'leftover' )))
-
-
-# check to see if it works
-# # April 2024 - trapnest 1 has NA for parasite column
-# trapnest_1 <- nesting_2 %>% filter(Trapnest == 'trapnest_1' & Date == '2023-05-31')
-# trapnest_1 <- trapnest_1 %>% select(Date, Trapnest, Nest_ID, Status, Bee_choice, Nest_parasitized, Active_bin, Osmia_ps, Osmia_no_ps, Osmia_ps_prior, Osmia_no_ps_prior, Other_nests_ps_os, Other_nests_no_ps_os, Par_nests_unsealed_os, Other_nests_no_ps_os_indv, Other_nests_ps_os_indv)
-# # trapnest 36 works
-trapnest_36 <- nesting_2 %>% filter(Trapnest == 'trapnest_36' & Date == '2023-06-04')
-
-trapnest_36 <- trapnest_36 %>% select(Date, Trapnest, Nest_ID, Status, Bee_choice, Nest_parasitized, Active_bin, Osmia_ps, Osmia_no_ps, Osmia_ps_prior, Osmia_no_ps_prior, Other_nests_ps_os, Other_nests_no_ps_os, Par_nests_unsealed_os, Other_nests_no_ps_os_indv, Other_nests_ps_os_indv, Par_and_unsealed_os)
-
+# take columns I want
+nesting <- nesting_2 %>% select(Trapnest:New_nests_meg, DP_os_post: NDP_ps_os_post, DP_os_prior:NDP_ps_os_prior)
+# join with rest of df
+nesting <- left_join(nesting_1, nesting)
+# remove unwanted columns again
+nesting <- nesting %>% select(Trapnest, Date, Day_of_year, Site:Treatment, Filled_length_mm, Straw_length_mm, Nest_ID, Status, Sealed, Nest_parasitized, Occupant:New_nests_meg, New_nests_sum, Osmia_ps_prior:Meg_no_ps_no_iw, DP_os_post:NDP_ps_os_prior)
 
 
 ```
 
+
 ```{r Editing data for models}
 
+# check structure
+str(nesting)
+str(nesting_investment_0)
+
+## Make df for just nest investment
+
+nesting_investment_0 <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo')
+nesting_investment_0 <- distinct(nesting_investment_0, Nest_ID, .keep_all= TRUE)
+# make numeric
+nesting_investment_0$Straw_length_mm <- as.numeric(nesting_investment_0$Straw_length_mm)
+nesting_investment_0$Filled_length_mm <- as.numeric(nesting_investment_0$Filled_length_mm)
+# round to nearest integer
+nesting_investment_0$Straw_length <- round(nesting_investment_0$Straw_length_mm)
+nesting_investment_0$Filled_length <- round(nesting_investment_0$Filled_length_mm)
+# remove NAs 
+nesting_investment_0 <- nesting_investment_0 %>% filter(!is.na(Filled_length_mm))
+
+# exclude nests that were built in the last day of each experimental chunk if they weren't sealed because I removed them so they were unfinished
+nesting_investment_0 %>% filter(Date == '2023-06-29' & Sealed == 'not sealed' | Date == '2023-08-09' & Sealed == 'not sealed') # only three removed
+Nest_ID_exclude <- c('44_3b', '7_11b', '8_13c')
+
+nesting_investment <- nesting_investment_0 %>%
+  filter(!Nest_ID %in% Nest_ID_exclude)
 
 ## Separate Osmia and Megachile data frames 
 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none') 
-# to reduce zeros from "empties" outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the full summer of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
+# to reduce zeros from empties outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the full summer of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
 # this stuff overlaps with the first cleaning chunk that removed excessive non_existents 
 dates_os <- nesting_os %>% 
   group_by(Date, Occupant) %>% 
@@ -1240,16 +1157,14 @@ dates_exclude_meg <- as_date(c('2023-05-07', '2023-05-11', '2023-05-12', '2023-0
 nesting_meg <- nesting_meg %>%
   filter(!Date %in% dates_exclude_meg)
 
-
 # parasite data already only for collected nests
 table(nesting_investment$Date)
-
 
 # counting new nests 
 nesting_os %>% filter(!is.na(Bee_choice)) %>% 
   summarize(nests_total = sum(Bee_choice)) # 164 osmia nests for osmia through the summer
 nesting_meg %>% filter(!is.na(Bee_choice)) %>% 
-  summarize(nests_total = sum(Bee_choice)) # 58 osmia nests for osmia through the summer
+  summarize(nests_total = sum(Bee_choice)) # 42 megachile nests for the summer
 nesting %>% filter(!is.na(Bee_choice)) %>% 
   summarize(nests_total = sum(Bee_choice))
 # still missing confirmed occupants (unsure what they are before they emerge) ### CHECK
@@ -1261,12 +1176,10 @@ nesting %>% filter(!is.na(Bee_choice)) %>%
 nesting_os_xs <- distinct(nesting_os, Date, Trapnest, .keep_all= TRUE)
 nesting_meg_xs <- distinct(nesting_meg, Date, Trapnest, .keep_all= TRUE)
 
-# keep only rows that makes sense when summed by trapnest
-nesting_os_xs <- nesting_os_xs %>% select(Date, Day_of_year, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_sum, New_nests_os:Meg_no_ps_prior, Par_nests_unsealed_os, Other_nests_ps_os, Other_nests_no_ps_os)
-nesting_meg_xs <- nesting_meg_xs %>% select(Date, Day_of_year, Site, Subsite, Trapnest, Treatment, Good_days, Available_cavities_prior, New_nests_sum, New_nests_os:Meg_no_ps_prior, Par_nests_unsealed_os) ### later: add Meg_nests(_no)_ps_os 
+# take only columns that make sense at the trapnest level
+nesting_os_xs <- nesting_os_xs %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, Available_cavities_prior, New_nests_os, New_nests_sum, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_ps_no_iw, Osmia_no_ps_no_iw, DP_os_post, NDP_os_post, NDP_ps_os_post, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
 
-nesting_os_xs <- nesting_os_xs %>% mutate(Prop_new_os = New_nests_os/Available_cavities_prior)
-nesting_meg_xs <- nesting_meg_xs %>% mutate(Prop_new_meg = New_nests_meg/Available_cavities_prior)
+nesting_meg_xs <- nesting_meg_xs %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, Available_cavities_prior, New_nests_meg, New_nests_sum, Meg_ps_prior, Meg_no_ps_prior, Meg_ps_no_iw, Meg_no_ps_no_iw)
 
 
 ## Saving wrangled data

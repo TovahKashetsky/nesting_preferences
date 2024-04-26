@@ -9,6 +9,8 @@ editor: visual
 bibliography: references.bib
 ---
 
+
+
 **Response variables:**
 
 -   New_nests_os: number of new osmia nests for each trapnest and date combination.
@@ -31,6 +33,8 @@ bibliography: references.bib
 -   Site: three sites in total.
 -   Subsite: six subsites for each site, unique to each site.
 -   Trapnest: 72 trapnests total, ach subsite contains three, unique to each subsite.
+
+
 
 ```{r Prep, include=FALSE, include=TRUE}
 
@@ -78,7 +82,11 @@ plot(I(New_nests_meg/ (Meg_no_ps_prior)) ~ (Day_of_year), data=nesting_meg_xs)
 
 ```
 
+
+
 ### Nesting per Available Cavities
+
+
 
 ```{r Models: Nest per Available Cavities, include=TRUE}
 
@@ -113,7 +121,11 @@ ggpredict(mod_choice_cav_meg, c('Available_cavities_prior')) %>% plot(rawdata = 
 
 ```
 
+
+
 ### Nesting per Conspecific Presence
+
+
 
 ```{r Models: Nest per Conspecifics Osmia, include=TRUE}
 
@@ -167,7 +179,11 @@ plot(marginal_effects_os_no_ps, rawdata = TRUE, jitter = 0.04)
 
 ```
 
+
+
 ------------------------------------------------------------------------
+
+
 
 ```{r Models: Nest per Conspecifics Megachile, include=TRUE}
 
@@ -216,7 +232,11 @@ plot(marginal_effects_meg_no_ps, rawdata = TRUE, jitter = 0.04)
 
 ```
 
+
+
 ### Parasitism
+
+
 
 ```{r Parasites and Aggregations, include=TRUE}
 
@@ -423,3 +443,4 @@ unscaled_estimate_os
 # plot(allEffects(mod_choice_consp_meg_no_ps_POISSON))
 
 ```
+
