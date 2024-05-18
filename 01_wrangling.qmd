@@ -451,7 +451,6 @@ sum(conspecifics$Bee_choice, na.rm = TRUE) # 230 new nests, real number
 
 ```
 
-
 ```{r New Nests}
 
 
@@ -484,8 +483,6 @@ prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 
 
 
 ```
-
-
 
 ```{r Weather Data}
 
@@ -948,11 +945,11 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 
 ```
 
-|                     | Sealed                      | Active |
-|---------------------|-----------------------------|--------|
-| **Parasitized**     | NDP                         | DP     |
-| **Not Parasitized** | NDP                         | NDP    |
-| **Pseudo**          | NDP_ps                      | --     |
+|                     | Sealed | Active |
+|---------------------|--------|--------|
+| **Parasitized**     | NDP    | DP     |
+| **Not Parasitized** | NDP    | NDP    |
+| **Pseudo**          | NDP_ps | --     |
 
 ```{r Detectable and No Detectable Parasite Nests}
 
@@ -1105,7 +1102,6 @@ nesting <- nesting %>% select(Trapnest, Date, Day_of_year, Site:Treatment, Fille
 
 
 ```
-
 
 ```{r Editing data for models}
 

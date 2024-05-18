@@ -58,11 +58,13 @@ nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') # three columns wi
 nesting_os_xs <- read_csv('data/nesting_cleaned_osmia_xs.csv')
 nesting_meg_xs <- read_csv('data/nesting_cleaned_megachile_xs.csv')
 investment <- read_csv('data/investment_cleaned.csv')
+investment_os <- nesting_investment %>% filter(Occupant == 'osmia') 
 obs.os <- read_csv('data/observed_data_os.csv')
 obs.meg <- read_csv('data/observed_data_meg.csv') 
 exp.os <- read_csv('data/expected_data_os.csv')
 exp.meg <- read_csv('data/expected_data_meg.csv')
 parasite_sum_os_contains_cells <- read_csv('Data/parasite_sum_os_contains_cells.csv')
+nesting_cells_os <- read_csv('data/nesting_cells_cleaned_osia.csv')
 
 
 # number of nests
@@ -80,32 +82,45 @@ theme_set(theme_classic(base_size=15))
 
 ```
 
-## Nesting per available cavities
-
-```{r Available Cavities, echo=FALSE, warning=FALSE, message=FALSE}
-
-
-### Osmia 
-
-nesting_os_xs %>% 
-  ggplot(aes(Available_cavities_prior, New_nests_os)) + 
-  geom_jitter(height = 0.05, alpha = 0.5) +
-  stat_smooth(method='glm', colour = 'grey75') +
-  scale_color_manual(values=c('steelblue3', 'plum3')) +
-  labs(x='Available cavities', y = 'Number of new nests each visit') +
-  theme( # removing the y axes labels
-    axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()) + 
-  xlim(0, 18)
-
-
-```
-
 ## Nesting per conspecific presence (including pseudo nests)
 
 ```{r Conspecifics_with_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
 
 
+### Probability
+
+# create a probability by successes/ successes + failures
+os_fig_data <- nesting_os_xs %>% mutate(Probability_new_nest = New_nests_os/Available_cavities_prior)
+
+## Osmia 
+
+os_fig_data %>% 
+  ggplot(aes(x=Osmia_ps_prior, y=Probability_new_nest)) +
+  geom_point(colour = 'skyblue2') + stat_smooth(method='lm', colour = 'skyblue2', fill = 'skyblue2') +
+  labs(x = 'Number of '~italic(Osmia)~' in trapnest', y = 'Number of new nests / \n Number of potential nests') + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
+
+
+
+### Raw data
+
+## Osmia 
+
+nesting_os_xs %>% 
+  ggplot(aes(Osmia_ps_prior, New_nests_os)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, colour = 'steelblue2') +
+  geom_smooth(method='lm', colour = 'indianred3', fill = 'indianred3') +
+  labs(x='Osmia', y = 'Number of new nests each visit') +
+  xlim(0, 18)
+
+## Megachile 
+
+nesting_meg_xs %>% 
+  ggplot(aes(Meg_ps_prior, New_nests_meg)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, colour = 'goldenrod2') +
+  geom_smooth(method='glm', colour = 'indianred3', fill = 'indianred3') +
+  labs(x='Available cavities', y = 'Number of new nests each visit') +
+  xlim(0, 18)
 
 ```
 
@@ -113,141 +128,120 @@ nesting_os_xs %>%
 
 ```{r Conspecifics_without_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
 
+### Osmia 
+
+nesting_os_xs %>% 
+  ggplot(aes(Osmia_no_ps_prior, New_nests_os)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, colour = 'steelblue2') +
+  geom_smooth(method='glm', colour = 'rosybrown', fill = 'rosybrown') +
+  labs(x='Available cavities', y = 'Number of new nests each visit') +
+  xlim(0, 18)
+
+### Megachile 
+
+nesting_meg_xs %>% 
+  ggplot(aes(Meg_no_ps_prior, New_nests_meg)) + 
+  geom_jitter(height = 0.05, alpha = 0.5, colour = 'goldenrod2') +
+  geom_smooth(method='glm', colour = 'rosybrown', fill = 'rosybrown') +
+  labs(x='Available cavities', y = 'Number of new nests each visit') +
+  xlim(0, 18)
 
 
 ```
 
 ## Parasitism
 
-```{r Parasitism, echo=FALSE, warning=FALSE, message=FALSE}
+```{r Wrangling Parasitism data, ignore=TRUE}
+
+## Change data to make a stacked bar plot
+
+cells_os <- pivot_longer(nesting_cells_os, 
+                         cols = c(Sum_cell_not_parasitized, Sum_cell_parasitized),
+                         names_to = 'Parasitized', 
+                         values_to = 'Cell_count')
 
 
-
-# Cumulative number of parasites per osmia occupancies
-
-nesting_os %>% 
-  filter(!is.na(Cumulative_par)) %>% 
-  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) + 
-  geom_jitter(height = 0.05, width = 0.01, alpha = 0.5) + 
-  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
-  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Cumulative number of parasites', title = 'Number of parasites per osmia occupancies (excluding pseudo)') 
-# looks nearly identical if i include pseudo
-
-
-# Proportion of cells in a nest with parasites per osmia occupancies
-
-nesting_os %>% 
-  filter(!is.na(Prop_cells_par)) %>% 
-  ggplot(aes(Osmia_no_ps_prior, Prop_cells_par)) +
-  geom_jitter(height = 0.05, width = 0.01, alpha = 0.5) + 
-  stat_smooth(method='glm', method.args=list(family='binomial'), colour = 'plum', fill = 'plum') +
-  labs(x = 'Osmia occupancies (excluding pseudo)', y = 'Proportion of cells in a nest that are parasitized', title = 'Proportion of cells in a nest with parasites per osmia occupancies (excluding pseudo)') 
-
-
-
-
-## Prop of yeses per number of unsealed parasitized nests
-
-# make column to say nest is currently not sealed and has at least one parasite
-nesting_os <- nesting_os %>% mutate(Not_sealed_with_par = ifelse(Sealed == 'not sealed' & Cumulative_par >= 1, 1, 0))
-
-# make column to count the sum by trapnest and date combo
-not_sealed_parasites <- nesting_os %>% 
-  group_by(Date, Trapnest) %>% 
-  summarise(Not_sealed_with_par_sum = sum(Not_sealed_with_par, na.rm = TRUE))
-
-# merge together
-nesting_os <- full_join(nesting_os, not_sealed_parasites)
-
-# make porporton of yeses for those trapnest and date combos
-
-# make sum of new nests, then counts (0s and 1s)
-summary_os_par <- nesting_os %>% 
-  group_by(Not_sealed_with_par_sum) %>% 
-  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup() 
-summary_os_par <- summary_os_par %>% 
-  group_by(Not_sealed_with_par_sum) %>% 
-  mutate(Possible_occurrences = length(Bee_choice)) %>% 
-  ungroup()
-
-# make into a proportion of yeses
-summary_os_par <- summary_os_par %>%
-  mutate(Prop_yes = New_nests_os_per_trapnests/Possible_occurrences)
-# deleting duplicates
-summary_os_par <- summary_os_par[!duplicated(summary_os_par[c('Trapnest','Date')]),]
-
-# Figure
-
-summary_os_par %>% 
-  ggplot(aes(Not_sealed_with_par_sum, Prop_yes)) +
-  geom_jitter(height = 0, width = 0) + 
-  ylim(-0.1, 0.5) + 
-  labs(y = 'Proportion of visits that are 1s', x = 'Number of parasites in unsealed nests', title = 'Proportion of nests built given the opportunity')
-
-
-
-
-summary_os_par.1 <- nesting_os %>% 
-  group_by(Not_sealed_with_par_sum) %>% 
-  mutate(New_nests_os_per_trapnests = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup() 
-
-# divide by total number of osmia nests
-summary_os_par.1 <- summary_os_par.1 %>%
-  mutate(Prop_new_per_par_not_sealed = New_nests_os_per_trapnests/164)
-# deleting duplicates
-summary_os_par.1 <- summary_os_par.1[!duplicated(summary_os_par.1[c('Prop_new_per_par_not_sealed','Not_sealed_with_par_sum')]),]
-
-summary_os_par.1 %>% 
-  ggplot(aes(Not_sealed_with_par_sum, Prop_new_per_par_not_sealed)) +
-  geom_jitter(height = 0, width = 0) +
-  stat_smooth(color = 'plum', fill = 'plum') +
-  labs(y = 'Proportion of new Osmia nests', x = 'Number of unsealed nests with parasites', title = 'Spread of new nests per unsealed nests with parasites') + 
-  ylim(0, 1) +
-  geom_text(
-    label = summary_os_par.1$New_nests_os_per_trapnests, nudge_y = 0.01)
-
-
-
-
-
-
-
-## parasites per active nest density?
-nesting_os %>% 
-  filter(Sealed== 'not sealed') %>% 
-  ggplot(aes(Osmia_no_ps_prior, Cumulative_par)) +
-  geom_jitter(height = 0.2, width = 0.02, alpha = 0.5) +
-  stat_smooth(method='glm', colour = 'coral2', fill = 'coral2') +
-  labs(title = 'CUMULATIVE parasite count per Osmia occupancies')
+cells_os$Parasitized <- factor(cells_os$Parasitized, levels=c('Sum_cell_parasitized', 'Sum_cell_not_parasitized'))
 
 
 ```
 
-```{r}
-
-
-# How the presence of parasites effects nesting preferences
-
-nesting_os_xs_fig <- nesting_os_xs %>% mutate(Proportion_new_nests_os = (New_nests_os/(Available_cavities_prior - New_nests_sum)))
-
-nesting_os_xs_fig %>% 
-  ggplot(aes(Par_nests_unsealed_os, Proportion_new_nests_os)) +
-  geom_jitter() 
+```{r Parasitism, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 
-# How the presence of parasites effects nest investment
+# Relation between parasites and aggregation densities, with pseudo
 
-mod_invest_filled <- glmer(cbind(Filled_length, Straw_length) ~ scale(Par_nests_unsealed_os_calc) * Nest_parasitized + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = investment_os, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
+cells_os %>% 
+  ggplot(aes(Osmia_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+  geom_bar(stat="identity") + # to make this a proportion of cells, add "position='fill'" 
+  scale_fill_manual(values = c("plum", "seagreen3")) + 
+  scale_colour_manual(values = c("plum", "seagreen3"))
 
-investment_os_fig <- investment_os %>% mutate(Prop_straw_filled = (Filled_length/Straw_length))
 
-investment_os_fig %>% 
-  ggplot(aes(Par_nests_unsealed_os_calc, Prop_straw_filled)) +
-  geom_jitter() 
+# Relation between parasites and aggregation densities, without pseudo
 
+cells_os %>% 
+  ggplot(aes(Osmia_no_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+  geom_bar(stat="identity") + # to make this a proportion of cells, add "position='fill'" 
+  scale_fill_manual(values = c("plum", "seagreen3")) + 
+  scale_colour_manual(values = c("plum", "seagreen3"))
+
+
+# Relation between parasites and aggregation densities, only unsealed
+
+cells_os %>% 
+  ggplot(aes(Sum_unsealed_os_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+  geom_bar(stat="identity") + # to make this a proportion of cells, add "position='fill'" 
+  scale_fill_manual(values = c("palevioletred2", "skyblue2"), labels = c("Parasitized", "Not arasitized")) + 
+  scale_colour_manual(values = c("palevioletred2", "skyblue2"), labels = c("Parasitized", "Not arasitized")) +
+  labs(y = 'Number of cells', x = 'Number of active '~italic(Osmia)~' nests') +
+  theme(legend.title = element_blank()) + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
+
+
+
+```
+
+```{r Preferences and Parasites}
+
+# make proportion of new nests
+nests_os_xs <- nesting_os_xs %>% mutate(Proportion_new_nests_os = New_nests_os/Available_cavities_prior)
+
+# scale DP_os_prior
+nests_os_xs$DP_os_scaled <- scale(nests_os_xs$DP_os_prior)
+
+# make numeric
+nests_os_xs$DP_os_scaled <- as.numeric(nests_os_xs$DP_os_scaled)
+
+# make mean + and - 1 SD
+nests_os_xs <- nests_os_xs %>%
+  mutate( mean_DP_os_scaled = mean(DP_os_scaled, na.rm = TRUE),
+          sd_DP_os_scaled = sd(DP_os_scaled, na.rm = TRUE),
+          DP_os_category = case_when(
+            DP_os_scaled < mean_DP_os_scaled - sd_DP_os_scaled ~ "Mean - 1 SD",
+            DP_os_scaled > mean_DP_os_scaled + sd_DP_os_scaled ~ "Mean + 1 SD",
+            TRUE ~ "Mean"
+    )
+  ) %>%
+  select(-mean_DP_os_scaled, -sd_DP_os_scaled) # Optionally remove the intermediate columns
+
+
+mean(nests_os_xs$DP_os_scaled)
+
+
+
+# How the presence of parasites effects nesting preferences, with pseudo 
+
+
+nests_os_xs %>% 
+  ggplot(aes(NDP_ps_os_prior, Proportion_new_nests_os, colour = DP_os_category, group = DP_os_category)) +
+  geom_jitter(colour = 'skyblue2') + 
+  geom_smooth(method = 'glm', aes(colour = DP_os_category, fill = DP_os_category)) +
+  scale_colour_manual(values = c("palevioletred2", "pink1"), name = ('Number of nests with \ndetectable parasites'), breaks=c('Mean + 1 SD', 'Mean')) +
+  scale_fill_manual(values = c("palevioletred2", "pink1"), name = ('Number of nests with \ndetectable parasites'), breaks=c('Mean + 1 SD', 'Mean')) +
+  labs(y = 'Number of new nests / \n Number of potential nests', x = 'Number of nests without \ndetectable parasites') + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
 
 
 ```
@@ -256,164 +250,183 @@ The most recent figure shows osmia density of unsealed nests, but shows cumulati
 
 ## Nest Investment
 
+```{r Last Cell, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Is the last cell more likely to be parasitized?
+cells_os$Last_cell <- as.factor(cells_os$Last_cell)
+
+
+cells_os %>% 
+  ggplot(aes(Last_cell, Cell_count, fill = Parasitized, colour = Parasitized)) +
+  geom_bar(stat="identity") + # to make this a proportion of cells, add "position='fill'" 
+  scale_fill_manual(values = c("palevioletred2", "skyblue2"), labels = c("Parasitized", "Not Parasitized")) + 
+  scale_colour_manual(values = c("palevioletred2", "skyblue2"), labels = c("Parasitized", "Not Parasitized")) +
+  labs(y = 'Number of cells', x = '') + 
+  scale_x_discrete(labels = c('Not last cell','Last cell')) + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
+
+```
+
 ```{r Investment, echo=FALSE, warning=FALSE, message=FALSE}
 
+# Editing data for figure
 
-investment <- investment %>% mutate(Prop_filled = (Filled_length_mm/Straw_length_mm))
-
-investment_os <- investment %>% filter(Occupant == 'osmia')
-investment_meg <- investment %>% filter(Occupant == 'megachile')
+investment_os <- investment_os %>% mutate(Prop_filled = Filled_length/Straw_length)
 
 
-
-investment_os %>% 
-  ggplot(aes(Par_nests_unsealed_os_calc, Prop_filled)) + 
-  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
-  stat_smooth() 
-  
-
-str(investment_os)
+# Investment into a nest if other active nests or the nest itself is parasitized
 
 
-investment_os %>% 
-  filter(Sealed == 'not sealed') %>% 
-  ggplot(aes(Par_in_trapnest, Prop_filled)) + 
-  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
-  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
-  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in unsealed nests')
-
-investment_os %>% 
-  filter(Sealed == 'sealed') %>% 
-  ggplot(aes(Par_in_trapnest, Prop_filled)) + 
-  geom_jitter(height = 0, width = 0, alpha = 0.3) + 
-  stat_smooth(color = 'skyblue3', fill = 'skyblue3') + 
-  labs(y = 'Proportion of straw filled with cells', x = 'Number of parasites in sealed nests')
+investment_os %>%
+  filter(!is.na(Nest_parasitized)) %>% 
+  ggplot(aes(DP_os_prior, Prop_filled, fill = Nest_parasitized)) +
+  geom_smooth(method = "glm", 
+              method.args = list(family = binomial()),
+              aes(colour = Nest_parasitized)) +
+  geom_jitter(width = 0.1, height = 0.1) +
+  scale_colour_manual(values = c("skyblue2", "palevioletred2")) +
+  scale_fill_manual(values = c("skyblue2", "palevioletred2")) +
+  labs(y = 'Porpotion of nest filled with cells', x = 'Number of nests with detectable parasites') + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
 
 
+predictions %>%
+  ggplot(aes(DP_os_prior, Prop_filled, fill = group)) +
+  geom_smooth(method = "glm", 
+              method.args = list(family = binomial()),
+              aes(colour = Nest_parasitized)) +
+  geom_jitter(width = 0.1, height = 0.1) +
+  scale_colour_manual(values = c("skyblue2", "palevioletred2")) +
+  scale_fill_manual(values = c("skyblue2", "palevioletred2")) +
+  labs(y = 'Porpotion of nest filled with cells', x = 'Number of nests with detectable parasites') + 
+  theme(axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"))
 
 
+ggplot(data = investment_os, aes(x = DP_os_prior, y = Prop_filled, color = Nest_parasitized)) +
+  geom_point() +
+  geom_line(data = predictions, aes(y = predicted, group = group)) +
+  geom_ribbon(data = predictions, aes(ymin = conf.low, ymax = conf.high, group = group, fill = group), alpha = 0.2) +
+  labs(x = "X", y = "Y", title = "Relationship between X and Y by Group") +
+  theme_minimal()
 
-
-
-## plot number of unsealed nests with parasites vs number without? not enough values for x axis?
 
 ```
 
 ```{r Old Figures, include=FALSE}
 
-
-## Make summary for proportion of new nests per number of Available_cavities_prior
-
-### Osmia
-
-# sum the new nests per each Available_cavities_prior value
-summary_os_avlb <- nesting_os %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup()
-# divide by total number of osmia nests
-summary_os_avlb <- summary_os_avlb %>%
-  mutate(Prop_new_per_available = New_nests_by_avlb/164)
-# deleting duplicates
-summary_os_avlb <- summary_os_avlb[!duplicated(summary_os_avlb[c('Available_cavities_prior','Prop_new_per_available')]),]
-
-
-### Megachile
-
-# sum the new nests per each Available_cavities_prior value
-summary_meg_avlb <- nesting_meg %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup()
-# divide by total number of megachile nests
-summary_meg_avlb <- summary_meg_avlb %>%
-  mutate(Prop_new_per_available = New_nests_by_avlb/58)
-# deleting duplicates
-summary_meg_avlb <- summary_meg_avlb[!duplicated(summary_meg_avlb[c('Available_cavities_prior', 'Prop_new_per_available')]),]
-
-# Figures
-
-summary_os_avlb %>% 
-  ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
-  geom_jitter(height = 0, width = 0) +
-  stat_smooth(color = 'plum', fill = 'plum') +
-  labs(y = 'Proportion of new Osmia nests', x = 'Number of available cavities prior to nesting') + 
-  xlim(0, 18) +
-  ylim(-0.1, 0.5) +
-  geom_text(
-    label = summary_os_avlb$New_nests_by_avlb, nudge_y = 0.01)
-
-summary_meg_avlb %>% 
-  ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
-  geom_jitter(height = 0, width = 0) +
-  stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
-  labs(y = 'Proportion of new Megachile nests', x = 'Number of available cavities prior to nesting') + 
-  xlim(0, 18) +
-  ylim(-0.1, 0.5) +
-  geom_text(
-    label = summary_meg_avlb$New_nests_by_avlb, nudge_y = 0.01)
-
-
-
-## Make summary for proportion of new nests per number of available cavities within each X axis value
-
-### Osmia
-
-# make sum of new nests, then counts (0s and 1s)
-summary_os_avlb_2 <- nesting_os %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup()
-summary_os_avlb_2 <- summary_os_avlb_2 %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
-  ungroup()
-# make into a proportion of yeses
-summary_os_avlb_2 <- summary_os_avlb_2 %>%
-  mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
-# deleting duplicates
-summary_os_avlb_2 <- summary_os_avlb_2[!duplicated(summary_os_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
-
-
-### Megachile
-
-# make sum of new nests, then counts (0s and 1s)
-summary_meg_avlb_2 <- nesting_meg %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
-  ungroup()
-summary_meg_avlb_2 <- summary_meg_avlb_2 %>% 
-  group_by(Available_cavities_prior) %>% 
-  mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
-  ungroup()
-# make into a proportion of yeses
-summary_meg_avlb_2 <- summary_meg_avlb_2 %>%
-  mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
-# deleting duplicates
-summary_meg_avlb_2 <- summary_meg_avlb_2[!duplicated(summary_meg_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
-
-
-# Figures
-
-summary_os_avlb_2 %>% 
-  ggplot(aes(Available_cavities_prior, Prop_yes)) +
-  geom_jitter(height = 0, width = 0) + 
-  geom_smooth(color = 'plum', fill = 'plum') + 
-  xlim(0, 18) +
-  ylim(-0.1, 0.5) +
-  labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
-
-summary_meg_avlb_2 %>% 
-  ggplot(aes(Available_cavities_prior, Prop_yes)) +
-  geom_jitter(height = 0, width = 0) + 
-  geom_smooth(color = 'goldenrod2', fill = 'goldenrod2') + 
-  xlim(0, 18) +
-  ylim(-0.1, 0.5) +
-  labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
-
-
-
-
-
+# 
+# ## Make summary for proportion of new nests per number of Available_cavities_prior
+# 
+# ### Osmia
+# 
+# # sum the new nests per each Available_cavities_prior value
+# summary_os_avlb <- nesting_os %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+#   ungroup()
+# # divide by total number of osmia nests
+# summary_os_avlb <- summary_os_avlb %>%
+#   mutate(Prop_new_per_available = New_nests_by_avlb/164)
+# # deleting duplicates
+# summary_os_avlb <- summary_os_avlb[!duplicated(summary_os_avlb[c('Available_cavities_prior','Prop_new_per_available')]),]
+# 
+# 
+# ### Megachile
+# 
+# # sum the new nests per each Available_cavities_prior value
+# summary_meg_avlb <- nesting_meg %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+#   ungroup()
+# # divide by total number of megachile nests
+# summary_meg_avlb <- summary_meg_avlb %>%
+#   mutate(Prop_new_per_available = New_nests_by_avlb/58)
+# # deleting duplicates
+# summary_meg_avlb <- summary_meg_avlb[!duplicated(summary_meg_avlb[c('Available_cavities_prior', 'Prop_new_per_available')]),]
+# 
+# # Figures
+# 
+# summary_os_avlb %>% 
+#   ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
+#   geom_jitter(height = 0, width = 0) +
+#   stat_smooth(color = 'plum', fill = 'plum') +
+#   labs(y = 'Proportion of new Osmia nests', x = 'Number of available cavities prior to nesting') + 
+#   xlim(0, 18) +
+#   ylim(-0.1, 0.5) +
+#   geom_text(
+#     label = summary_os_avlb$New_nests_by_avlb, nudge_y = 0.01)
+# 
+# summary_meg_avlb %>% 
+#   ggplot(aes(Available_cavities_prior, Prop_new_per_available)) +
+#   geom_jitter(height = 0, width = 0) +
+#   stat_smooth(color = 'goldenrod2', fill = 'goldenrod2') +
+#   labs(y = 'Proportion of new Megachile nests', x = 'Number of available cavities prior to nesting') + 
+#   xlim(0, 18) +
+#   ylim(-0.1, 0.5) +
+#   geom_text(
+#     label = summary_meg_avlb$New_nests_by_avlb, nudge_y = 0.01)
+# 
+# 
+# 
+# ## Make summary for proportion of new nests per number of available cavities within each X axis value
+# 
+# ### Osmia
+# 
+# # make sum of new nests, then counts (0s and 1s)
+# summary_os_avlb_2 <- nesting_os %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+#   ungroup()
+# summary_os_avlb_2 <- summary_os_avlb_2 %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
+#   ungroup()
+# # make into a proportion of yeses
+# summary_os_avlb_2 <- summary_os_avlb_2 %>%
+#   mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
+# # deleting duplicates
+# summary_os_avlb_2 <- summary_os_avlb_2[!duplicated(summary_os_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
+# 
+# 
+# ### Megachile
+# 
+# # make sum of new nests, then counts (0s and 1s)
+# summary_meg_avlb_2 <- nesting_meg %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(New_nests_by_avlb = sum(Bee_choice, na.rm = TRUE)) %>% 
+#   ungroup()
+# summary_meg_avlb_2 <- summary_meg_avlb_2 %>% 
+#   group_by(Available_cavities_prior) %>% 
+#   mutate(Possible_occurrences_by_avlb = length(Bee_choice)) %>% 
+#   ungroup()
+# # make into a proportion of yeses
+# summary_meg_avlb_2 <- summary_meg_avlb_2 %>%
+#   mutate(Prop_yes = New_nests_by_avlb/Possible_occurrences_by_avlb)
+# # deleting duplicates
+# summary_meg_avlb_2 <- summary_meg_avlb_2[!duplicated(summary_meg_avlb_2[c('Available_cavities_prior','Prop_yes')]),]
+# 
+# 
+# # Figures
+# 
+# summary_os_avlb_2 %>% 
+#   ggplot(aes(Available_cavities_prior, Prop_yes)) +
+#   geom_jitter(height = 0, width = 0) + 
+#   geom_smooth(color = 'plum', fill = 'plum') + 
+#   xlim(0, 18) +
+#   ylim(-0.1, 0.5) +
+#   labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
+# 
+# summary_meg_avlb_2 %>% 
+#   ggplot(aes(Available_cavities_prior, Prop_yes)) +
+#   geom_jitter(height = 0, width = 0) + 
+#   geom_smooth(color = 'goldenrod2', fill = 'goldenrod2') + 
+#   xlim(0, 18) +
+#   ylim(-0.1, 0.5) +
+#   labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
+# 
+# 
+# 
+# 
+# 
 
 ```

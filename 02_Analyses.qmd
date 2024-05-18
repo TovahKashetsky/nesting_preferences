@@ -1,10 +1,9 @@
 ---
 title: "Analyses"
 format: 
-  html:
-    self-contained: true
-    toc: true
-  docx: default
+ html:
+  self-contained: true
+  toc: true
 editor: visual
 bibliography: references.bib
 ---
@@ -99,7 +98,7 @@ ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = T
 
 # MODEL 2
 ### New nests per available cavities Megachile ###
-mod_choice_cav_meg <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2)  + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial(), control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1000000)))
+mod_choice_cav_meg <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial(), control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1000000)))
 
 plot(simulateResiduals(mod_choice_cav_meg)) # fine
 check_model(mod_choice_cav_meg) # fine
@@ -132,12 +131,12 @@ vif(mod_choice_consp_os_ps) # good
 
 # specify my range of values for Osmia_ps_prior
 values_osmia_ps <- seq(min(nesting_os_xs$Osmia_ps_prior), 
-                    max(nesting_os_xs$Osmia_ps_prior), 
-                    length.out = 100)
+          max(nesting_os_xs$Osmia_ps_prior), 
+          length.out = 100)
 # compute marginal effects at specific values of Osmia_ps_prior
 marginal_effects_os_ps <- ggpredict(mod_choice_consp_os_ps, 
-                              terms = "Osmia_ps_prior [all]", 
-                              conditions = list(Osmia_ps_prior = values_osmia_ps))
+               terms = "Osmia_ps_prior [all]", 
+               conditions = list(Osmia_ps_prior = values_osmia_ps))
 # plot
 plot(marginal_effects_os_ps, rawdata = TRUE, jitter = 0.04)
 
@@ -156,14 +155,16 @@ vif(mod_choice_consp_os_no_ps) # good
 
 # specify my range of values for Osmia_no_ps_prior
 values_osmia_no_ps <- seq(min(nesting_os_xs$Osmia_no_ps_prior), 
-                    max(nesting_os_xs$Osmia_no_ps_prior), 
-                    length.out = 100)
+          max(nesting_os_xs$Osmia_no_ps_prior), 
+          length.out = 100)
 # compute marginal effects at specific values of Osmia_ps_prior
 marginal_effects_os_no_ps <- ggpredict(mod_choice_consp_os_no_ps, 
-                              terms = "Osmia_no_ps_prior [all]", 
-                              conditions = list(Osmia_no_ps_prior = values_osmia_no_ps))
+               terms = "Osmia_no_ps_prior [all]", 
+               conditions = list(Osmia_no_ps_prior = values_osmia_no_ps))
 # plot
 plot(marginal_effects_os_no_ps, rawdata = TRUE, jitter = 0.04)
+       
+
 
 ```
 
@@ -186,11 +187,11 @@ vif(mod_choice_consp_meg_ps)
 
 # plot
 values_meg_ps <- seq(min(nesting_meg_xs$Meg_ps_prior), 
-                    max(nesting_meg_xs$Meg_ps_prior), 
-                    length.out = 100)
+          max(nesting_meg_xs$Meg_ps_prior), 
+          length.out = 100)
 marginal_effects_meg_ps <- ggpredict(mod_choice_consp_meg_ps, 
-                              terms = "Meg_ps_prior [all]", 
-                              conditions = list(Meg_ps_prior = values_meg_ps))
+               terms = "Meg_ps_prior [all]", 
+               conditions = list(Meg_ps_prior = values_meg_ps))
 plot(marginal_effects_meg_ps, rawdata = TRUE, jitter = 0.04)
 
 # MODEL 6
@@ -206,17 +207,17 @@ vif(mod_choice_consp_meg_no_ps) # good
 
 # plot
 values_meg_no_ps <- seq(min(nesting_meg_xs$Meg_no_ps_prior), 
-                    max(nesting_meg_xs$Meg_no_ps_prior), 
-                    length.out = 100)
+          max(nesting_meg_xs$Meg_no_ps_prior), 
+          length.out = 100)
 marginal_effects_meg_no_ps <- ggpredict(mod_choice_consp_meg_no_ps, 
-                              terms = "Meg_no_ps_prior [all]", 
-                              conditions = list(Meg_no_ps_prior = values_meg_no_ps))
+               terms = "Meg_no_ps_prior [all]", 
+               conditions = list(Meg_no_ps_prior = values_meg_no_ps))
 plot(marginal_effects_meg_no_ps, rawdata = TRUE, jitter = 0.04)
 
 
 ```
 
-### Parasitism
+### Parasite Preferences
 
 ```{r Parasites and Aggregations, include=TRUE}
 
@@ -225,7 +226,7 @@ plot(marginal_effects_meg_no_ps, rawdata = TRUE, jitter = 0.04)
 # MODEL 7
 # Relation between parasites and aggregation densities, with pseudo
 
-mod_par_agg_ps <- glmer(cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_ps_no_iw) + poly(Day_of_year,2)  + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_par_agg_ps <- glmer(cbind(Sum_cell_parasitized, Sum_cell_not_parasitized) ~ scale(Osmia_ps_no_iw) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
 plot(simulateResiduals(mod_par_agg_ps)) # good
 check_model(mod_par_agg_ps) # good
@@ -236,11 +237,11 @@ vif(mod_par_agg_ps)
 
 # plot
 values_osmia_ps_no_iw <- seq(min(nesting_cells_os$Osmia_ps_no_iw, na.rm = TRUE), 
-                              max(nesting_cells_os$Osmia_ps_no_iw, na.rm = TRUE), 
-                              length.out = 100)
+               max(nesting_cells_os$Osmia_ps_no_iw, na.rm = TRUE), 
+               length.out = 100)
 marginal_effects_os_ps_no_iw <- ggpredict(mod_par_agg_ps, 
-                              terms = "Osmia_ps_no_iw [all]", 
-                              conditions = list(Osmia_ps_no_iw = values_osmia_ps_no_iw))
+               terms = "Osmia_ps_no_iw [all]", 
+               conditions = list(Osmia_ps_no_iw = values_osmia_ps_no_iw))
 plot(marginal_effects_os_ps_no_iw, rawdata = TRUE, jitter = 0.04)
 
 
@@ -260,11 +261,11 @@ table(nesting_cells_os$Site) # very few CP
 
 # plot
 values_osmia_no_ps_no_iw <- seq(min(nesting_cells_os$Osmia_no_ps_no_iw, na.rm = TRUE), 
-                                max(nesting_cells_os$Osmia_no_ps_no_iw, na.rm = TRUE), 
-                                length.out = 100)
+                max(nesting_cells_os$Osmia_no_ps_no_iw, na.rm = TRUE), 
+                length.out = 100)
 marginal_effects_os_no_ps_no_iw <- ggpredict(mod_par_agg_no_ps, 
-                              terms = "Osmia_no_ps_no_iw [all]", 
-                              conditions = list(Osmia_no_ps_no_iw = values_osmia_no_ps_no_iw))
+               terms = "Osmia_no_ps_no_iw [all]", 
+               conditions = list(Osmia_no_ps_no_iw = values_osmia_no_ps_no_iw))
 plot(marginal_effects_os_no_ps_no_iw, rawdata = TRUE, jitter = 0.04)
 
 
@@ -282,14 +283,16 @@ vif(mod_par_agg_unsealed_os) # no detected effects
 
 # plot
 values_unsealed_os_no_iw <- seq(min(nesting_cells_os$Sum_unsealed_os_no_iw, na.rm = TRUE), 
-                                     max(nesting_cells_os$Sum_unsealed_os_no_iw, na.rm = TRUE), 
-                                     length.out = 100)
+                   max(nesting_cells_os$Sum_unsealed_os_no_iw, na.rm = TRUE), 
+                   length.out = 100)
 marginal_effects_unsealed_os_no_iw <- ggpredict(mod_par_agg_unsealed_os, 
-                              terms = "Sum_unsealed_os_no_iw [all]", 
-                              conditions = list(Sum_unsealed_os_no_iw = values_unsealed_os_no_iw))
+               terms = "Sum_unsealed_os_no_iw [all]", 
+               conditions = list(Sum_unsealed_os_no_iw = values_unsealed_os_no_iw))
 plot(marginal_effects_unsealed_os_no_iw, rawdata = TRUE, jitter = 0.04)
 
 ```
+
+### Effects of Parasite on Social Preferences
 
 ```{r Preferences and Parasites, include=TRUE}
 
@@ -307,8 +310,12 @@ testZeroInflation(mod_choice_par_ps_os) # fine
 summary(mod_choice_par_ps_os) # significant effect of parasitized unsealed nests, conspecifics, good days, day of year, and site
 vif(mod_choice_par_ps_os) # good
 
-interact_plot(mod_choice_par_ps_os, pred = NDP_ps_os_prior, modx = DP_os_prior, data = nesting_os_xs)
-
+interact_plot(mod_choice_par_ps_os, 
+              pred = NDP_ps_os_prior, 
+              modx = DP_os_prior, 
+              data = nesting_os_xs,
+              colors = c("salmon1", "salmon2", "salmon3"))
+#  y-axis represents the predicted probability of observing new nests out of the total available cavities, given the values of the predictor variables
 
 # Model 11
 # How the presence of parasites effects nesting preferences, without pseudo
@@ -322,15 +329,21 @@ testZeroInflation(mod_choice_par_no_ps_os) # good
 summary(mod_choice_par_no_ps_os) # significant effect of parasitized unsealed nests, conspecifics, parasitized unsealed nests*conspecifics, good days, day of year, and site
 vif(mod_choice_par_no_ps_os)
 
-interact_plot(mod_choice_par_no_ps_os, pred = NDP_os_prior, modx = DP_os_prior, data = nesting_os_xs)
+interact_plot(mod_choice_par_no_ps_os, 
+              pred = NDP_os_prior, 
+              modx = DP_os_prior, 
+              data = nesting_os_xs,
+              colors = c("salmon1", "salmon2", "salmon3"))
 
 
 ```
 
+### Nest Investment
+
 ```{r Investment, include=TRUE}
 
 # MODEL 12
-# Likelyhood of  of terminating nest investment after a cell was parasitized
+# Likelyhood of of terminating nest investment after a cell was parasitized
 
 mod_last_cell <- glmer(Last_cell ~ Cell_parasitized + Day_of_year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
 
@@ -351,10 +364,16 @@ check_model(mod_invest_filled) # fine
 summary(mod_invest_filled) # significant effect of parasitized unsealed nests, if focal nest is parasitized, good days, day of year, and site
 vif(mod_invest_filled) # good
 
-interact_plot(mod_invest_filled, pred = DP_os_prior, modx = Nest_parasitized, data = investment_os)
+interact_plot(mod_invest_filled, pred = DP_os_prior, modx = Nest_parasitized, data = investment_os) 
+
+
+plot(ggpredict(mod_invest_filled, terms = c("DP_os_prior", "Nest_parasitized"))) 
+
 
 
 ```
+
+## Confirming my treatments worked as planned
 
 ```{r Ignore, include=TRUE}
 
@@ -381,6 +400,17 @@ unscaled_estimate_os <- scaled_estimate_os * mean_os_no_ps_prior + mean_os_no_ps
 unscaled_estimate_os
 
 
+mean_os_ps_prior <- mean(nesting_os_xs$Osmia_ps_prior)
+sd_os_ps_prior <- sd(nesting_os_xs$Osmia_ps_prior)
+scaled_estimate_os_ps <- 0.85564
+unscaled_estimate_os_ps <- scaled_estimate_os_ps * mean_os_ps_prior + mean_os_ps_prior
+unscaled_estimate_os_ps
+
+
+
+
+
+
 # ## Check that cbind() is identical to manually making the response matrix
 
 # # make two columns with cbind that I will use in my models, as an example
@@ -396,7 +426,7 @@ unscaled_estimate_os
 # ## Models I didn't use
  
 # ### New nests per available cavities Osmia POISSON ### Model 1
-# mod_choice_cav_os_POISSON <- glmer(New_nests_os ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2)  + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = poisson()) 
+# mod_choice_cav_os_POISSON <- glmer(New_nests_os ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = poisson()) 
 # plot(simulateResiduals(mod_choice_cav_os_POISSON)) 
 # summary(mod_choice_cav_os_POISSON)
 # vif(mod_choice_cav_os_POISSON)
