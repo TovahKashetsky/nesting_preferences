@@ -11,7 +11,7 @@ editor: visual
 # count number of inner wall only nests
 
 # NN I 26 1a was a large pseudo until June 22, then a medium after
-
+### REMEMBER to not count nests unfinished when we removed them at the end of summer. E.g., 70_5a had one cell built but shouldnt be considered the last cell
 
 
 ## Columns ##
@@ -41,7 +41,7 @@ editor: visual
 
 ```
 
-```{r Cleaning Data}
+```{r Cleaning}
 knitr::opts_chunk$set(echo = TRUE)
 
 
@@ -223,7 +223,7 @@ sum(long_choice$Bee_choice, na.rm = TRUE) # 270 new nests, but this is incorrect
 
 ```
 
-```{r Nests Containing Cells}
+```{r Nests_Containing_Cells}
 
 
 ## Categorize occupied nests as containing cells, or as just inner walls
@@ -267,7 +267,7 @@ long_choice <- long_choice %>% arrange(Nest_ID, Date)
 
 ```
 
-```{r Available Cavities post}
+```{r Available_Cavities_Post}
 
 ## Count the number of Available Cavities in each trapnest after the new nests for that visit
 
@@ -284,7 +284,7 @@ summ_avail$Available_post <- replace(summ_avail$Available_post, summ_avail$Avail
 
 ```
 
-```{r Conspecific Presence (for bees)}
+```{r Conspecific_Presence_for_Bee_Models}
 
 # includes inner walls only as conspecifics
 
@@ -359,7 +359,7 @@ conspecifics_both_1 <- merge(conspecifics_os_2, conspecifics_meg_2)
 
 ```
 
-```{r Conspecific Presence (for parasite models)}
+```{r Conspecific_Presence_for_Parasite_Models}
 
 # excludes inner walls only because parasites can't lay eggs
 
@@ -429,7 +429,7 @@ conspecifics_both <- merge(conspecifics_both_1, conspecifics_both_2)
 
 ```
 
-```{r Cleaning Data 2}
+```{r Cleaning_2}
 
 
 ## Cleaning required after previous steps 
@@ -451,7 +451,7 @@ sum(conspecifics$Bee_choice, na.rm = TRUE) # 230 new nests, real number
 
 ```
 
-```{r New Nests}
+```{r New_Nests}
 
 
 ## Counting the number of new nests
@@ -484,7 +484,7 @@ prefs$New_nests_meg <- replace(prefs$New_nests_meg, is.na(prefs$New_nests_meg), 
 
 ```
 
-```{r Weather Data}
+```{r Weather}
 
 
 ## Creating column with number of good days for bee activity based on weather between my visits to the trapnests 
@@ -550,7 +550,7 @@ length(preferences$Trapnest) # 26568
 
 ```
 
-```{r Calculating Prior Values}
+```{r Calculating_Prior_Values}
 
 
 ## Changing occupant count for prior number to be the average number of congenera 
@@ -598,7 +598,7 @@ preferences <- preferences %>% select(Date, Site, Subsite, Treatment, Trapnest, 
 
 ```
 
-```{r Available Cavities Prior}
+```{r Available_Cavities_Prior}
 
 ## Making column for the number of available cavities that could have been occupied
 
@@ -616,7 +616,7 @@ table(preferences$Occupant)
 
 ```
 
-```{r Parasite Wrangling}
+```{r Parasite_Wrangling}
 
 # Columns
  # Cumulative_par: cumulative number of parasites for that specific nest. E.g., 6_15a had no parasites when 1 cell was built, then two more cells each had a parasite, then six more cells with three parasites. So cumulative_par is 0, 2, then 5, and 5 until the nest is removed 
@@ -862,7 +862,7 @@ nesting_cells <- nesting_cells %>%
 
 ```
 
-```{r Parasite Wrangling 2}
+```{r Parasite_Wrangling_2}
 
 # This chunk is to make columns needed for the models
 
@@ -951,7 +951,7 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 | **Not Parasitized** | NDP    | NDP    |
 | **Pseudo**          | NDP_ps | --     |
 
-```{r Detectable and No Detectable Parasite Nests}
+```{r Detectable_and_No_Detectable_Parasites}
 
 ### do the same with megachile once they emerge
 
@@ -1103,11 +1103,10 @@ nesting <- nesting %>% select(Trapnest, Date, Day_of_year, Site:Treatment, Fille
 
 ```
 
-```{r Editing data for models}
+```{r Editing_Data_for_Models}
 
 # check structure
 str(nesting)
-str(nesting_investment_0)
 
 ## Make df for just nest investment
 
@@ -1196,7 +1195,7 @@ write.csv(nesting_cells_os, 'data/nesting_cells_cleaned_osia.csv')
 
 ```
 
-```{r Example code}
+```{r Example_Code}
  
 # Testing to make sure my looping method works
 
@@ -1242,5 +1241,95 @@ write.csv(nesting_cells_os, 'data/nesting_cells_cleaned_osia.csv')
 # # the length of ex1 should = ex2 + ex3 --> 80 + 334 
 # os_parasites_ex3 <- rbind(os_parasites_ex2, os_parasites_ex3)
 # os_parasites_ex3 <- os_parasites_ex3 %>% arrange(Nest_ID, Date)
+
+```
+
+```{r Prep_for_Simulations}
+
+
+## Simulate the null hypothesis that bees are treating each cavity equally, thus nesting would be based just on availability
+
+# simulation without replacement so that if there are multiple new osmia nests, the number of available cavities goes down by one for each sequential new nest in that subsite-group combo
+
+# create a function to simulate the distribution of nests based on the null hypothesis that bees are nesting according to available cavities
+simulate_nests <- function(avail_cavities, total_nests) {
+  n <- length(avail_cavities) # number of available cavities
+  nest_counts <- rep(0, n) # start with zero nests in each trapnest
+
+  # keep as zeros is no nests are built
+  if (total_nests == 0) {
+    return(nest_counts)
+  }
+
+  # look through each of the new nests to be randomly assigned
+  for (i in 1:total_nests) {
+    if (sum(avail_cavities) == 0) break  # stop if all cavities used
+    probability <- avail_cavities / sum(avail_cavities) # calculate probability proportional to the number of available cavities
+    chosen <- sample(1:n, size = 1, prob = probability) # randomly choose a trapnest for the new nest based on available cavities
+    nest_counts[chosen] <- nest_counts[chosen] + 1 # record it
+    avail_cavities[chosen] <- avail_cavities[chosen] - 1 # reduce the number of available cavities by 1, when we apply the function the loop will run again until no new nests are left
+  }
+  return(nest_counts) # return the vector with how many nests were randomly assigned
+}
+
+## Apply the function
+
+# indicate how many simulated data columns we want for the model
+n_sim <- 100
+
+nesting_os_xs_null <- nesting_os_xs %>%
+  group_by(Subsite, Date) %>%
+  group_modify(~ { # simulate random nest distribution for subsite-date combo
+    for (i in 1:n_sim){ # make each of the columns we indicated that we want 
+    nest_counts <- simulate_nests(.x$Available_cavities_prior, sum(.x$New_nests_os)) # use available cavities as weights and sum the new nests
+    .x[[paste0("Null_new_nests", i)]] <- nest_counts # make the new column
+    }
+    .x # return the modified group
+  }
+  ) %>%
+  ungroup()
+
+
+## Making the model part 1: Simulated data 
+
+# run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
+sim_list <- lapply(1:n_sim, function(x){
+  my_formula <- paste0("Null_new_nests", x, " ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)") 
+  output <- glmer(as.formula(my_formula), data = nesting_os_xs_null, family = poisson)
+  summary(output)
+} )
+
+# take all of the simulated coefficients
+sim_coefs <- c(unlist(lapply(sim_list, function(x) {
+  x$coefficients[2,1] # extract second row, first column for the estimate 
+})))
+
+# plot the simulated coefficients
+hist(sim_coefs)
+
+
+## Making the model part 2: Observed data 
+
+mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs_null, family = poisson)
+summary(mod_choice_consp_os_ps)
+
+# extract my observed coefficient
+obvs_coef <- summary(mod_choice_consp_os_ps)$coefficients[2,1]
+
+# plot my observed values with the simulated coefficients
+abline(v=obvs_coef)
+
+# range of 95%, i.e., if my observed value falls within this range, its not different from the null
+quantile(sim_coefs, c(0.025, 0.975))
+
+# Convert to dataframe
+df <- data.frame(sim_coefs = sim_coefs)
+
+ggplot(df, aes(x = sim_coefs)) +
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(xintercept = obvs_coef, color = "red", linetype = "dashed", size = 1) 
+
+
+
 
 ```

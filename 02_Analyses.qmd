@@ -79,11 +79,11 @@ plot(I(New_nests_meg/ (Meg_no_ps_prior)) ~ (Day_of_year), data=nesting_meg_xs)
 
 ### Nesting per Available Cavities
 
-```{r Models: Nest per Available Cavities, include=TRUE}
+```{r Available_Cavities, include=TRUE}
 
 
 # MODEL 1 
-### New nests per available cavities Osmia ###
+### New nests per available cavities - Osmia ###
 mod_choice_cav_os <- glmer(cbind(New_nests_os, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = binomial(), control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1000000))) # ignore boudnary singular fit warning, means random effects don't account for much
 
 plot(simulateResiduals(mod_choice_cav_os)) # fine
@@ -97,7 +97,7 @@ ggpredict(mod_choice_cav_os, c('Available_cavities_prior')) %>% plot(rawdata = T
 
 
 # MODEL 2
-### New nests per available cavities Megachile ###
+### New nests per available cavities - Megachile ###
 mod_choice_cav_meg <- glmer(cbind(New_nests_meg, Available_cavities_prior - New_nests_sum) ~ scale(Available_cavities_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_meg_xs, family = binomial(), control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1000000)))
 
 plot(simulateResiduals(mod_choice_cav_meg)) # fine
@@ -114,7 +114,7 @@ ggpredict(mod_choice_cav_meg, c('Available_cavities_prior')) %>% plot(rawdata = 
 
 ### Nesting per Conspecific Presence
 
-```{r Models: Nest per Conspecifics Osmia, include=TRUE}
+```{r Conspecifics_Osmia, include=TRUE}
 
 
 # MODEL 3 
@@ -170,8 +170,7 @@ plot(marginal_effects_os_no_ps, rawdata = TRUE, jitter = 0.04)
 
 ------------------------------------------------------------------------
 
-```{r Models: Nest per Conspecifics Megachile, include=TRUE}
-
+```{r Conspecifics_Megachile, include=TRUE}
 
 
 # MODEL 5
@@ -219,7 +218,7 @@ plot(marginal_effects_meg_no_ps, rawdata = TRUE, jitter = 0.04)
 
 ### Parasite Preferences
 
-```{r Parasites and Aggregations, include=TRUE}
+```{r Parasites_and_Aggregations, include=TRUE}
 
 # Relation between parasites and aggregation densities
 
@@ -294,7 +293,7 @@ plot(marginal_effects_unsealed_os_no_iw, rawdata = TRUE, jitter = 0.04)
 
 ### Effects of Parasite on Social Preferences
 
-```{r Preferences and Parasites, include=TRUE}
+```{r Preferences_and_Parasites, include=TRUE}
 
 
 # MODEL 10
@@ -364,11 +363,9 @@ check_model(mod_invest_filled) # fine
 summary(mod_invest_filled) # significant effect of parasitized unsealed nests, if focal nest is parasitized, good days, day of year, and site
 vif(mod_invest_filled) # good
 
-interact_plot(mod_invest_filled, pred = DP_os_prior, modx = Nest_parasitized, data = investment_os) 
 
 
 plot(ggpredict(mod_invest_filled, terms = c("DP_os_prior", "Nest_parasitized"))) 
-
 
 
 ```
