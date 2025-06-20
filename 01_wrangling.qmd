@@ -957,6 +957,8 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 
 ### CHECK - April 24th 2024, NAs for parasites are not counted for either DP or NDP. How should NAs be counted?
 
+### CHECK - are there instances where the nest itself is parasitized the first day its built, meaning the data would say theres 1 parasite in the trapnest but its actually 0 when it first nested because the focal nest itself is parasitized?
+
 # In order to measure nesting preferences of bees to see if affected by parasites, I need to separate the nests with detectable parasites (DP) from the nests with no detectable parasites (NDP), see the table above
 # this is about to get messy, so I'm making a smaller df 
 nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Osmia_ps:Meg_no_ps, Nest_parasitized, Active_bin)

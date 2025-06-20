@@ -104,7 +104,7 @@ confirm_treatment_data %>%
 ```{r Social_Preferences}
 
 
-## Prepare for simulated model data
+## Prepare simulated data
 
 
 ## Simulate the null hypothesis that bees are treating each cavity equally, thus nesting would be based just on availability
@@ -150,6 +150,8 @@ nesting_os_xs_null <- nesting_os_xs %>%
   ungroup()
 
 
+## PREDICTION 1 
+
 ## Making the model part 1: Simulated data 
 
 # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
@@ -168,10 +170,16 @@ sim_coefs <- c(unlist(lapply(sim_list, function(x) {
 hist(sim_coefs)
 
 
+
+
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs_null, family = poisson)
+mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs, family = poisson)
 summary(mod_choice_consp_os_ps)
+
+check_model(mod_choice_consp_os_ps)
+plot(simulateResiduals(mod_choice_consp_os_ps)) 
+vif(mod_choice_consp_os_ps)
 
 # extract my observed coefficient
 obvs_coef <- summary(mod_choice_consp_os_ps)$coefficients[2,1]
@@ -196,6 +204,8 @@ ggplot(df, aes(x = sim_coefs)) +
 ```{r Parasites_and_Aggregations, include=TRUE}
 
 # Relation between parasites and aggregation densities
+
+## PREDICTION 2
 
 # MODEL 7
 # Relation between parasites and aggregation densities, with pseudo
@@ -268,7 +278,7 @@ plot(marginal_effects_unsealed_os_no_iw, rawdata = TRUE, jitter = 0.04)
 
 ```{r Preferences_and_Parasites, include=TRUE}
 
-
+## PREDICTION 3a
 
 # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 sim_list_2 <- lapply(1:n_sim, function(x){
@@ -368,17 +378,7 @@ interact_plot(mod_choice_par_no_ps_os,
 
 ```{r Investment, include=TRUE}
 
-# MODEL 12
-# Likelyhood of of terminating nest investment after a cell was parasitized
-
-mod_last_cell <- glmer(Last_cell ~ Cell_parasitized + Day_of_year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
-
-plot(simulateResiduals(mod_last_cell)) # good
-summary(mod_last_cell) # significant effect of day of year
-vif(mod_last_cell) # good
-
-ggpredict(mod_last_cell, c('Cell_parasitized')) %>% plot(rawdata = TRUE, jitter = .04) 
-
+## PREDICTION 3b
 
 # MODEL 13
 # Investment into a nest if other active nests or the nest itself is parasitized
@@ -391,8 +391,33 @@ summary(mod_invest_filled) # significant effect of parasitized unsealed nests, i
 vif(mod_invest_filled) # good
 
 
-
 plot(ggpredict(mod_invest_filled, terms = c("DP_os_prior", "Nest_parasitized"))) 
+
+
+## mean straw length:
+mean(investment_os$Straw_length_mm)
+sd(investment_os$Straw_length_mm)
+
+
+
+## PREDICTION 3c
+
+# MODEL 12
+# Likelyhood of of terminating nest investment after a cell was parasitized
+
+mod_last_cell <- glmer(Last_cell ~ Cell_parasitized + poly(Day_of_year,2) + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
+
+plot(simulateResiduals(mod_last_cell)) # good
+summary(mod_last_cell) # significant effect of day of year
+vif(mod_last_cell) # good
+
+ggpredict(mod_last_cell, c('Cell_parasitized')) %>% plot(rawdata = TRUE, jitter = .04) 
+
+
+
+
+## PREDICTION 3d
+
 
 
 ```
