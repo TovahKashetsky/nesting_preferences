@@ -34,6 +34,9 @@ bibliography: references.bib
 ```{r Prep, include=FALSE, include=TRUE}
 
 
+
+#### CHECK IF BINARIES ARE CODED AS 1 AND 0
+
 ## Loading packages
 
 library(glmmTMB)
