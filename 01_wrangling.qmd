@@ -5,21 +5,6 @@ editor: visual
 ---
 
 ```{r Notes}
-styler::style_dir(
-  style = styler::tidyverse_style(
-    strict = TRUE,
-    transformers = styler::tidyverse_style()$transformers %>%
-      styler::add_transformers(
-        line_break = list(
-          # Force line break before every pipe
-          `%>%` = function(pd_flat) {
-            styler:::force_break_between(pd_flat, token = "%>%")
-          }
-        )
-      )
-  )
-)
-
 
 ## To Do List ##
 
@@ -59,6 +44,8 @@ styler::style_dir(
 ```
 
 ```{r Cleaning_2023}
+
+
 knitr::opts_chunk$set(echo = TRUE) 
 library(sqldf)
 library(tidyverse)
@@ -258,7 +245,7 @@ table(long_choice_2023$Occupant[long_choice_2023$Bee_choice == 1])
 ```
 
 ```{r Cleaning_2024}
-
+ 
 
 ## Load data
 data_2024 <- read_csv('Data/Aggregate_nesting_data_2024.csv')
@@ -419,7 +406,7 @@ table(long_choice_2024$Occupant[long_choice_2024$Bee_choice == 1])
 ```
 
 ```{r Nests_Containing_Cells_2023}
-
+ 
 
 ## Categorize occupied nests as containing cells, or as just inner walls
 
@@ -465,7 +452,7 @@ long_choice_2023 <- long_choice_2023 %>% arrange(Nest_ID, Date)
 ```{r Nests_Containing_Cells_2024}
 
 ## Categorize occupied nests as containing cells, or as just inner walls
-
+ 
 
 # make column to say if the Status contains the word "cell" (1) or not (0)
 contains_cells_2024 <- long_choice_2024 %>% filter(Status != 'empty' & Status != 'pseudo' & Occupant == 'osmia' | Status != 'empty' & Status != 'pseudo' & Occupant == 'megachile')
@@ -507,7 +494,7 @@ long_choice_2024 <- long_choice_2024 %>% arrange(Nest_ID, Date)
 ```
 
 ```{r Available_Cavities_Post_2023}
-
+ 
 
 ## Count the number of Available Cavities in each trapnest after the new nests for that visit
 
@@ -526,7 +513,7 @@ summ_avail_2023$Available_post <- replace(summ_avail_2023$Available_post, summ_a
 ```
 
 ```{r Available_Cavities_Post_2024}
-
+ 
 
 ## Count the number of Available Cavities in each trapnest after the new nests for that visit
 
@@ -545,7 +532,7 @@ summ_avail_2024$Available_post <- replace(summ_avail_2024$Available_post, summ_a
 ```
 
 ```{r Conspecific_Presence_for_Bee_Models_2023}
-
+ 
 
 # includes inner walls only as conspecifics
 
@@ -621,7 +608,7 @@ conspecifics_both_1_2023 <- merge(conspecifics_os_2_2023, conspecifics_meg_2_202
 ```
 
 ```{r Conspecific_Presence_for_Bee_Models_2024}
-
+ 
 
 # includes inner walls only as conspecifics
 
@@ -697,7 +684,7 @@ conspecifics_both_1_2024 <- merge(conspecifics_os_2_2024, conspecifics_meg_2_202
 ```
 
 ```{r Conspecific_Presence_for_Parasite_Models_2023}
-
+ 
 
 # excludes inner walls only because parasites can't lay eggs
 
@@ -769,7 +756,7 @@ conspecifics_both_2023 <- merge(conspecifics_both_1_2023, conspecifics_both_2_20
 ```
 
 ```{r Conspecific_Presence_for_Parasite_Models_2024}
-
+ 
 
 # excludes inner walls only because parasites can't lay eggs
 
@@ -841,7 +828,7 @@ conspecifics_both_2024 <- merge(conspecifics_both_1_2024, conspecifics_both_2_20
 ```
 
 ```{r Cleaning_Round_2_2023}
-
+ 
 
 ## Cleaning required after previous steps 
 
@@ -862,7 +849,7 @@ sum(conspecifics_2023$Bee_choice, na.rm = TRUE) # 226 new nests, real number
 ```
 
 ```{r Cleaning_Round_2_2024}
-
+ 
 
 ## Cleaning required after previous steps 
 
@@ -883,7 +870,7 @@ sum(conspecifics_2024$Bee_choice, na.rm = TRUE) # 81 new nests, real number
 ```
 
 ```{r Counting_New_Nests_2023}
-
+ 
 
 ## Counting the number of new nests
 
@@ -915,7 +902,7 @@ prefs_2023$New_nests_meg <- replace(prefs_2023$New_nests_meg, is.na(prefs_2023$N
 ```
 
 ```{r Counting_New_Nests_2024}
-
+ 
 
 ## Counting the number of new nests
 
@@ -948,7 +935,7 @@ prefs_2024$New_nests_meg <- replace(prefs_2024$New_nests_meg, is.na(prefs_2024$N
 ```
 
 ```{r Weather_2023}
-
+ 
 
 ## Creating column with number of good days for bee activity based on weather between my visits to the trapnests 
 
@@ -1012,7 +999,7 @@ length(preferences_2023$Trapnest) # 26568
 ```
 
 ```{r Weather_2024}
-
+ 
 
 ## Creating column with number of good days for bee activity based on weather between my visits to the trapnests 
 
@@ -1058,7 +1045,7 @@ length(preferences_2024$Trapnest) # 13284
 ```
 
 ```{r Merging_Preferences_data}
-
+ 
 # merge together 2023 and 2024 bee choice data
 preferences_1 <- rbind(preferences_2023, preferences_2024)
 
@@ -1072,7 +1059,7 @@ table(preferences_1$Occupant)
 ```
 
 ```{r Calculating_Prior_Values}
-
+ 
 
 ## Changing occupant count for prior number to be the average number of congenera 
 
@@ -1108,7 +1095,7 @@ preferences_1 <- preferences_1 %>% mutate(Osmia_ps_prior = ifelse(Osmia_ps_prior
   # osmia no pseudo
 preferences_1 <- preferences_1 %>% mutate(Osmia_no_ps_prior = ifelse(Osmia_no_ps_prior_V1 == 'TBD', (Osmia_equ + Osmia_no_ps - New_nests_os), ifelse(is.na(Osmia_equ) & !is.na(Osmia_no_ps_prior_V1) | Osmia_no_ps_prior_V1 != 'TBD', Osmia_no_ps_prior_V1, 'leftover' )))
   # megachile pseudo
-preferences_1 <- preferences_1 %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == 'TBD', (Meg_equ + Meg_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_ps_prior_V1) | Meg_ps_prior_V1 != 'TBD', Meg_ps_prior_V1, 'leftover' )))
+preferences_1 <- preferences_1 %>% mutate(Meg_ps_prior = ifelse(Meg_ps_prior_V1 == 'TBD', (Meg_equ + Meg_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_ps_prior_V1) | Meg_ps_prior_V1 != 'TBD', Meg_ps_prior_V1, 'leftover' ))) 
   # megachile no pseudo
 preferences_1 <- preferences_1 %>% mutate(Meg_no_ps_prior = ifelse(Meg_no_ps_prior_V1 == 'TBD', (Meg_equ + Meg_no_ps - New_nests_meg), ifelse(is.na(Meg_equ) & !is.na(Meg_no_ps_prior_V1) | Meg_no_ps_prior_V1 != 'TBD', Meg_no_ps_prior_V1, 'leftover' )))
 
@@ -1131,9 +1118,8 @@ preferences <- preferences %>% mutate(New_nests_sum = ifelse(!is.na(New_nests_os
 
 preferences <- preferences %>% mutate(Available_cavities_prior = Available_post + New_nests_sum)
  
-# filter out wasps and non-targets from choices, after we counted them as occupied cavities
-preferences <- filter(preferences, Occupant == 'osmia' | Occupant =='megachile' | Occupant == 'none')
-table(preferences$Occupant)
+# filter out wasps and non-targets from choices, after we counted them as occupied cavities, but do this in the next chunk
+
 
 ```
 
@@ -1148,80 +1134,197 @@ table(preferences$Occupant)
 ### Question 3: Do parasites affect nesting preferences ###
 
 # load data
-emergence_2023 <- read_csv('Data/Emergence_data_2023.csv') 
-emergence_2024 <- read_csv('Data/Emergence_data_2024.csv') 
+emergence_2023 <- read_csv('Data/Emergence_data_2023.csv')  
+emergence_2024 <- read_csv('Data/Emergence_data_2024.csv')  
 
 # inspect
-table(emergence_2023$Cell_number)
 table(emergence_2023$Cell_occupant)
 table(emergence_2024$Cell_occupant)
 
 
-## Make column to turn cell number into cell position for emergence_2023
+## Merge dfs and wrangle cell_number and cell_position, and create cell_parasitized  
 
+# make column to turn cell number into cell position for emergence_2023
 # take max number of each nest
-only_last_cell_2023 <- emergence_2023 %>% 
+emergence_2023 <- emergence_2023 %>%
+  arrange(Nest_ID, Date) %>%
+  group_by(Nest_ID) %>%
+  mutate(Cell_position_2 = if_else(Cell_number == max(Cell_number), 'last cell', 'not last cell')) %>%
+  ungroup()
+
+# merge together the two Cell_position columns and rename for 2023 data
+emergence_2023 <- emergence_2023 %>%
+  mutate(Cell_position_combined = coalesce(Cell_position, Cell_position_2))
+emergence_2023 <- emergence_2023 %>% select(-Cell_position, -Cell_position_2)
+emergence_2023 <- emergence_2023 %>% rename(Cell_position = Cell_position_combined)
+
+# NOTE: the cell_number column does not always indicate the order of cells built, especially if there are multiple built on the same day. It's a way to distinguish the cell-level data. What's imrpotant is the date each cell was built, and weather its the last cell or not (Cell_position)
+
+# make a cell number column for 2024 data, and fill in the blanks for the 2023 data
+emergence_2024 <- emergence_2024 %>%
+  arrange(Nest_ID, Date) %>% 
   group_by(Nest_ID) %>% 
-  slice(which.max(Cell_number)) 
-length(unique(only_last_cell_os$Nest_ID)) # checking length is all unique nest IDs
-# remove last cells from the main df
-not_last_cell_os <- anti_join(nesting_cells_os_0, only_last_cell_os)
-# make column to say last cell (1) or not (0)
-not_last_cell_os$Last_cell <- 0
-only_last_cell_os$Last_cell <- 1
-nesting_cells_os_0 <- rbind(not_last_cell_os, only_last_cell_os)
-nesting_cells_os_0 <- nesting_cells_os_0 %>% arrange(Cell_ID, Date)
+  mutate(Cell_number = row_number())
+
+emergence_2023 <- emergence_2023 %>%
+  arrange(Nest_ID, Date) %>% 
+  group_by(Nest_ID) %>%
+  mutate(
+    Cell_number = if_else(
+      is.na(Cell_number), 
+      row_number(),
+      Cell_number)) %>%
+  ungroup()
 
 # bind dfs together
-emergence_0 <- bind_rows(emergence_2023, emergence_2024)
-length(emergence_2023$Site) + length(emergence_2024$Site) # = length of emergence_0
+emergence <- bind_rows(emergence_2023, emergence_2024)
+length(emergence_2023$Site) + length(emergence_2024$Site) # = length(emergence$Site) 
 
 # make cell ID column
-emergence_0$Cell_ID <- with(emergence_0, paste(Nest_ID, Cell_number, sep = '_'))
+emergence$Cell_ID <- with(emergence, paste(Nest_ID, Cell_number, sep = '_'))
+
+# rearrange and remove columns I don't need
+emergence <- emergence %>% select(Site, Subsite, Trapnest, Treatment, Cavity_size, Cavity_number, Straw_ID, Nest_ID, Cell_number, Cell_ID, Cell_position, Date, Cell_occupant,  Species_or_subtype)
+
+
+## Filter out non-target occupants
+
+# first straight from the emergence data
+non_target <- c('heriades', 'hoplitis', 'hyleaus', 'masked bee', 'non-target bee', 'NA', 'resin bee', 'wasp', 'unknown')
+emergence <- emergence %>%
+  group_by(Nest_ID) %>%
+  filter(!any(Cell_occupant %in% non_target)) %>%  
+  ungroup()
+
+# then from the emergence data again but from occupant in preferences data (to catch nests that didn't develope, but we know based on their nesting material)
+table(preferences$Occupant)
+nests_to_remove <- preferences %>%
+  filter(Occupant %in% non_target) %>% 
+  pull(Nest_ID) %>%
+  unique()
+emergence <- emergence %>%
+  filter(!Nest_ID %in% nests_to_remove)
+
+# finally, filter out the non-target occupants in the preferences data
+preferences <- preferences %>% filter(Occupant == 'osmia' | Occupant =='megachile' | Occupant == 'none')
+
+
+## Wrangle number of cells and parasites
 
 # create column to say if cell is parasitized or not
-emergence_2023 <- emergence_2023 %>% 
-  mutate(Cell_parasitized = ifelse(Cell_occupant == 'sapyga', 1, 0))  #### change to 'parasite'
+table(emergence$Cell_occupant)
+emergence <- emergence %>% 
+  mutate(Cell_parasitized = ifelse(Cell_occupant == 'parasite', 1, 0))
 
 # take number of cells total for that nest and date combo
-emergence_2023 <- emergence_2023 %>% 
+emergence <- emergence %>% 
     group_by(Nest_ID, Date) %>% 
     mutate(Number_of_cells = max(Cell_number))
+
+# check that each nest has only one type of bee, e.g., not mislabelled 
+emergence %>%
+  group_by(Nest_ID) %>%
+  summarise(Occupants = paste(unique(Cell_occupant), collapse = ", "),
+      .groups = "drop")
 
 
 ## Make column to say nest is parasitized or not for when a parasite is in a cell, from that date onwards
 
 # make column to say for each date, if a cell has parasites, then count cumulative parasites in a new column
-emergence_2023 <- emergence_2023 %>% 
+emergence <- emergence %>% 
+  arrange(Nest_ID, Date) %>% 
   group_by(Nest_ID) %>% 
   mutate(Cumulative_par = cumsum(Cell_parasitized))
 
 # take max number of parasites for a nest_ID - date combo
 # e.g., on 2023-06-14 for 13_18a (cells 1 and 2), both are parasitized, so take the highest parasite count for that date, so say for 13_18a on 2023-06-14, there's 2 parasites
-emergence_2023 <- emergence_2023 %>% 
+emergence <- emergence %>% 
   group_by(Date, Nest_ID) %>% 
   mutate(Cumulative_par_max = max(Cumulative_par)) %>% 
   ungroup()
 
+
 # bind parasite counts with preferences data 
- #### preferences has one row per nest and date, while emergence data has multiple rows per date (one per cell)
-#### remove the duplciates?
-emergence_2023$Date <- as.Date(emergence_2023$Date)
+# preferences has one row per nest and date, while emergence data has multiple rows per date (one per cell)
+emergence$Trapnest <- paste('trapnest', emergence$Trapnest, sep = '_')
+emerg_and_pref <- full_join(emergence, preferences) # extra rows from 29_4a because cell order and thus date are unknown
+emerg_and_pref <- emerg_and_pref %>% 
+  arrange(Nest_ID, Date)
 
-emergence_2023$Trapnest <- paste('trapnest', emergence_2023$Trapnest, sep = '_')
-emerg_and_pref_2023 <- full_join(emergence_2023, preferences) # extra rows from 29_4a because cell order and thus date are unknown
+# bee_choice now has some duplicates after merging into emerg_and_pref, so make the duplicates NA
+emerg_and_pref <- emerg_and_pref %>%
+  group_by(Nest_ID) %>%
+  mutate(Bee_choice = if_else(row_number() == min(which(Bee_choice == 1)), 1, NA)) %>%
+  ungroup() # ignore warnings about using min() on NAs
+
+
+## Inspect
+
+# test_pref <- filter(preferences, Nest_ID == '97_14a')
+# testing_emerg <- filter(emergence, Nest_ID == '97_14a')
+# testing_both <- filter(emerg_and_pref, Nest_ID == '97_14a')
+
+# numbers of new nests 
+sum(preferences$Bee_choice, na.rm = TRUE)  # 307, which includes the nests with only inner walls
+
+table(preferences %>% 
+        filter(Bee_choice == 1) %>% 
+        pull(Contains_cells)) # 261, this includes only Megachile and Osmia nests that have at least 1 cell, and 46 that don't include cells
+# check that there are no duplicates of contains_cells to make sure there are truly 261 new nests
+preferences %>%
+  filter(Bee_choice == 1) %>%
+  group_by(Nest_ID) %>%
+  filter(n_distinct(Contains_cells) > 1) %>%
+  ungroup() # 0
+# number of nests from emergence data
+length(unique(emergence$Nest_ID)) # 249
+
+# what doesn't line up?
+
+
+# Compare the nest IDs in the dfs of nests with activity
+
+# nest_IDs_preferences <- preferences %>%
+#   filter(Status != 'pseudo' & Status != 'empty' & Status != 'no change' & Bee_choice == 1 & Contains_cells == 1) %>% 
+#   group_by(Nest_ID) %>%
+#   ungroup() %>%
+#   arrange(Nest_ID)
+# nest_IDs_preferences <- nest_IDs_preferences %>% select(Nest_ID)
+
+
+# nest_IDs_emergence <- emergence %>% 
+#   group_by(Nest_ID) %>%
+#   slice(1) %>%   
+#   ungroup() %>%
+#   arrange(Nest_ID)
+# nest_IDs_emergence <- nest_IDs_emergence %>% select(Nest_ID)
+
+# anti_join_1 <- anti_join(nest_IDs_preferences, nest_IDs_emergence)
+# anti_join_2 <- anti_join(nest_IDs_emergence, nest_IDs_preferences)
+
+# listing the reasons for discrepencies: 
+# cell not completed (abandoned or just end cap and inner wall), thus nothing to emerge: 
+  # anti_join_1: 43_11a, 43_14a, 44_5a, 5_12a, 50_10a, 76_11a, 83_9b, 84_13b, 93_15b
+  # anti_join_2: 16_11a, 17_7a, 7_3c, 78_17a, 84_7b
+# nests eaten in the field by birds or insects: 
+  # anti_join_1: 23_15a, 24_15a, 26_10a, 31_3a, 32_7a, 5_9a, 59_16a, 7_16a, 7_17b, 81_12b, 81_16b, 81_5a
+# nests without emergence data. Unclear why, perhaps not recorded or their nest was too moldy: 
+  # anti_join_1: 1_16a, 17_1b, 24_9a, 25_11a, 3_13b, 30_11b, 42_2b, 43_11b, 43_4a, 49_4b, 59_4b, 6_9b, 67_16a, 71_14a, 71_2a, 71_4a
+  # anti_join_2: 15_4a, 16_1a, 17_18a, 17_9a, 18_8b, 2_18a, 25_16b, 25_1a, 25_4a, 30_7a, 35_8a, 36_3b, 59_4a, 6_17a, 7_4a, 8_12a, 9_9b
+# nests that are mislabelled: 13_15a, 43_3a, 6_10a
+
+# remove the mislabelled nests
+
+
+
+
+
+
+# length
+
 
 ####
-testing <- filter(preferences, Nest_ID == '2_1a')
-testing_combined <- filter(emerg_and_pref_2023, Nest_ID == '2_1a')
-
-
-# length(unique(emergence_2023$Nest_ID)) # 188 nests 
-# length(unique(emerg_and_pref_2023$Nest_ID))
- #### 39081 (preferences) + 982 (emergence_2023) - 188 (unique nest IDs) should = emerg_and_pref_2023 ### CHECK
-
-####
-# leftover <- anti_join(emerg_and_pref_2023, emergence_2023) ### check - 18_8b was mislabelled, its a wasp but had osmia cells attached to the name
+# leftover <- anti_join(emerg_and_pref, emergence) ### check - 18_8b was mislabelled, its a wasp but had osmia cells attached to the name
 # emerg_and_pref_2023 should have the values for number_of_cells and cumulative_par(_max) for only the dates with activity. The loop will make those values consistent throughout the time the nest is in the trapnest
 
 ### CHECK  missing statuses would be mistakes/ extras or 29_4a ?
