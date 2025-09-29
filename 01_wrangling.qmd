@@ -64,7 +64,7 @@ data_2023 <- read_csv('Data/Aggregate_nesting_data_2023.csv')
 ## Add in straws that remained empty throughout the experiment
 
 # add empty data frame
-empty_data_2023 <- read_csv('Data/Empty_data.csv')
+empty_data_2023 <- read_csv('Data/Empty_data_2023.csv')
 # add columns to say 'for binding' or NA to tell data frames apart and prioritize the collected data
 empty_data_2023$For_binding <- 0
 data_2023$For_binding <- 1
@@ -1713,7 +1713,7 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 
 # In order to measure nesting preferences of bees to see if affected by parasites, I need to separate the nests with detectable parasites (DP) from the nests with no detectable parasites (NDP)
 # this is about to get messy, so I'm making a smaller df 
-nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Osmia_ps:Meg_no_ps, Nest_parasitized, Active_bin)  
+nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Available_cavities_prior, Osmia_ps:Meg_no_ps, Nest_parasitized, Active_bin)  
 
 # first I make the columns with the total numbers for DP and NDP and NDP with pseudo nests, then I need to calculate the number of those three columns prior to the new bees nesting there. So if there was 1 or more new nests in DP or NDP(_ps), I calculate (total nests in that group - new nests) + (n-1)/2 for the group that the new nest is a part of. If there's new nests for the other group (e.g., new DP nest, but from the new NDP nest perspective), we do (total nests in that group - 1/2 * new nests).
 
@@ -1884,7 +1884,7 @@ nesting <- nesting_2 %>% select(Trapnest:Nest_parasitized, DP_os_prior:NDP_ps_me
 # join with rest of df
 nesting <- left_join(nesting_1, nesting)
 # remove unwanted columns again
-nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Straw_ID, Date, Day_of_year, Filled_length_mm, Straw_length_mm, Nest_ID, Status, Sealed, Nest_parasitized, Occupant:New_nests_meg, New_nests_sum, Osmia_ps_prior:Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior:NDP_ps_meg_prior)
+nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Straw_ID, Date, Day_of_year, Filled_length_mm, Straw_length_mm, Nest_ID, Status, Sealed, Nest_parasitized, Occupant:New_nests_meg, Available_cavities_prior, New_nests_sum, Osmia_ps_prior:Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior:NDP_ps_meg_prior)
 
 # testing out some instances 
 # Trapnest_1 <- nesting %>% filter(Trapnest == 'trapnest_1' & Date == '2023-05-29')
@@ -1922,12 +1922,16 @@ nesting_investment <- nesting_investment_0 %>%
 length(unfinished_nests$Nest_ID) + length(nesting_investment$Nest_ID) # = length(nesting_investment_0$Nest_ID)
 # excepr that 11_14a and 12_17a didn't make the cut because they have NA values for nesting_investment_0, so = 260 not 262
 
+nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
+nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile') 
+
 
 ## Separate Osmia and Megachile data frames 
 
 # still has duplicates for the nests  
 nesting_os_dups <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg_dups <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none') 
+
 # to reduce zeros from empties outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the full summer of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
 # this stuff overlaps with the first cleaning chunk that removed excessive non_existents 
 # 
@@ -1984,9 +1988,9 @@ nesting_os <- distinct(nesting_os_dups, Date, Trapnest, .keep_all= TRUE)
 nesting_meg <- distinct(nesting_meg_dups, Date, Trapnest, .keep_all= TRUE)
 
 # take only columns that make sense at the trapnest level
-nesting_os <- nesting_os %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, New_nests_os, New_nests_sum, Osmia_ps_prior, Osmia_no_ps_prior, Sum_unsealed_os, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
+nesting_os <- nesting_os %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, New_nests_os, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Sum_unsealed_os, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
 
-nesting_meg <- nesting_meg %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, New_nests_meg, New_nests_sum, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_meg, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
+nesting_meg <- nesting_meg %>% select(Trapnest, Date, Day_of_year, Site, Subsite, Treatment, Good_days, New_nests_meg, New_nests_sum, Available_cavities_prior, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_meg, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
 
 # still the same as before
 nesting_os %>% 
@@ -1999,10 +2003,61 @@ nesting_meg %>%
 
 write.csv(nesting_os, 'data/nesting_cleaned_osmia.csv')
 write.csv(nesting_meg, 'data/nesting_cleaned_megachile.csv')
-write.csv(nesting_investment, 'data/investment_cleaned.csv')
+write.csv(nesting_investment_os, 'data/investment_cleaned_osmia.csv')
+write.csv(nesting_investment_meg, 'data/investment_cleaned_megachile.csv')
 write.csv(nesting_cells_os, 'data/nesting_cells_cleaned_osmia.csv')
-write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachila.csv')
+write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachile.csv')
 
+
+```
+
+```{r Descriptive}
+
+## How long are the straws?
+mean(nesting_investment$Straw_length_mm) # 139.93
+sd(nesting_investment$Straw_length_mm) # 9.93
+
+
+## How many instances were both of the rarest sized cavities occupied at the same time?
+rare_df <- preferences_1 %>%
+  filter((Trapnest %in% paste0("trapnest_", 1:36) & Cavity_size == "large") |
+         (Trapnest %in% paste0("trapnest_", 37:108) & Cavity_size == "small"))
+
+rare_df_filtered <- rare_df %>%
+  group_by(Trapnest, Date) %>%
+  filter(!any(Status == "empty")) %>%
+  ungroup()
+
+rare_df_filtered %>%
+  distinct(Trapnest, Date) %>%
+  nrow() # 105 days and trapnest combinations that have both rare holes filled
+
+preferences_1 %>%
+  filter(Status != 'non_existent') %>% 
+  distinct(Trapnest, Date) %>%
+  nrow() # out of the 2214 days and trapnest combinations 
+# (105/2214) * 100 so less than 5% of the time
+
+
+## How many nests were excluded from nest investment data because they weren't finished?
+length(Nest_ID_exclude)
+
+
+## Verifying my treatments: How related are my treatments to the number of available cavities?
+
+ ## Osmia and Megachile ##
+
+confirm_treatment_data <- nesting %>%
+  distinct(Treatment, Subsite, Day_of_year, .keep_all = TRUE)
+# mean and SD
+confirm_treatment_data %>% 
+  group_by(Treatment) %>% 
+  summarise(Mean_avail = mean(Available_cavities_prior),
+            SD_avail = sd(Available_cavities_prior))
+# Mean +- SD
+ # Low-occupancy = 17.3 +- 1.0
+ # Mid-occupancy = 11.6 +- 1.0
+ # High-occupancy = 6.7 +- 0.8
 
 ```
 
