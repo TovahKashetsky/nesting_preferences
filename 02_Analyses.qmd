@@ -732,14 +732,6 @@ vif(mod_invest_filled_meg) # good
 plot(ggpredict(mod_invest_filled, terms = c("DP_meg_prior", "Nest_parasitized"))) 
 
 
-
-
-
-
-
-
-
-
 # MODEL 3c_i - Osmia nest termination #
 
 mod_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
@@ -764,7 +756,12 @@ ggpredict(mod_last_cell_meg, terms = "Cell_parasitized [all]") %>%
 
 
 
+# MODEL 3d_i - Osmia abandoned inner walls #
 
+# MODEL 3d_ii - Megachile abandoned inner walls #
+
+
+## make figures first
 
 
 ```

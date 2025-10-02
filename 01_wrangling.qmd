@@ -92,6 +92,7 @@ length(data_2023$Nest_ID) # 1706, few extras.... ### CHECK ###
 long_data_2023 <- pivot_longer(data_2023, '06-May':'09-Aug', names_to = 'Date', values_to = 'Status')
 table(long_data_2023$Status)
 table(long_data_2023$Occupant)
+
 # Replace some input for statuses of how they should be treated
 long_data_2023$Status <- replace(long_data_2023$Status, long_data_2023$Status == 'eaten', 'empty')
 long_data_2023$Status <- replace(long_data_2023$Status, long_data_2023$Status == 'inner wall started', 'empty')
@@ -268,6 +269,7 @@ data_2024$Trapnest <- paste('trapnest', data_2024$Trapnest, sep = '_')
 long_data_2024 <- pivot_longer(data_2024, '05-Jun':'13-Aug', names_to = 'Date', values_to = 'Status')
 table(long_data_2024$Status) 
 table(long_data_2024$Occupant) 
+
 # Replace some input for statuses of how they should be treated
 long_data_2024$Status <- replace(long_data_2024$Status, long_data_2024$Status=='eaten','empty')
 long_data_2024$Status <- replace(long_data_2024$Status, long_data_2024$Status=='inner wall started','empty')
@@ -982,6 +984,30 @@ preferences <- preferences %>% mutate(New_nests_sum = ifelse(!is.na(New_nests_os
 preferences <- preferences %>% mutate(Available_cavities_prior = Available_post + New_nests_sum)
  
 # filter out wasps and non-targets from choices, after we counted them as occupied cavities, but do this in the next chunk
+
+
+```
+
+```{r Inner_Wall_Only}
+
+## How many nests have ever had only an inner wall?
+
+# does not include the nests that were "inner wall started" which i treated at empty, because i only logged those for 2023
+
+# take nests that have never had any cells
+prefs_summary <- preferences %>%
+  group_by(Nest_ID) %>%
+  filter(Status != 'empty' & Status != 'pseudo') %>% 
+  filter(all(Contains_cells == 0)) 
+
+prefs_summary %>%
+  group_by(Occupant) %>%
+  summarise(n_unique_nests = n_distinct(Nest_ID))
+# 10 megachile only inner walls and 23 osmia
+
+### get list of these nest IDs then make a small df with DP and NDP for these nests
+# and graph it, porpotion of osmia and megachile nests that were abandoned when DP or NDP around 
+
 
 
 ```
@@ -1843,7 +1869,7 @@ nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile')
 
 # still has duplicates for the nests  
 nesting_os_dups <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
-nesting_meg_dups <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none') 
+nesting_meg_dups <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none')
 
 # to reduce zeros from empties outside of the bee season, filter out most off-season dates: Find the first and last dates of activity to measure the active season, and remove off-season data (this is still including the full summer of data, while excluding the inflated 'zeros' for Bee_choice for when osmia and megachile wouldn't have been active)
 # this stuff overlaps with the first cleaning chunk that removed excessive non_existents 
@@ -1974,6 +2000,9 @@ confirm_treatment_data %>%
 
 
 ## How many times was an inner wall abandoned?
+
+
+
 
 
 ```
