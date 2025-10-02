@@ -1,129 +1,129 @@
-"","Site","Subsite","Trapnest","Treatment","Straw_ID","Date","Day_of_year","Filled_length_mm","Straw_length_mm","Nest_ID","Status","Sealed","Nest_parasitized","Occupant","Good_days","Bee_choice","Available_post","New_nests_os","New_nests_meg","Available_cavities_prior","New_nests_sum","Osmia_ps_prior","Osmia_no_ps_prior","Meg_ps_prior","Meg_no_ps_prior","Sum_unsealed_os","Sum_unsealed_meg","DP_os_prior","NDP_os_prior","NDP_ps_os_prior","DP_meg_prior","NDP_meg_prior","NDP_ps_meg_prior","Straw_length","Filled_length"
-"1","BP","D","trapnest_12","High","b",2023-06-02,153,57.04,106.02,"12_12b","2 cells","not sealed","parasitized","osmia",2,1,6,2,0,8,2,10.5,3.5,0,0,4,NA,1,2,9,0,0,0,106,57
-"2","BP","D","trapnest_12","High","a",2023-05-29,149,116.97,145.25,"12_15a","7 cells","not sealed","parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,2,NA,0,1,11,0,0,0,145,117
-"3","BP","D","trapnest_12","High","a",2023-06-02,153,83.98,144.81,"12_18a","5 cells","not sealed","not parasitized","osmia",2,1,6,2,0,8,2,10.5,3.5,0,0,4,NA,1,2,9,0,0,0,145,84
-"4","BP","D","trapnest_12","High","a",2023-05-15,135,115.52,142.83,"12_5a","2 cells","not sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,0,0,0,1,NA,0,0,11,0,0,0,143,116
-"5","BP","D","trapnest_12","High","b",2023-05-29,149,103.97,143.76,"12_6b","9 cells","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,2,NA,0,1,11,0,0,0,144,104
-"6","BP","D","trapnest_12","High","c",2023-06-20,171,51.58,143.84,"12_6c","1 cell","not sealed","parasitized","osmia",3,1,5,2,0,7,2,11.5,6.5,0,0,3,NA,0,6,11,0,0,0,144,52
-"7","BP","D","trapnest_12","High","b",2023-06-14,165,21.9,130.53,"12_9b","2 cells","not sealed","parasitized","osmia",0,1,6,1,0,7,1,11,6,0,0,2,NA,0,6,11,0,0,0,131,22
-"8","BP","E","trapnest_13","Low","a",2023-06-05,156,41.44,140.51,"13_11a","3 cells","not sealed","parasitized","osmia",1,1,12,2,0,14,2,4.5,4.5,0,0,2,NA,1,3,3,0,0,0,141,41
-"9","BP","E","trapnest_13","Low","a",2023-05-29,149,101,137,"13_12a","2 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,2.5,2.5,0,0,0,137,101
-"10","BP","E","trapnest_13","Low","a",2023-06-14,165,19.88,140.03,"13_14a","2 cells + end cap","sealed","parasitized","osmia",0,1,14,3,0,17,3,2,2,0,0,1,NA,0,2,2,0,0,0,140,20
-"11","BP","E","trapnest_13","Low","a",2023-06-14,165,15.4,141.29,"13_16a","2 cells + end cap","sealed","not parasitized","osmia",0,1,14,3,0,17,3,2,2,0,0,1,NA,0,2,2,0,0,0,141,15
-"12","BP","E","trapnest_13","Low","a",2023-05-23,143,105.25,123.3,"13_2a","2 cells","not sealed","not parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,1,NA,0,0,0,0,0,0,123,105
-"13","BP","E","trapnest_13","Low","b",2023-05-31,151,34.05,146.25,"13_2b","3 cells","not sealed","not parasitized","osmia",2,1,14,1,0,15,1,3,3,0,0,3,NA,1,2,2,0,0,0,146,34
-"14","BP","E","trapnest_13","Low","a",2023-05-29,149,75.74,150.06,"13_4a","6 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,2.5,2.5,0,0,0,150,76
-"15","BP","E","trapnest_13","Low","b",2023-06-02,153,41.56,85.621,"13_4b","4 cells","not sealed","parasitized","osmia",2,1,13,2,0,15,2,3.5,3.5,0,0,3,NA,1,2,2,0,0,0,86,42
-"16","BP","E","trapnest_13","Low","a",2023-06-16,167,9.55,150.06,"13_5a","1 cell + end cap","sealed","parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,1,NA,1,0,0,0,0,0,150,10
-"17","BP","E","trapnest_13","Low","a",2023-05-29,149,133.33,152.52,"13_7a","9 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,2.5,2.5,0,0,0,153,133
-"18","BP","E","trapnest_13","Low","b",2023-06-05,156,48.93,153,"13_7b","4 cells + end cap","sealed","not parasitized","osmia",1,1,12,2,0,14,2,4.5,4.5,0,0,2,NA,1,3,3,0,0,0,153,49
-"19","BP","E","trapnest_13","Low","a",2023-06-02,153,3.094,147.37,"13_8a","3 cells","not sealed","not parasitized","osmia",2,1,13,2,0,15,2,3.5,3.5,0,0,3,NA,1,2,2,0,0,0,147,3
-"20","BP","E","trapnest_14","Mid","a",2023-05-31,151,32.56,149.7,"14_10a","3 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,2,0,0,3,NA,0,2.5,7.5,0,0,0,150,33
-"21","BP","E","trapnest_14","Mid","b",2023-06-05,156,48.98,141.14,"14_10b","6 cells + end cap","sealed","not parasitized","osmia",1,1,11,1,0,12,1,6,3,0,0,2,NA,0,3,6,0,0,0,141,49
-"22","BP","E","trapnest_14","Mid","a",2023-05-29,149,76.22,145.71,"14_12a","7 cells","not sealed","parasitized","osmia",1,1,12,1,0,13,1,5,0,0,0,1,NA,0,0,5,0,0,0,146,76
-"23","BP","E","trapnest_14","Mid","a",2023-05-31,151,67.77,143.11,"14_16a","2 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,2,0,0,3,NA,0,2.5,7.5,0,0,0,143,68
-"24","BP","E","trapnest_15","High","a",2023-05-15,135,10.75,143.02,"15_4a","inner wall","not sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,0,0,0,1,NA,0,0,11,0,0,0,143,11
-"25","BP","E","trapnest_15","High","b",2023-05-22,142,8.77,144.32,"15_6b","1 cell + end cap","sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,1,NA,0,2,12,0,0,0,144,9
-"26","BP","F","trapnest_16","Low","a",2023-05-26,146,44.25,149.85,"16_11a","inner wall","not sealed","not parasitized","osmia",2,1,15,1,0,16,1,2,2,0,0,3,NA,1,1,1,0,0,0,150,44
-"27","BP","F","trapnest_16","Low","a",2023-05-29,149,11.4,142.13,"16_14a","2 cells","not sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,NA,0,4,4,0,0,0,142,11
-"28","BP","F","trapnest_16","Low","a",2023-05-29,149,7.13,140.01,"16_1a","inner wall","not sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,NA,0,4,4,0,0,0,140,7
-"29","BP","F","trapnest_16","Low","b",2023-05-29,149,65.59,143.64,"16_3b","3 cells + end cap","sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,NA,0,4,4,0,0,0,144,66
-"30","BP","F","trapnest_16","Low","a",2023-05-12,132,86.8,140.489,"16_5a","1 cell","not sealed","not parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,2,NA,0,1,1,0,0,0,140,87
-"31","BP","F","trapnest_16","Low","b",2023-05-23,143,77,133,"16_5b","2 cells","not sealed","not parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,2,NA,1,0,0,0,0,0,133,77
-"32","BP","F","trapnest_16","Low","c",2023-06-02,153,19.57,142.88,"16_5c","3 cells + end cap","sealed","parasitized","osmia",2,1,14,1,0,15,1,3,3,0,0,1,NA,0,3,3,0,0,0,143,20
-"33","BP","F","trapnest_16","Low","a",2023-05-29,149,41.41,142.06,"16_6a","5 cells + end cap","sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,NA,0,4,4,0,0,0,142,41
-"34","BP","F","trapnest_16","Low","b",2023-05-31,151,58.2,150.21,"16_6b","1 cell + end cap","sealed","not parasitized","osmia",2,1,12,2,0,14,2,4.5,4.5,0,0,3,NA,0,5,5,0,0,0,150,58
-"35","BP","F","trapnest_16","Low","a",2023-05-15,135,26.95,123.63,"16_8a","1 cell","not sealed","parasitized","osmia",3,1,16,1,0,17,1,1,1,0,0,2,NA,0,1,1,0,0,0,124,27
-"36","BP","F","trapnest_16","Low","b",2023-05-31,151,33.96,149.35,"16_8b","2 cells","not sealed","not parasitized","osmia",2,1,12,2,0,14,2,4.5,4.5,0,0,3,NA,0,5,5,0,0,0,149,34
-"37","BP","F","trapnest_17","Mid","b",2023-06-23,174,40.29,134.99,"17_13b","5 cells + end cap","sealed","parasitized","osmia",3,1,7,1,2,10,3,6,5,2.5,2.5,0,4,0,5,6,0,2,2,135,40
-"38","BP","F","trapnest_17","Mid","a",2023-05-26,146,74.49,146.51,"17_15a","8 cells","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,0,0,0,1,NA,0,0,6,0,0,0,147,74
-"39","BP","F","trapnest_17","Mid","a",2023-06-05,156,22.77,144.92,"17_16a","3 cells","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,5.5,0,0,4,NA,1,5,6,0,0,0,145,23
-"40","BP","F","trapnest_17","Mid","a",2023-05-29,149,55.95,153.18,"17_17a","4 cells","not sealed","parasitized","osmia",1,1,9,2,0,11,2,7.5,1.5,0,0,3,NA,0,1,7,0,0,0,153,56
-"41","BP","F","trapnest_17","Mid","b",2023-06-05,156,24.4,139.02,"17_17b","3 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,5.5,0,0,4,NA,1,5,6,0,0,0,139,24
-"42","BP","F","trapnest_17","Mid","a",2023-05-29,149,21.07,139.95,"17_18a","inner wall","not sealed","not parasitized","osmia",1,1,9,2,0,11,2,7.5,1.5,0,0,3,NA,0,1,7,0,0,0,140,21
-"43","BP","F","trapnest_17","Mid","a",2023-06-02,153,2.9,145.32,"17_7a","inner wall","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,3,NA,0,4.5,7.5,0,0,0,145,3
-"44","BP","F","trapnest_17","Mid","a",2023-06-02,153,78.68,149.03,"17_9a","inner wall","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,3,NA,0,4.5,7.5,0,0,0,149,79
-"45","BP","F","trapnest_18","High","b",2023-06-05,156,17.79,144.44,"18_10b","2 cell + end cap","sealed","not parasitized","osmia",1,1,4,1,0,5,1,13,5,0,0,1,NA,0,5,13,0,0,0,144,18
-"46","BP","F","trapnest_18","High","b",2023-05-31,151,95.42,145.84,"18_12b","7 cells","not sealed","not parasitized","osmia",2,1,3,1,0,4,1,14,4,0,0,3,NA,0,4,14,0,0,0,146,95
-"47","BP","F","trapnest_18","High","a",2023-05-29,149,27.2,142.7,"18_1a","3 cells + end cap","sealed","not parasitized","osmia",1,1,3,4,0,7,4,12.5,1.5,0,0,2,NA,0,2,13,0,0,0,143,27
-"48","BP","F","trapnest_18","High","a",2023-05-29,149,78.55,148.55,"18_8a","2 cells","not sealed","not parasitized","osmia",1,1,3,4,0,7,4,12.5,1.5,0,0,2,NA,0,2,13,0,0,0,149,79
-"49","NN","G","trapnest_19","Low","a",2023-05-29,149,30.46,139.14,"19_8a","3 cells + end cap","sealed","parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,0,NA,0,1,1,0,0,0,139,30
-"50","NN","G","trapnest_19","Low","b",2023-06-04,155,18.39,139.95,"19_8b","2 cells + end cap","sealed","not parasitized","osmia",3,1,17,1,0,18,1,0,0,0,0,0,NA,0,0,0,0,0,0,140,18
-"51","NN","G","trapnest_19","Low","a",2023-05-15,135,74.4,143.3,"19_9a","2 cells","not sealed","not parasitized","osmia",3,1,17,1,0,18,1,0,0,0,0,1,NA,0,0,0,0,0,0,143,74
-"52","BP","A","trapnest_1","Low","a",2023-06-05,156,91,141,"1_16a","2 cells","not sealed",NA,"osmia",1,1,17,1,0,18,1,0,0,0,0,1,NA,0,0,0,0,0,0,141,91
-"53","NN","G","trapnest_20","Mid","a",2023-06-01,152,10.45,144.11,"20_15a","1 cell","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,2.5,0,0,1,NA,0,3,7,0,0,0,144,10
-"54","NN","G","trapnest_20","Mid","a",2023-05-29,149,96.03,149.23,"20_2a","9 cells","not sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,0.5,0,0,2,NA,0,0,6,0,0,0,149,96
-"55","NN","G","trapnest_20","Mid","b",2023-06-01,152,41.3,142.17,"20_3b","5 cells + end cap","sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,2.5,0,0,1,NA,0,3,7,0,0,0,142,41
-"56","NN","G","trapnest_20","Mid","a",2023-05-29,149,89.81,145.52,"20_5a","8 cells","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,0.5,0,0,2,NA,0,0,6,0,0,0,146,90
-"57","NN","H","trapnest_22","Low","a",2023-06-19,170,9.35,146.11,"22_9a","1 cell","not sealed","parasitized","osmia",0,1,16,1,0,17,1,0,0,0,0,1,NA,0,0,0,0,0,0,146,9
-"58","NN","H","trapnest_24","High","a",2023-06-08,159,26.42,143.1,"24_10a","1 cell","not sealed","parasitized","osmia",2,1,7,1,0,8,1,10,2,0,0,2,NA,1,1,9,0,0,0,143,26
-"59","NN","H","trapnest_24","High","a",2023-06-30,181,11.84,144.44,"24_12a","2 cells + end cap","sealed","parasitized","osmia",1,1,4,1,0,5,1,12,4,0,0,0,NA,0,4,12,0,0,0,144,12
-"60","NN","H","trapnest_24","High","a",2023-06-04,155,48.72,138.64,"24_2a","5 cells","not sealed","parasitized","osmia",3,1,6,1,0,7,1,11,1,0,0,2,NA,1,0,10,0,0,0,139,49
-"61","NN","H","trapnest_24","High","b",2023-06-19,170,28.02,137.27,"24_3b","1 cell","not sealed","parasitized","osmia",0,1,5,1,0,6,1,11,3,0,0,2,NA,1,2,10,0,0,0,137,28
-"62","NN","H","trapnest_24","High","b",2023-06-01,152,70.92,140.17,"24_7b","3 cells","not sealed","parasitized","osmia",1,1,6,1,0,7,1,11,1,0,0,2,NA,0,0,10,0,0,0,140,71
-"63","NN","I","trapnest_25","Low","a",2023-06-04,155,88.22,148.7,"25_11a","6 cells","not sealed",NA,"osmia",3,1,12,2,0,14,2,4.5,4.5,0,0,2,NA,0,4,4,0,0,0,149,88
-"64","NN","I","trapnest_25","Low","a",2023-05-29,149,108.83,148.8,"25_13a","3 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,1,1,0,0,0,149,109
-"65","NN","I","trapnest_25","Low","a",2023-06-08,159,74.15,143.66,"25_16a","7 cells","not sealed","not parasitized","osmia",2,1,15,1,0,16,1,2,2,0,0,3,NA,0,1,1,0,0,0,144,74
-"66","NN","I","trapnest_25","Low","a",2023-05-31,151,59.44,149.61,"25_1a","inner wall","not sealed","not parasitized","osmia",2,1,13,1,0,14,1,4,4,0,0,4,NA,1,2,2,0,0,0,150,59
-"67","NN","I","trapnest_25","Low","b",2023-06-15,166,37.62,143.46,"25_1b","1 cell","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,NA,1.5,2,2,0,0,0,143,38
-"68","NN","I","trapnest_25","Low","a",2023-05-29,149,111.2,111.2,"25_3a","3 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,1,1,0,0,0,111,111
-"69","NN","I","trapnest_25","Low","b",2023-06-15,166,20.96,140.64,"25_3b","2 cells","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,NA,1.5,2,2,0,0,0,141,21
-"70","NN","I","trapnest_25","Low","c",2023-06-22,173,5.21,134.1,"25_3c","1 cell","not sealed","not parasitized","osmia",3,1,15,1,0,16,1,2,2,0,0,1,NA,0,2,2,0,0,0,134,5
-"71","NN","I","trapnest_25","Low","a",2023-05-29,149,50.46,148.66,"25_4a","no change",NA,NA,"osmia",1,NA,14,3,0,17,3,2,2,0,0,3,NA,0,1,1,0,0,0,149,50
-"72","NN","I","trapnest_25","Low","b",2023-06-15,166,20.99,142.81,"25_4b","1 cell","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,NA,1.5,2,2,0,0,0,143,21
-"73","NN","I","trapnest_25","Low","a",2023-05-29,149,119.74,151.74,"25_6a","7 cells","not sealed","parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,NA,0,1,1,0,0,0,152,120
-"74","NN","I","trapnest_25","Low","b",2023-06-04,155,58.79,136.32,"25_6b","1 cell","not sealed","not parasitized","osmia",3,1,12,2,0,14,2,4.5,4.5,0,0,2,NA,0,4,4,0,0,0,136,59
-"75","NN","J","trapnest_28","Low","a",2023-05-29,149,18.3,146.85,"28_17a","3 cells + end cap","sealed","parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,0,NA,0,0,0,0,0,0,147,18
-"76","NN","J","trapnest_28","Low","a",2023-06-22,173,30.81,144.79,"28_3a","2 cells","not sealed","parasitized","osmia",3,1,16,1,0,17,1,0,0,0,0,1,NA,0,0,0,0,0,0,145,31
-"77","NN","J","trapnest_29","Mid","b",2023-05-31,151,54.16,125.67,"29_1b","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,2,0,0,1,NA,0,2,6,0,0,0,126,54
-"78","NN","J","trapnest_29","Mid","a",2023-05-18,138,88.6,142.9,"29_4a","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,0,0,0,1,NA,0,0,6,0,0,0,143,89
-"79","NN","J","trapnest_29","Mid","a",2023-05-25,145,124.59,147.7,"29_7a","1 cell","not sealed","not parasitized","osmia",3,1,11,1,0,12,1,6,1,0,0,2,NA,1,0,5,0,0,0,148,125
-"80","BP","A","trapnest_2","Mid","b",2023-05-31,151,29,137.3,"2_15b","3 cells + end cap","sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,2,NA,0,4.5,7.5,0,0,0,137,29
-"81","BP","A","trapnest_2","Mid","b",2023-05-29,149,42.06,140.65,"2_16b","4 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,1.5,0,0,0,NA,0,2,7,0,0,0,141,42
-"82","BP","A","trapnest_2","Mid","a",2023-05-11,131,106.85,142.77,"2_18a","inner wall","not sealed","not parasitized","osmia",3,1,10,2,0,12,2,6.5,0.5,0,0,2,NA,0,1,7,0,0,0,143,107
-"83","BP","A","trapnest_2","Mid","a",2023-05-29,149,21.51,147.24,"2_1a","2 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,1.5,0,0,0,NA,0,2,7,0,0,0,147,22
-"84","BP","A","trapnest_2","Mid","a",2023-05-31,151,64.69,148.95,"2_9a","6 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,2,NA,0,4.5,7.5,0,0,0,149,65
-"85","NN","K","trapnest_32","Mid","b",2023-06-01,152,17.37,61.84,"32_8b","2 cells + end cap","sealed","not parasitized","osmia",1,1,10,1,0,11,1,7,4,0,0,4,NA,0,3,6,0,0,0,62,17
-"86","NN","L","trapnest_35","Mid","a",2023-06-22,173,4.98,141.88,"35_7a","1 cell","not sealed","not parasitized","osmia",3,1,7,1,0,8,1,6,1,0,0,1,NA,0,1,6,0,0,0,142,5
-"87","NN","L","trapnest_35","Mid","c",2023-07-06,187,9.77,144.43,"35_9c","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,2,0,0,2,NA,0,2,6,0,0,0,144,10
-"88","NN","L","trapnest_36","High","b",2023-06-04,155,38.51,140.74,"36_13b","3 cells + end cap","sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,6,0,0,4,NA,2,4,9,0,0,0,141,39
-"89","NN","L","trapnest_36","High","b",2023-06-08,159,12.03,143.21,"36_15b","2 cells","not sealed","not parasitized","osmia",2,1,6,1,0,7,1,11,6,0,0,4,NA,2,4,9,0,0,0,143,12
-"90","NN","L","trapnest_36","High","a",2023-05-29,149,86.14,144.22,"36_1a","1 cell","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,0.5,0,0,2,NA,0,1,12,0,0,0,144,86
-"91","NN","L","trapnest_36","High","b",2023-05-31,151,81.83,148.15,"36_3b","inner wall","not sealed","not parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,NA,0,3.5,12.5,0,0,0,148,82
-"92","NN","L","trapnest_36","High","b",2023-05-31,151,60.97,136.39,"36_4b","1 cell","not sealed","not parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,NA,0,3.5,12.5,0,0,0,136,61
-"93","NN","L","trapnest_36","High","a",2023-05-29,149,48,146.43,"36_6a","1 cell","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,0.5,0,0,2,NA,0,1,12,0,0,0,146,48
-"94","NN","L","trapnest_36","High","b",2023-06-22,173,9.14,138.49,"36_8b","1 cell","not sealed","not parasitized","osmia",3,1,5,1,0,6,1,11,7,0,0,2,NA,0,7,11,0,0,0,138,9
-"95","NN","L","trapnest_36","High","a",2023-05-31,151,29.63,143.68,"36_9a","2 cells","not sealed","parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,NA,0,3.5,12.5,0,0,0,144,30
-"96","BP","A","trapnest_3","High","b",2023-06-02,153,18.88,141.84,"3_11b","2 cells + end cap","sealed","parasitized","osmia",2,1,5,3,0,8,3,11,5,0,0,2,NA,0,5.5,11.5,0,0,0,142,19
-"97","BP","A","trapnest_3","High","b",2023-05-29,149,35,140,"3_13b","1 cell","not sealed",NA,"osmia",1,1,6,1,0,7,1,11,2,0,0,1,NA,0,2,11,0,0,0,140,35
-"98","BP","A","trapnest_3","High","a",2023-05-26,146,8.71,142.78,"3_14a","2 cells","not sealed","parasitized","osmia",2,1,6,1,0,7,1,11,1,0,0,2,NA,0,1,11,0,0,0,143,9
-"99","BP","A","trapnest_3","High","a",2023-05-23,143,61.17,144.35,"3_18a","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,NA,0,0,11,0,0,0,144,61
-"100","BP","A","trapnest_3","High","a",2023-05-31,151,46.68,142.17,"3_2a","2 cells","not sealed","not parasitized","osmia",2,1,5,1,0,6,1,12,3,0,0,2,NA,0,2,11,0,0,0,142,47
-"101","BP","Q","trapnest_50","Mid","a",2023-07-04,185,15,143.4,"50_12a","1 cell","not sealed","not parasitized","osmia",1,1,8,1,1,10,2,0,0,6,0,1,1,0,0,0,0,0,6,143,15
-"102","BP","Q","trapnest_51","High","a",2023-07-04,185,13.86,130.28,"51_4a","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,0,0,11,0,1,NA,0,0,0,0,0,11,130,14
-"103","BP","B","trapnest_5","Mid","a",2023-06-02,153,24.8,143.69,"5_18a","3 cells","not sealed","parasitized","osmia",2,1,11,1,0,12,1,6,1,0,0,1,NA,0,1,6,0,0,0,144,25
-"104","BP","B","trapnest_5","Mid","a",2023-05-29,149,71,146,"5_9a","1 cell","not sealed",NA,"osmia",1,1,11,1,0,12,1,6,0,0,0,1,NA,0,0,6,0,0,0,146,71
-"105","CP","U","trapnest_62","Mid","a",2023-07-05,186,28.11,144,"62_15a","2 cells","not sealed","not parasitized","osmia",1,1,11,1,0,12,1,0,0,6,0,1,NA,0,0,0,0,0,6,144,28
-"106","BP","B","trapnest_6","High","a",2023-05-31,151,22.27,144.29,"6_14a","1 cell","not sealed","not parasitized","osmia",2,1,4,3,0,7,3,12,2,0,0,3,NA,0,1.5,10.5,0,0,0,144,22
-"107","BP","B","trapnest_6","High","a",2023-05-31,151,81.61,138.87,"6_15a","1 cell","not sealed","not parasitized","osmia",2,1,4,3,0,7,3,12,2,0,0,3,NA,0,1.5,10.5,0,0,0,139,82
-"108","BP","B","trapnest_6","High","a",2023-05-29,149,87,129,"6_17a","inner wall","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,NA,0,0,10,0,0,0,129,87
-"109","BP","B","trapnest_6","High","b",2023-06-05,156,17.78,135.46,"6_5b","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,4,0,0,2,NA,0,4,11,0,0,0,135,18
-"110","BP","B","trapnest_6","High","b",2023-05-31,151,39,145,"6_9b","5 cells + end cap","sealed",NA,"osmia",2,1,4,3,0,7,3,12,2,0,0,3,NA,0,1.5,10.5,0,0,0,145,39
-"111","BP","AB","trapnest_77","Mid","a",2024-06-05,157,91,133,"77_4a","5 cells","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,0,0,6,0,1,NA,0,0,0,0,0,6,133,91
-"112","BP","C","trapnest_7","Low","a",2023-05-29,149,8.67,142.14,"7_12a","1 cell","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,0,2.5,2.5,0,0,0,142,9
-"113","BP","C","trapnest_7","Low","a",2023-05-29,149,138.07,138.07,"7_14a","2 cells","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,0,2.5,2.5,0,0,0,138,138
-"114","BP","C","trapnest_7","Low","a",2023-05-29,149,83.82,146.73,"7_15a","4 cells","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,0,2.5,2.5,0,0,0,147,84
-"115","BP","C","trapnest_7","Low","a",2023-05-29,149,37.42,148.86,"7_17a","5 cells + end cap","sealed","parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,0,2.5,2.5,0,0,0,149,37
-"116","BP","C","trapnest_7","Low","a",2023-05-22,142,24.54,151.22,"7_3a","1 cell","not sealed","not parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,1,NA,0,0,0,0,0,0,151,25
-"117","BP","C","trapnest_7","Low","b",2023-05-31,151,66.62,139.07,"7_3b","3 cells","not sealed","not parasitized","osmia",2,1,13,1,0,14,1,3,3,1,1,4,1,0,3,3,0,0,0,139,67
-"118","BP","C","trapnest_7","Low","c",2023-06-14,165,2.55,138.37,"7_3c","inner wall + end cap","sealed","not parasitized","osmia",0,1,12,1,1,14,2,1,1,3,3,1,4,0,0,0,0,2,2,138,3
-"119","BP","C","trapnest_8","Mid","a",2023-05-23,143,59.29,147.64,"8_12a","inner wall","not sealed","not parasitized","osmia",1,1,11,1,0,12,1,6,1,0,0,2,NA,1,0,5,0,0,0,148,59
-"120","BP","C","trapnest_8","Mid","a",2023-05-26,146,73.97,142.42,"8_16a","4 cells","not sealed","parasitized","osmia",2,1,10,1,0,11,1,7,2,0,0,3,NA,2,0,5,0,0,0,142,74
-"121","BP","C","trapnest_8","Mid","a",2023-05-29,149,17.28,145.88,"8_2a","2 cells","not sealed","not parasitized","osmia",1,1,9,1,0,10,1,8,3,0,0,3,NA,2,1,6,0,0,0,146,17
-"122","BP","C","trapnest_8","Mid","a",2023-05-22,142,59.6,147.13,"8_3a","3 cells","not sealed","parasitized","osmia",1,1,11,1,0,12,1,6,0,0,0,1,NA,0,0,6,0,0,0,147,60
-"123","CP","AG","trapnest_91","Low","a",2024-06-21,173,39,144,"91_8a","4 cells","not sealed","not parasitized","osmia",4,1,16,1,1,18,2,0,0,0,0,1,1,0,0,0,0,0,0,144,39
-"124","CP","AI","trapnest_99","High","a",2024-06-21,173,9,131,"99_14a","1 cell","not sealed","not parasitized","osmia",4,1,5,2,0,7,2,0.5,0.5,11,0,2,NA,0,1,1,0,0,11,131,9
-"125","CP","AI","trapnest_99","High","a",2024-06-21,173,50,140,"99_4a","1 cell","not sealed","not parasitized","osmia",4,1,5,2,0,7,2,0.5,0.5,11,0,2,NA,0,1,1,0,0,11,140,50
-"126","BP","C","trapnest_9","High","a",2023-06-05,156,70.8,146.38,"9_5a","8 cells","not sealed","not parasitized","osmia",1,1,5,1,1,7,2,11,2,0,0,1,0,0,2,11,0,0,0,146,71
-"127","BP","C","trapnest_9","High","a",2023-05-22,142,82.48,150.77,"9_8a","2 cells","not sealed","parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,NA,0,0,11,0,0,0,151,82
-"128","BP","C","trapnest_9","High","b",2023-05-29,149,104.11,150.1,"9_9b","inner wall","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,1,0,0,1,NA,0,1,11,0,0,0,150,104
+"","Site","Subsite","Trapnest","Treatment","Straw_ID","Date","Day_of_year","Filled_length_mm","Straw_length_mm","Nest_ID","Status","Sealed","Nest_parasitized","Occupant","Good_days","Bee_choice","Available_post","New_nests_os","New_nests_meg","Available_cavities_prior","New_nests_sum","Osmia_ps_prior","Osmia_no_ps_prior","Meg_ps_prior","Meg_no_ps_prior","Osmia_active_mothers","Meg_active_mothers","Sum_unsealed_os","Sum_unsealed_meg","DP_os_prior","NDP_os_prior","NDP_ps_os_prior","DP_meg_prior","NDP_meg_prior","NDP_ps_meg_prior","Straw_length","Filled_length"
+"1","BP","D","trapnest_12","High","b",2023-06-02,153,57.04,106.02,"12_12b","2 cells","not sealed","parasitized","osmia",2,1,6,2,0,8,2,10.5,3.5,0,0,4,0,4,NA,1,2,9,0,0,0,106,57
+"2","BP","D","trapnest_12","High","a",2023-05-29,149,116.97,145.25,"12_15a","7 cells","not sealed","parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,2,0,2,NA,0,1,11,0,0,0,145,117
+"3","BP","D","trapnest_12","High","a",2023-06-02,153,83.98,144.81,"12_18a","5 cells","not sealed","not parasitized","osmia",2,1,6,2,0,8,2,10.5,3.5,0,0,4,0,4,NA,1,2,9,0,0,0,145,84
+"4","BP","D","trapnest_12","High","a",2023-05-15,135,115.52,142.83,"12_5a","2 cells","not sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,0,0,0,1,0,1,NA,0,0,11,0,0,0,143,116
+"5","BP","D","trapnest_12","High","b",2023-05-29,149,103.97,143.76,"12_6b","9 cells","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,2,0,2,NA,0,1,11,0,0,0,144,104
+"6","BP","D","trapnest_12","High","c",2023-06-20,171,51.58,143.84,"12_6c","1 cell","not sealed","parasitized","osmia",3,1,5,2,0,7,2,11.5,6.5,0,0,3,0,3,NA,0,6,11,0,0,0,144,52
+"7","BP","D","trapnest_12","High","b",2023-06-14,165,21.9,130.53,"12_9b","2 cells","not sealed","parasitized","osmia",0,1,6,1,0,7,1,11,6,0,0,2,0,2,NA,0,6,11,0,0,0,131,22
+"8","BP","E","trapnest_13","Low","a",2023-06-05,156,41.44,140.51,"13_11a","3 cells","not sealed","parasitized","osmia",1,1,12,2,0,14,2,4.5,4.5,0,0,2,0,2,NA,1,3,3,0,0,0,141,41
+"9","BP","E","trapnest_13","Low","a",2023-05-29,149,101,137,"13_12a","2 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,2.5,2.5,0,0,0,137,101
+"10","BP","E","trapnest_13","Low","a",2023-06-14,165,19.88,140.03,"13_14a","2 cells + end cap","sealed","parasitized","osmia",0,1,14,3,0,17,3,2,2,0,0,1,0,1,NA,0,2,2,0,0,0,140,20
+"11","BP","E","trapnest_13","Low","a",2023-06-14,165,15.4,141.29,"13_16a","2 cells + end cap","sealed","not parasitized","osmia",0,1,14,3,0,17,3,2,2,0,0,1,0,1,NA,0,2,2,0,0,0,141,15
+"12","BP","E","trapnest_13","Low","a",2023-05-23,143,105.25,123.3,"13_2a","2 cells","not sealed","not parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,123,105
+"13","BP","E","trapnest_13","Low","b",2023-05-31,151,34.05,146.25,"13_2b","3 cells","not sealed","not parasitized","osmia",2,1,14,1,0,15,1,3,3,0,0,3,0,3,NA,1,2,2,0,0,0,146,34
+"14","BP","E","trapnest_13","Low","a",2023-05-29,149,75.74,150.06,"13_4a","6 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,2.5,2.5,0,0,0,150,76
+"15","BP","E","trapnest_13","Low","b",2023-06-02,153,41.56,85.621,"13_4b","4 cells","not sealed","parasitized","osmia",2,1,13,2,0,15,2,3.5,3.5,0,0,3,0,3,NA,1,2,2,0,0,0,86,42
+"16","BP","E","trapnest_13","Low","a",2023-06-16,167,9.55,150.06,"13_5a","1 cell + end cap","sealed","parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,1,0,1,NA,1,0,0,0,0,0,150,10
+"17","BP","E","trapnest_13","Low","a",2023-05-29,149,133.33,152.52,"13_7a","9 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,2.5,2.5,0,0,0,153,133
+"18","BP","E","trapnest_13","Low","b",2023-06-05,156,48.93,153,"13_7b","4 cells + end cap","sealed","not parasitized","osmia",1,1,12,2,0,14,2,4.5,4.5,0,0,2,0,2,NA,1,3,3,0,0,0,153,49
+"19","BP","E","trapnest_13","Low","a",2023-06-02,153,3.094,147.37,"13_8a","3 cells","not sealed","not parasitized","osmia",2,1,13,2,0,15,2,3.5,3.5,0,0,3,0,3,NA,1,2,2,0,0,0,147,3
+"20","BP","E","trapnest_14","Mid","a",2023-05-31,151,32.56,149.7,"14_10a","3 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,2,0,0,3,0,3,NA,0,2.5,7.5,0,0,0,150,33
+"21","BP","E","trapnest_14","Mid","b",2023-06-05,156,48.98,141.14,"14_10b","6 cells + end cap","sealed","not parasitized","osmia",1,1,11,1,0,12,1,6,3,0,0,2,0,2,NA,0,3,6,0,0,0,141,49
+"22","BP","E","trapnest_14","Mid","a",2023-05-29,149,76.22,145.71,"14_12a","7 cells","not sealed","parasitized","osmia",1,1,12,1,0,13,1,5,0,0,0,1,0,1,NA,0,0,5,0,0,0,146,76
+"23","BP","E","trapnest_14","Mid","a",2023-05-31,151,67.77,143.11,"14_16a","2 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,2,0,0,3,0,3,NA,0,2.5,7.5,0,0,0,143,68
+"24","BP","E","trapnest_15","High","a",2023-05-15,135,10.75,143.02,"15_4a","inner wall","not sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,0,0,0,1,0,1,NA,0,0,11,0,0,0,143,11
+"25","BP","E","trapnest_15","High","b",2023-05-22,142,8.77,144.32,"15_6b","1 cell + end cap","sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,1.5,0,0,1,0,1,NA,0,2,12,0,0,0,144,9
+"26","BP","F","trapnest_16","Low","a",2023-05-26,146,44.25,149.85,"16_11a","inner wall","not sealed","not parasitized","osmia",2,1,15,1,0,16,1,2,2,0,0,2,0,3,NA,1,1,1,0,0,0,150,44
+"27","BP","F","trapnest_16","Low","a",2023-05-29,149,11.4,142.13,"16_14a","2 cells","not sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,0,3,NA,0,4,4,0,0,0,142,11
+"28","BP","F","trapnest_16","Low","a",2023-05-29,149,7.13,140.01,"16_1a","inner wall","not sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,0,3,NA,0,4,4,0,0,0,140,7
+"29","BP","F","trapnest_16","Low","b",2023-05-29,149,65.59,143.64,"16_3b","3 cells + end cap","sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,0,3,NA,0,4,4,0,0,0,144,66
+"30","BP","F","trapnest_16","Low","a",2023-05-12,132,86.8,140.489,"16_5a","1 cell","not sealed","not parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,2,0,2,NA,0,1,1,0,0,0,140,87
+"31","BP","F","trapnest_16","Low","b",2023-05-23,143,77,133,"16_5b","2 cells","not sealed","not parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,1,0,2,NA,1,0,0,0,0,0,133,77
+"32","BP","F","trapnest_16","Low","c",2023-06-02,153,19.57,142.88,"16_5c","3 cells + end cap","sealed","parasitized","osmia",2,1,14,1,0,15,1,3,3,0,0,1,0,1,NA,0,3,3,0,0,0,143,20
+"33","BP","F","trapnest_16","Low","a",2023-05-29,149,41.41,142.06,"16_6a","5 cells + end cap","sealed","not parasitized","osmia",1,1,12,4,0,16,4,3.5,3.5,0,0,3,0,3,NA,0,4,4,0,0,0,142,41
+"34","BP","F","trapnest_16","Low","b",2023-05-31,151,58.2,150.21,"16_6b","1 cell + end cap","sealed","not parasitized","osmia",2,1,12,2,0,14,2,4.5,4.5,0,0,2,0,3,NA,0,5,5,0,0,0,150,58
+"35","BP","F","trapnest_16","Low","a",2023-05-15,135,26.95,123.63,"16_8a","1 cell","not sealed","parasitized","osmia",3,1,16,1,0,17,1,1,1,0,0,2,0,2,NA,0,1,1,0,0,0,124,27
+"36","BP","F","trapnest_16","Low","b",2023-05-31,151,33.96,149.35,"16_8b","2 cells","not sealed","not parasitized","osmia",2,1,12,2,0,14,2,4.5,4.5,0,0,2,0,3,NA,0,5,5,0,0,0,149,34
+"37","BP","F","trapnest_17","Mid","b",2023-06-23,174,40.29,134.99,"17_13b","5 cells + end cap","sealed","parasitized","osmia",3,1,7,1,2,10,3,6,5,2.5,2.5,0,4,0,4,0,5,6,0,2,2,135,40
+"38","BP","F","trapnest_17","Mid","a",2023-05-26,146,74.49,146.51,"17_15a","8 cells","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,0,0,0,1,0,1,NA,0,0,6,0,0,0,147,74
+"39","BP","F","trapnest_17","Mid","a",2023-06-05,156,22.77,144.92,"17_16a","3 cells","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,5.5,0,0,4,0,4,NA,1,5,6,0,0,0,145,23
+"40","BP","F","trapnest_17","Mid","a",2023-05-29,149,55.95,153.18,"17_17a","4 cells","not sealed","parasitized","osmia",1,1,9,2,0,11,2,7.5,1.5,0,0,3,0,3,NA,0,1,7,0,0,0,153,56
+"41","BP","F","trapnest_17","Mid","b",2023-06-05,156,24.4,139.02,"17_17b","3 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,5.5,0,0,4,0,4,NA,1,5,6,0,0,0,139,24
+"42","BP","F","trapnest_17","Mid","a",2023-05-29,149,21.07,139.95,"17_18a","inner wall","not sealed","not parasitized","osmia",1,1,9,2,0,11,2,7.5,1.5,0,0,3,0,3,NA,0,1,7,0,0,0,140,21
+"43","BP","F","trapnest_17","Mid","a",2023-06-02,153,2.9,145.32,"17_7a","inner wall","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,3,0,3,NA,0,4.5,7.5,0,0,0,145,3
+"44","BP","F","trapnest_17","Mid","a",2023-06-02,153,78.68,149.03,"17_9a","inner wall","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,3,0,3,NA,0,4.5,7.5,0,0,0,149,79
+"45","BP","F","trapnest_18","High","b",2023-06-05,156,17.79,144.44,"18_10b","2 cell + end cap","sealed","not parasitized","osmia",1,1,4,1,0,5,1,13,5,0,0,0,0,1,NA,0,5,13,0,0,0,144,18
+"46","BP","F","trapnest_18","High","b",2023-05-31,151,95.42,145.84,"18_12b","7 cells","not sealed","not parasitized","osmia",2,1,3,1,0,4,1,14,4,0,0,3,0,3,NA,0,4,14,0,0,0,146,95
+"47","BP","F","trapnest_18","High","a",2023-05-29,149,27.2,142.7,"18_1a","3 cells + end cap","sealed","not parasitized","osmia",1,1,3,4,0,7,4,12.5,1.5,0,0,2,0,2,NA,0,2,13,0,0,0,143,27
+"48","BP","F","trapnest_18","High","a",2023-05-29,149,78.55,148.55,"18_8a","2 cells","not sealed","not parasitized","osmia",1,1,3,4,0,7,4,12.5,1.5,0,0,2,0,2,NA,0,2,13,0,0,0,149,79
+"49","NN","G","trapnest_19","Low","a",2023-05-29,149,30.46,139.14,"19_8a","3 cells + end cap","sealed","parasitized","osmia",1,1,16,1,0,17,1,1,1,0,0,0,0,0,NA,0,1,1,0,0,0,139,30
+"50","NN","G","trapnest_19","Low","b",2023-06-04,155,18.39,139.95,"19_8b","2 cells + end cap","sealed","not parasitized","osmia",3,1,17,1,0,18,1,0,0,0,0,0,0,0,NA,0,0,0,0,0,0,140,18
+"51","NN","G","trapnest_19","Low","a",2023-05-15,135,74.4,143.3,"19_9a","2 cells","not sealed","not parasitized","osmia",3,1,17,1,0,18,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,143,74
+"52","BP","A","trapnest_1","Low","a",2023-06-05,156,91,141,"1_16a","2 cells","not sealed",NA,"osmia",1,1,17,1,0,18,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,141,91
+"53","NN","G","trapnest_20","Mid","a",2023-06-01,152,10.45,144.11,"20_15a","1 cell","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,2.5,0,0,1,0,1,NA,0,3,7,0,0,0,144,10
+"54","NN","G","trapnest_20","Mid","a",2023-05-29,149,96.03,149.23,"20_2a","9 cells","not sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,0.5,0,0,2,0,2,NA,0,0,6,0,0,0,149,96
+"55","NN","G","trapnest_20","Mid","b",2023-06-01,152,41.3,142.17,"20_3b","5 cells + end cap","sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,2.5,0,0,1,0,1,NA,0,3,7,0,0,0,142,41
+"56","NN","G","trapnest_20","Mid","a",2023-05-29,149,89.81,145.52,"20_5a","8 cells","not sealed","not parasitized","osmia",1,1,10,2,0,12,2,6.5,0.5,0,0,2,0,2,NA,0,0,6,0,0,0,146,90
+"57","NN","H","trapnest_22","Low","a",2023-06-19,170,9.35,146.11,"22_9a","1 cell","not sealed","parasitized","osmia",0,1,16,1,0,17,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,146,9
+"58","NN","H","trapnest_24","High","a",2023-06-08,159,26.42,143.1,"24_10a","1 cell","not sealed","parasitized","osmia",2,1,7,1,0,8,1,10,2,0,0,2,0,2,NA,1,1,9,0,0,0,143,26
+"59","NN","H","trapnest_24","High","a",2023-06-30,181,11.84,144.44,"24_12a","2 cells + end cap","sealed","parasitized","osmia",1,1,4,1,0,5,1,12,4,0,0,0,0,0,NA,0,4,12,0,0,0,144,12
+"60","NN","H","trapnest_24","High","a",2023-06-04,155,48.72,138.64,"24_2a","5 cells","not sealed","parasitized","osmia",3,1,6,1,0,7,1,11,1,0,0,2,0,2,NA,1,0,10,0,0,0,139,49
+"61","NN","H","trapnest_24","High","b",2023-06-19,170,28.02,137.27,"24_3b","1 cell","not sealed","parasitized","osmia",0,1,5,1,0,6,1,11,3,0,0,2,0,2,NA,1,2,10,0,0,0,137,28
+"62","NN","H","trapnest_24","High","b",2023-06-01,152,70.92,140.17,"24_7b","3 cells","not sealed","parasitized","osmia",1,1,6,1,0,7,1,11,1,0,0,2,0,2,NA,0,0,10,0,0,0,140,71
+"63","NN","I","trapnest_25","Low","a",2023-06-04,155,88.22,148.7,"25_11a","6 cells","not sealed",NA,"osmia",3,1,12,2,0,14,2,4.5,4.5,0,0,2,0,2,NA,0,4,4,0,0,0,149,88
+"64","NN","I","trapnest_25","Low","a",2023-05-29,149,108.83,148.8,"25_13a","3 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,1,1,0,0,0,149,109
+"65","NN","I","trapnest_25","Low","a",2023-06-08,159,74.15,143.66,"25_16a","7 cells","not sealed","not parasitized","osmia",2,1,15,1,0,16,1,2,2,0,0,3,0,3,NA,0,1,1,0,0,0,144,74
+"66","NN","I","trapnest_25","Low","a",2023-05-31,151,59.44,149.61,"25_1a","inner wall","not sealed","not parasitized","osmia",2,1,13,1,0,14,1,4,4,0,0,4,0,4,NA,1,2,2,0,0,0,150,59
+"67","NN","I","trapnest_25","Low","b",2023-06-15,166,37.62,143.46,"25_1b","1 cell","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,0,3,NA,1.5,2,2,0,0,0,143,38
+"68","NN","I","trapnest_25","Low","a",2023-05-29,149,111.2,111.2,"25_3a","3 cells","not sealed","not parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,1,1,0,0,0,111,111
+"69","NN","I","trapnest_25","Low","b",2023-06-15,166,20.96,140.64,"25_3b","2 cells","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,0,3,NA,1.5,2,2,0,0,0,141,21
+"70","NN","I","trapnest_25","Low","c",2023-06-22,173,5.21,134.1,"25_3c","1 cell","not sealed","not parasitized","osmia",3,1,15,1,0,16,1,2,2,0,0,1,0,1,NA,0,2,2,0,0,0,134,5
+"71","NN","I","trapnest_25","Low","a",2023-05-29,149,50.46,148.66,"25_4a","no change",NA,NA,"osmia",1,NA,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,1,1,0,0,0,149,50
+"72","NN","I","trapnest_25","Low","b",2023-06-15,166,20.99,142.81,"25_4b","1 cell","not sealed","parasitized","osmia",0,1,13,3,0,16,3,3,3,0,0,3,0,3,NA,1.5,2,2,0,0,0,143,21
+"73","NN","I","trapnest_25","Low","a",2023-05-29,149,119.74,151.74,"25_6a","7 cells","not sealed","parasitized","osmia",1,1,14,3,0,17,3,2,2,0,0,3,0,3,NA,0,1,1,0,0,0,152,120
+"74","NN","I","trapnest_25","Low","b",2023-06-04,155,58.79,136.32,"25_6b","1 cell","not sealed","not parasitized","osmia",3,1,12,2,0,14,2,4.5,4.5,0,0,2,0,2,NA,0,4,4,0,0,0,136,59
+"75","NN","J","trapnest_28","Low","a",2023-05-29,149,18.3,146.85,"28_17a","3 cells + end cap","sealed","parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,0,0,0,NA,0,0,0,0,0,0,147,18
+"76","NN","J","trapnest_28","Low","a",2023-06-22,173,30.81,144.79,"28_3a","2 cells","not sealed","parasitized","osmia",3,1,16,1,0,17,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,145,31
+"77","NN","J","trapnest_29","Mid","b",2023-05-31,151,54.16,125.67,"29_1b","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,2,0,0,1,0,1,NA,0,2,6,0,0,0,126,54
+"78","NN","J","trapnest_29","Mid","a",2023-05-18,138,88.6,142.9,"29_4a","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,0,0,0,1,0,1,NA,0,0,6,0,0,0,143,89
+"79","NN","J","trapnest_29","Mid","a",2023-05-25,145,124.59,147.7,"29_7a","1 cell","not sealed","not parasitized","osmia",3,1,11,1,0,12,1,6,1,0,0,2,0,2,NA,1,0,5,0,0,0,148,125
+"80","BP","A","trapnest_2","Mid","b",2023-05-31,151,29,137.3,"2_15b","3 cells + end cap","sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,2,0,2,NA,0,4.5,7.5,0,0,0,137,29
+"81","BP","A","trapnest_2","Mid","b",2023-05-29,149,42.06,140.65,"2_16b","4 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,1.5,0,0,0,0,0,NA,0,2,7,0,0,0,141,42
+"82","BP","A","trapnest_2","Mid","a",2023-05-11,131,106.85,142.77,"2_18a","inner wall","not sealed","not parasitized","osmia",3,1,10,2,0,12,2,6.5,0.5,0,0,2,0,2,NA,0,1,7,0,0,0,143,107
+"83","BP","A","trapnest_2","Mid","a",2023-05-29,149,21.51,147.24,"2_1a","2 cells + end cap","sealed","parasitized","osmia",1,1,10,2,0,12,2,6.5,1.5,0,0,0,0,0,NA,0,2,7,0,0,0,147,22
+"84","BP","A","trapnest_2","Mid","a",2023-05-31,151,64.69,148.95,"2_9a","6 cells","not sealed","not parasitized","osmia",2,1,9,3,0,12,3,7,4,0,0,2,0,2,NA,0,4.5,7.5,0,0,0,149,65
+"85","NN","K","trapnest_32","Mid","b",2023-06-01,152,17.37,61.84,"32_8b","2 cells + end cap","sealed","not parasitized","osmia",1,1,10,1,0,11,1,7,4,0,0,1,0,4,NA,0,3,6,0,0,0,62,17
+"86","NN","L","trapnest_35","Mid","a",2023-06-22,173,4.98,141.88,"35_7a","1 cell","not sealed","not parasitized","osmia",3,1,7,1,0,8,1,6,1,0,0,1,0,1,NA,0,1,6,0,0,0,142,5
+"87","NN","L","trapnest_35","Mid","c",2023-07-06,187,9.77,144.43,"35_9c","1 cell","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,6,2,0,0,2,0,2,NA,0,2,6,0,0,0,144,10
+"88","NN","L","trapnest_36","High","b",2023-06-04,155,38.51,140.74,"36_13b","3 cells + end cap","sealed","not parasitized","osmia",3,1,6,1,0,7,1,11,6,0,0,4,0,4,NA,2,4,9,0,0,0,141,39
+"89","NN","L","trapnest_36","High","b",2023-06-08,159,12.03,143.21,"36_15b","2 cells","not sealed","not parasitized","osmia",2,1,6,1,0,7,1,11,6,0,0,3,0,4,NA,2,4,9,0,0,0,143,12
+"90","NN","L","trapnest_36","High","a",2023-05-29,149,86.14,144.22,"36_1a","1 cell","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,0.5,0,0,2,0,2,NA,0,1,12,0,0,0,144,86
+"91","NN","L","trapnest_36","High","b",2023-05-31,151,81.83,148.15,"36_3b","inner wall","not sealed","not parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,0,6,NA,0,3.5,12.5,0,0,0,148,82
+"92","NN","L","trapnest_36","High","b",2023-05-31,151,60.97,136.39,"36_4b","1 cell","not sealed","not parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,0,6,NA,0,3.5,12.5,0,0,0,136,61
+"93","NN","L","trapnest_36","High","a",2023-05-29,149,48,146.43,"36_6a","1 cell","not sealed","not parasitized","osmia",1,1,5,2,0,7,2,11.5,0.5,0,0,2,0,2,NA,0,1,12,0,0,0,146,48
+"94","NN","L","trapnest_36","High","b",2023-06-22,173,9.14,138.49,"36_8b","1 cell","not sealed","not parasitized","osmia",3,1,5,1,0,6,1,11,7,0,0,1,0,2,NA,0,7,11,0,0,0,138,9
+"95","NN","L","trapnest_36","High","a",2023-05-31,151,29.63,143.68,"36_9a","2 cells","not sealed","parasitized","osmia",2,1,3,4,0,7,4,12.5,3.5,0,0,6,0,6,NA,0,3.5,12.5,0,0,0,144,30
+"96","BP","A","trapnest_3","High","b",2023-06-02,153,18.88,141.84,"3_11b","2 cells + end cap","sealed","parasitized","osmia",2,1,5,3,0,8,3,11,5,0,0,2,0,2,NA,0,5.5,11.5,0,0,0,142,19
+"97","BP","A","trapnest_3","High","b",2023-05-29,149,35,140,"3_13b","1 cell","not sealed",NA,"osmia",1,1,6,1,0,7,1,11,2,0,0,1,0,1,NA,0,2,11,0,0,0,140,35
+"98","BP","A","trapnest_3","High","a",2023-05-26,146,8.71,142.78,"3_14a","2 cells","not sealed","parasitized","osmia",2,1,6,1,0,7,1,11,1,0,0,2,0,2,NA,0,1,11,0,0,0,143,9
+"99","BP","A","trapnest_3","High","a",2023-05-23,143,61.17,144.35,"3_18a","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,0,1,NA,0,0,11,0,0,0,144,61
+"100","BP","A","trapnest_3","High","a",2023-05-31,151,46.68,142.17,"3_2a","2 cells","not sealed","not parasitized","osmia",2,1,5,1,0,6,1,12,3,0,0,2,0,2,NA,0,2,11,0,0,0,142,47
+"101","BP","Q","trapnest_50","Mid","a",2023-07-04,185,15,143.4,"50_12a","1 cell","not sealed","not parasitized","osmia",1,1,8,1,1,10,2,0,0,6,0,1,1,1,1,0,0,0,0,0,6,143,15
+"102","BP","Q","trapnest_51","High","a",2023-07-04,185,13.86,130.28,"51_4a","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,0,0,11,0,1,0,1,NA,0,0,0,0,0,11,130,14
+"103","BP","B","trapnest_5","Mid","a",2023-06-02,153,24.8,143.69,"5_18a","3 cells","not sealed","parasitized","osmia",2,1,11,1,0,12,1,6,1,0,0,1,0,1,NA,0,1,6,0,0,0,144,25
+"104","BP","B","trapnest_5","Mid","a",2023-05-29,149,71,146,"5_9a","1 cell","not sealed",NA,"osmia",1,1,11,1,0,12,1,6,0,0,0,1,0,1,NA,0,0,6,0,0,0,146,71
+"105","CP","U","trapnest_62","Mid","a",2023-07-05,186,28.11,144,"62_15a","2 cells","not sealed","not parasitized","osmia",1,1,11,1,0,12,1,0,0,6,0,1,0,1,NA,0,0,0,0,0,6,144,28
+"106","BP","B","trapnest_6","High","a",2023-05-31,151,22.27,144.29,"6_14a","1 cell","not sealed","not parasitized","osmia",2,1,4,3,0,7,3,12,2,0,0,3,0,3,NA,0,1.5,10.5,0,0,0,144,22
+"107","BP","B","trapnest_6","High","a",2023-05-31,151,81.61,138.87,"6_15a","1 cell","not sealed","not parasitized","osmia",2,1,4,3,0,7,3,12,2,0,0,3,0,3,NA,0,1.5,10.5,0,0,0,139,82
+"108","BP","B","trapnest_6","High","a",2023-05-29,149,87,129,"6_17a","inner wall","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,0,1,NA,0,0,10,0,0,0,129,87
+"109","BP","B","trapnest_6","High","b",2023-06-05,156,17.78,135.46,"6_5b","1 cell","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,4,0,0,2,0,2,NA,0,4,11,0,0,0,135,18
+"110","BP","B","trapnest_6","High","b",2023-05-31,151,39,145,"6_9b","5 cells + end cap","sealed",NA,"osmia",2,1,4,3,0,7,3,12,2,0,0,3,0,3,NA,0,1.5,10.5,0,0,0,145,39
+"111","BP","AB","trapnest_77","Mid","a",2024-06-05,157,91,133,"77_4a","5 cells","not sealed","not parasitized","osmia",2,1,11,1,0,12,1,0,0,6,0,1,0,1,NA,0,0,0,0,0,6,133,91
+"112","BP","C","trapnest_7","Low","a",2023-05-29,149,8.67,142.14,"7_12a","1 cell","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,3,1,0,2.5,2.5,0,0,0,142,9
+"113","BP","C","trapnest_7","Low","a",2023-05-29,149,138.07,138.07,"7_14a","2 cells","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,3,1,0,2.5,2.5,0,0,0,138,138
+"114","BP","C","trapnest_7","Low","a",2023-05-29,149,83.82,146.73,"7_15a","4 cells","not sealed","not parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,3,1,0,2.5,2.5,0,0,0,147,84
+"115","BP","C","trapnest_7","Low","a",2023-05-29,149,37.42,148.86,"7_17a","5 cells + end cap","sealed","parasitized","osmia",1,1,12,5,1,18,6,2,2,0,0,3,1,3,1,0,2.5,2.5,0,0,0,149,37
+"116","BP","C","trapnest_7","Low","a",2023-05-22,142,24.54,151.22,"7_3a","1 cell","not sealed","not parasitized","osmia",1,1,17,1,0,18,1,0,0,0,0,1,0,1,NA,0,0,0,0,0,0,151,25
+"117","BP","C","trapnest_7","Low","b",2023-05-31,151,66.62,139.07,"7_3b","3 cells","not sealed","not parasitized","osmia",2,1,13,1,0,14,1,3,3,1,1,4,1,4,1,0,3,3,0,0,0,139,67
+"118","BP","C","trapnest_7","Low","c",2023-06-14,165,2.55,138.37,"7_3c","inner wall + end cap","sealed","not parasitized","osmia",0,1,12,1,1,14,2,1,1,3,3,0,3,1,4,0,0,0,0,2,2,138,3
+"119","BP","C","trapnest_8","Mid","a",2023-05-23,143,59.29,147.64,"8_12a","inner wall","not sealed","not parasitized","osmia",1,1,11,1,0,12,1,6,1,0,0,2,0,2,NA,1,0,5,0,0,0,148,59
+"120","BP","C","trapnest_8","Mid","a",2023-05-26,146,73.97,142.42,"8_16a","4 cells","not sealed","parasitized","osmia",2,1,10,1,0,11,1,7,2,0,0,3,0,3,NA,2,0,5,0,0,0,142,74
+"121","BP","C","trapnest_8","Mid","a",2023-05-29,149,17.28,145.88,"8_2a","2 cells","not sealed","not parasitized","osmia",1,1,9,1,0,10,1,8,3,0,0,3,0,3,NA,2,1,6,0,0,0,146,17
+"122","BP","C","trapnest_8","Mid","a",2023-05-22,142,59.6,147.13,"8_3a","3 cells","not sealed","parasitized","osmia",1,1,11,1,0,12,1,6,0,0,0,1,0,1,NA,0,0,6,0,0,0,147,60
+"123","CP","AG","trapnest_91","Low","a",2024-06-21,173,39,144,"91_8a","4 cells","not sealed","not parasitized","osmia",4,1,16,1,1,18,2,0,0,0,0,1,1,1,1,0,0,0,0,0,0,144,39
+"124","CP","AI","trapnest_99","High","a",2024-06-21,173,9,131,"99_14a","1 cell","not sealed","not parasitized","osmia",4,1,5,2,0,7,2,0.5,0.5,11,0,2,0,2,NA,0,1,1,0,0,11,131,9
+"125","CP","AI","trapnest_99","High","a",2024-06-21,173,50,140,"99_4a","1 cell","not sealed","not parasitized","osmia",4,1,5,2,0,7,2,0.5,0.5,11,0,2,0,2,NA,0,1,1,0,0,11,140,50
+"126","BP","C","trapnest_9","High","a",2023-06-05,156,70.8,146.38,"9_5a","8 cells","not sealed","not parasitized","osmia",1,1,5,1,1,7,2,11,2,0,0,1,0,1,0,0,2,11,0,0,0,146,71
+"127","BP","C","trapnest_9","High","a",2023-05-22,142,82.48,150.77,"9_8a","2 cells","not sealed","parasitized","osmia",1,1,6,1,0,7,1,11,0,0,0,1,0,1,NA,0,0,11,0,0,0,151,82
+"128","BP","C","trapnest_9","High","b",2023-05-29,149,104.11,150.1,"9_9b","inner wall","not sealed","not parasitized","osmia",1,1,6,1,0,7,1,11,1,0,0,1,0,1,NA,0,1,11,0,0,0,150,104

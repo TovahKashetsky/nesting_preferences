@@ -538,7 +538,7 @@ summ_avail_2024$Available_post <- replace(summ_avail_2024$Available_post, summ_a
 
 ```
 
-```{r Conspecific_Presence_for_Bee_Models_2023}
+```{r Conspecific_Presence_2023}
  
 
 # includes inner walls only as conspecifics
@@ -614,7 +614,7 @@ conspecifics_both_1_2023 <- merge(conspecifics_os_2_2023, conspecifics_meg_2_202
 
 ```
 
-```{r Conspecific_Presence_for_Bee_Models_2024}
+```{r Conspecific_Presence_2024}
  
 
 # includes inner walls only as conspecifics
@@ -686,152 +686,6 @@ conspecifics_meg_2_2024 <- conspecifics_meg_2_2024 %>% select(-Mega_bi_ps, -Mega
 
 # Join Osmia and Megachile data together
 conspecifics_both_1_2024 <- merge(conspecifics_os_2_2024, conspecifics_meg_2_2024)
-
-
-```
-
-```{r Conspecific_Presence_for_Parasite_Models_2023}
- 
-### New stats don't need this! - Sep 2025
-
-# # excludes inner walls only because parasites can't lay eggs
-# 
-# ## Osmia ##
-# 
-# # Make column to say osmia present or not, including pseudo, excluding inner walls 
-# conspecifics_os_no_iw_2023 <- long_choice_2023 %>%
-#   mutate(Osmia_bi_ps_no_iw = ifelse(Occupant == 'osmia' & Contains_cells == 1, 1, 0)) 
-# 
-# # Make column to say osmia present or not, excluding pseudo, excluding inner walls 
-# conspecifics_os_no_iw_2023 <- conspecifics_os_no_iw_2023 %>%
-#   mutate(Osmia_bi_no_ps_no_iw = ifelse(Occupant == 'osmia' & Status != 'pseudo' & Contains_cells == 1, 1, 0))
-# 
-# ## Count the number of osmia in each nest
-# 
-# # with pseudo nests/ pseudo nests considered osmia occupancies
-# summ_osmia_ps_no_iw_2023 <- conspecifics_os_no_iw_2023 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Osmia_ps_no_iw = (sum(Osmia_bi_ps_no_iw)))
-# # Osmia_ps_no_iw: number of osmia in each trapnest per date, including pseudo nests, excluding only inner walls
-# 
-# # without pseudo nests (pseudo nests not considered osmia occupancies)
-# summ_osmia_no_ps_no_iw_2023 <- conspecifics_os_no_iw_2023 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Osmia_no_ps_no_iw = (sum(Osmia_bi_no_ps_no_iw)))
-# # Osmia_no_ps_no_iw: number of osmia in each trapnest per date, excluding pseudo nests, excluding only inner walls
-# 
-# # Merge together
-# conspecifics_os_3_2023 <- merge(conspecifics_os_2_2023,  summ_osmia_ps_no_iw_2023, all.x = TRUE)
-# conspecifics_os_3_2023 <- merge(conspecifics_os_3_2023,  summ_osmia_no_ps_no_iw_2023, all.x = TRUE)
-# 
-# 
-# ## Megachile ##
-# 
-# # Make column to say osmia present or not, including pseudo
-# conspecifics_meg_no_iw_2023 <- long_choice_2023 %>% 
-#   mutate(Mega_bi_ps_no_iw = ifelse(Occupant == 'megachile' & Contains_cells == 1, 1, 0)) 
-# 
-# # Make column to say osmia present or not, excluding pseudo
-# conspecifics_meg_no_iw_2023 <- conspecifics_meg_no_iw_2023 %>% 
-#   mutate(Mega_bi_no_ps_no_iw = ifelse(Occupant == 'megachile' & Status != 'pseudo' & Contains_cells == 1, 1, 0)) 
-# 
-# ## Count the number of genera in each nest
-# 
-# # with pseudo nests/ pseudo nests considered osmia occupancies
-# summ_meg_ps_no_iw_2023 <- conspecifics_meg_no_iw_2023 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Meg_ps_no_iw = (sum(Mega_bi_ps_no_iw)))
-# # Meg_ps_no_iw: number of megachile in each trapnest per date, including pseudo nests, excluding only inner walls
-# 
-# # without pseudo nests/ pseudo nests not considered osmia occupancies
-# summ_meg_no_ps_no_iw_2023 <- conspecifics_meg_no_iw_2023 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Meg_no_ps_no_iw = (sum(Mega_bi_no_ps_no_iw)))
-# # Meg_no_ps_no_iw: number of megachile in each trapnest per date, excluding pseudo nests, excluding only inner walls
-# 
-# # Merge together
-# conspecifics_meg_3_2023 <- merge(conspecifics_meg_no_iw_2023,  summ_meg_ps_no_iw_2023, all.x = TRUE)
-# conspecifics_meg_3_2023 <- merge(conspecifics_meg_3_2023,  summ_meg_no_ps_no_iw_2023, all.x = TRUE)
-# 
-# # Delete columns I dont need
-# conspecifics_meg_3_2023 <- conspecifics_meg_3_2023 %>% select(-Mega_bi_ps_no_iw, -Mega_bi_no_ps_no_iw)
-# 
-# # Join data together
-# conspecifics_both_2_2023 <- merge(conspecifics_os_3_2023, conspecifics_meg_3_2023)
-# conspecifics_both_2023 <- merge(conspecifics_both_1_2023, conspecifics_both_2_2023)
-
-
-```
-
-```{r Conspecific_Presence_for_Parasite_Models_2024}
- 
-### New stats don't need this! - Sep 2025
-
-# # excludes inner walls only because parasites can't lay eggs
-# 
-# ## Osmia ##
-# 
-# # Make column to say osmia present or not, including pseudo, excluding inner walls 
-# conspecifics_os_no_iw_2024 <- long_choice_2024 %>%
-#   mutate(Osmia_bi_ps_no_iw = ifelse(Occupant == 'osmia' & Contains_cells == 1, 1, 0)) 
-# 
-# # Make column to say osmia present or not, excluding pseudo, excluding inner walls 
-# conspecifics_os_no_iw_2024 <- conspecifics_os_no_iw_2024 %>%
-#   mutate(Osmia_bi_no_ps_no_iw = ifelse(Occupant == 'osmia' & Status != 'pseudo' & Contains_cells == 1, 1, 0))
-# 
-# ## Count the number of osmia in each nest
-# 
-# # with pseudo nests/ pseudo nests considered osmia occupancies
-# summ_osmia_ps_no_iw_2024 <- conspecifics_os_no_iw_2024 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Osmia_ps_no_iw = (sum(Osmia_bi_ps_no_iw)))
-# # Osmia_ps_no_iw: number of osmia in each trapnest per date, including pseudo nests, excluding only inner walls
-# 
-# # without pseudo nests (pseudo nests not considered osmia occupancies)
-# summ_osmia_no_ps_no_iw_2024 <- conspecifics_os_no_iw_2024 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Osmia_no_ps_no_iw = (sum(Osmia_bi_no_ps_no_iw)))
-# # Osmia_no_ps_no_iw: number of osmia in each trapnest per date, excluding pseudo nests, excluding only inner walls
-# 
-# # Merge together
-# conspecifics_os_3_2024 <- merge(conspecifics_os_2_2024,  summ_osmia_ps_no_iw_2024, all.x = TRUE)
-# conspecifics_os_3_2024 <- merge(conspecifics_os_3_2024,  summ_osmia_no_ps_no_iw_2024, all.x = TRUE)
-# 
-# 
-# ## Megachile ##
-# 
-# # Make column to say megachile present or not, including pseudo
-# conspecifics_meg_no_iw_2024 <- long_choice_2024 %>% 
-#   mutate(Mega_bi_ps_no_iw = ifelse(Occupant == 'megachile' & Contains_cells == 1, 1, 0)) 
-# 
-# # Make column to say megachile present or not, excluding pseudo
-# conspecifics_meg_no_iw_2024 <- conspecifics_meg_no_iw_2024 %>% 
-#   mutate(Mega_bi_no_ps_no_iw = ifelse(Occupant == 'megachile' & Status != 'pseudo' & Contains_cells == 1, 1, 0)) 
-# 
-# ## Count the number of genera in each nest
-# 
-# # with pseudo nests/ pseudo nests considered megachile occupancies
-# summ_meg_ps_no_iw_2024 <- conspecifics_meg_no_iw_2024 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Meg_ps_no_iw = (sum(Mega_bi_ps_no_iw)))
-# # Meg_ps_no_iw: number of megachile in each trapnest per date, including pseudo nests, excluding only inner walls
-# 
-# # without pseudo nests/ pseudo nests not considered osmia occupancies
-# summ_meg_no_ps_no_iw_2024 <- conspecifics_meg_no_iw_2024 %>% 
-#   group_by(Trapnest, Date) %>% 
-#   summarize(Meg_no_ps_no_iw = (sum(Mega_bi_no_ps_no_iw)))
-# # Meg_no_ps_no_iw: number of megachile in each trapnest per date, excluding pseudo nests, excluding only inner walls
-# 
-# # Merge together
-# conspecifics_meg_3_2024 <- merge(conspecifics_meg_no_iw_2024,  summ_meg_ps_no_iw_2024, all.x = TRUE)
-# conspecifics_meg_3_2024 <- merge(conspecifics_meg_3_2024,  summ_meg_no_ps_no_iw_2024, all.x = TRUE)
-# 
-# # Delete columns I dont need
-# conspecifics_meg_3_2024 <- conspecifics_meg_3_2024 %>% select(-Mega_bi_ps_no_iw, -Mega_bi_no_ps_no_iw)
-# 
-# # Join data together
-# conspecifics_both_2_2024 <- merge(conspecifics_os_3_2024, conspecifics_meg_3_2024)
-# conspecifics_both_2024 <- merge(conspecifics_both_1_2024, conspecifics_both_2_2024)
 
 
 ```
@@ -1535,12 +1389,12 @@ nesting_cells <- nesting_cells %>% mutate(Nest_parasitized = ifelse(is.na(Cumula
 nesting_cells <- nesting_cells %>%
   group_by(Nest_ID) %>%   
   mutate(
-    after_inner_wall = cumsum(Status == "inner wall"),
-    before_cells = cumsum(grepl("cell", Status, ignore.case = TRUE)),
+    After_inner_wall = cumsum(Status == "inner wall"),
+    Before_cells = cumsum(grepl("cell", Status, ignore.case = TRUE)),
 
     Nest_parasitized_v2 = case_when(
       is.na(Nest_parasitized) & Status == "inner wall" ~ "not parasitized",
-      Status == "no change" & after_inner_wall > 0 & before_cells == 0 ~ "not parasitized",
+      Status == "no change" & After_inner_wall > 0 & Before_cells == 0 ~ "not parasitized",
       TRUE ~ NA_character_
     )
   ) %>%
@@ -1586,11 +1440,58 @@ table(parasite_bin_meg$Nest_parasitized)
 # make binary sealed column 
 nesting_cells <- nesting_cells %>% 
   mutate(Active_bin = ifelse(Sealed == 'sealed', 0, ifelse(Sealed == 'not sealed', 1, NA)))
-# don't need to separate if inner walls are included or not, because we're using Active_bin for the parasite models, and parasites can't infect nests with no cells
+# don't need to separate if inner walls are included or not, because we're using Active_bin for the parasite models, and parasites can't infect nests with no cell
+
+# inspect
+# nesting_cells_inspect <- nesting_cells %>% filter(Bee_choice == 1)
 
 
-nesting_cells_inspect <- nesting_cells %>% filter(Bee_choice == 1)
+## Make column to say if nests are active enough to have mothers around
 
+# within the unsealed nests, filter out ones that are abandoned 
+# if nest is not sealed and says no change for 3 visits, it's abandoned
+
+active_nests_summary <- nesting_cells %>%
+  arrange(Trapnest, Nest_ID, Date) %>%  # make sure data is ordered by date
+  group_by(Trapnest, Nest_ID) %>%
+  filter(Sealed == "not sealed") %>% 
+  mutate(
+    # Check for 3 consecutive "no change"
+    Abandoned = 
+      (Status == "no change") &
+      lag(Status, 1) == "no change" &
+      lag(Status, 2) == "no change"
+  )
+
+# convert to 0s and 1s
+active_nests_summary$Abandoned <- as.numeric(active_nests_summary$Abandoned)
+
+# Osmia
+# sum the number of nests that are no abandoned for each trapnest date combination 
+summ_active_os <- active_nests_summary %>% 
+  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'osmia' & Status != 'pseudo') %>% 
+  group_by(Date, Trapnest) %>% 
+  summarise(Osmia_active_mothers = length(unique(Nest_ID)))
+
+# add to the full df
+nesting_cells <- left_join(nesting_cells, summ_active_os)
+
+# replace NAs with zero
+nesting_cells <- nesting_cells %>%
+  mutate(Osmia_active_mothers = replace_na(Osmia_active_mothers, 0))
+
+# sum the number of nests that are no abandoned for each trapnest date combination 
+summ_active_meg <- active_nests_summary %>% 
+  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'megachile' & Status != 'pseudo') %>% 
+  group_by(Date, Trapnest) %>% 
+  summarise(Meg_active_mothers = length(unique(Nest_ID)))
+
+# add to the full df
+nesting_cells <- left_join(nesting_cells, summ_active_meg)
+
+# replace NAs with zero
+nesting_cells <- nesting_cells %>%
+  mutate(Meg_active_mothers = replace_na(Meg_active_mothers, 0))
 
 
 ######## CHECK - nests that are the current Bee_choice, if parasitized, are counted in the number of par in trapnest. Fix this. Leads to impossible values in parasite figures 
@@ -1713,7 +1614,7 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 
 # In order to measure nesting preferences of bees to see if affected by parasites, I need to separate the nests with detectable parasites (DP) from the nests with no detectable parasites (NDP)
 # this is about to get messy, so I'm making a smaller df 
-nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Available_cavities_prior, Osmia_ps:Meg_no_ps, Nest_parasitized, Active_bin)  
+nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Available_cavities_prior, Osmia_ps:Meg_no_ps, Osmia_active_mothers, Meg_active_mothers, Nest_parasitized, Active_bin)  
 
 # first I make the columns with the total numbers for DP and NDP and NDP with pseudo nests, then I need to calculate the number of those three columns prior to the new bees nesting there. So if there was 1 or more new nests in DP or NDP(_ps), I calculate (total nests in that group - new nests) + (n-1)/2 for the group that the new nest is a part of. If there's new nests for the other group (e.g., new DP nest, but from the new NDP nest perspective), we do (total nests in that group - 1/2 * new nests).
 
@@ -1884,7 +1785,7 @@ nesting <- nesting_2 %>% select(Trapnest:Nest_parasitized, DP_os_prior:NDP_ps_me
 # join with rest of df
 nesting <- left_join(nesting_1, nesting)
 # remove unwanted columns again
-nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Straw_ID, Date, Day_of_year, Filled_length_mm, Straw_length_mm, Nest_ID, Status, Sealed, Nest_parasitized, Occupant:New_nests_meg, Available_cavities_prior, New_nests_sum, Osmia_ps_prior:Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior:NDP_ps_meg_prior)
+nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Straw_ID, Date, Day_of_year, Filled_length_mm, Straw_length_mm, Nest_ID, Status, Sealed, Nest_parasitized, Occupant:New_nests_meg, Available_cavities_prior, New_nests_sum, Osmia_ps_prior:Meg_no_ps_prior, Osmia_active_mothers, Meg_active_mothers, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior:NDP_ps_meg_prior)
 
 # testing out some instances 
 # Trapnest_1 <- nesting %>% filter(Trapnest == 'trapnest_1' & Date == '2023-05-29')
@@ -1901,9 +1802,21 @@ str(nesting)
 # make numeric
 nesting$Straw_length_mm <- as.numeric(nesting$Straw_length_mm)
 nesting$Filled_length_mm <- as.numeric(nesting$Filled_length_mm)
+
 # round to nearest integer
 nesting$Straw_length <- round(nesting$Straw_length_mm)
 nesting$Filled_length <- round(nesting$Filled_length_mm)
+
+# make binary
+nesting_cells_os <- nesting_cells_os %>% mutate(Cell_position_bi = ifelse(Cell_position == 'last cell', 1,
+                                                     ifelse(Cell_position == 'not last cell', 0, NA)))
+
+nesting_cells_meg <- nesting_cells_meg %>% mutate(Cell_position_bi = ifelse(Cell_position == 'last cell', 1,
+                                                     ifelse(Cell_position == 'not last cell', 0, NA)))
+
+
+
+
 
 ## Make df for just nest investment
 
@@ -2045,7 +1958,7 @@ length(Nest_ID_exclude)
 
 ## Verifying my treatments: How related are my treatments to the number of available cavities?
 
- ## Osmia and Megachile ##
+ # Osmia and Megachile #
 
 confirm_treatment_data <- nesting %>%
   distinct(Treatment, Subsite, Day_of_year, .keep_all = TRUE)
@@ -2058,6 +1971,10 @@ confirm_treatment_data %>%
  # Low-occupancy = 17.3 +- 1.0
  # Mid-occupancy = 11.6 +- 1.0
  # High-occupancy = 6.7 +- 0.8
+
+
+## How many times was an inner wall abandoned?
+
 
 ```
 
@@ -2107,95 +2024,5 @@ confirm_treatment_data %>%
 # # the length of ex1 should = ex2 + ex3 --> 80 + 334 
 # emerg_and_pref_ex3 <- rbind(emerg_and_pref_ex2, emerg_and_pref_ex3)
 # emerg_and_pref_ex3 <- emerg_and_pref_ex3 %>% arrange(Nest_ID, Date)
-
-```
-
-```{r Prep_for_Simulations}
-
-
-## Simulate the null hypothesis that bees are treating each cavity equally, thus nesting would be based just on availability
-
-# simulation without replacement so that if there are multiple new osmia nests, the number of available cavities goes down by one for each sequential new nest in that subsite-group combo
-
-# create a function to simulate the distribution of nests based on the null hypothesis that bees are nesting according to available cavities 
-simulate_nests <- function(avail_cavities, total_nests) {
-  n <- length(avail_cavities) # number of available cavities
-  nest_counts <- rep(0, n) # start with zero nests in each trapnest
-
-  # keep as zeros is no nests are built
-  if (total_nests == 0) {
-    return(nest_counts)
-  }
-
-  # look through each of the new nests to be randomly assigned
-  for (i in 1:total_nests) {
-    if (sum(avail_cavities) == 0) break  # stop if all cavities used
-    probability <- avail_cavities / sum(avail_cavities) # calculate probability proportional to the number of available cavities
-    chosen <- sample(1:n, size = 1, prob = probability) # randomly choose a trapnest for the new nest based on available cavities
-    nest_counts[chosen] <- nest_counts[chosen] + 1 # record it
-    avail_cavities[chosen] <- avail_cavities[chosen] - 1 # reduce the number of available cavities by 1, when we apply the function the loop will run again until no new nests are left
-  }
-  return(nest_counts) # return the vector with how many nests were randomly assigned
-}
-
-## Apply the function
-
-# indicate how many simulated data columns we want for the model
-n_sim <- 100 
-
-nesting_os_xs_null <- nesting_os_xs %>%
-  group_by(Subsite, Date) %>%
-  group_modify(~ { # simulate random nest distribution for subsite-date combo
-    for (i in 1:n_sim){ # make each of the columns we indicated that we want 
-    nest_counts <- simulate_nests(.x$Available_cavities_prior, sum(.x$New_nests_os)) # use available cavities as weights and sum the new nests
-    .x[[paste0('Null_new_nests', i)]] <- nest_counts # make the new column
-    }
-    .x # return the modified group
-  }
-  ) %>%
-  ungroup()
-
-
-## Making the model part 1: Simulated data 
-
-# run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
-sim_list <- lapply(1:n_sim, function(x){
-  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
-  output <- glmer(as.formula(my_formula), data = nesting_os_xs_null, family = poisson)
-  summary(output)
-} )
-
-# take all of the simulated coefficients
-sim_coefs <- c(unlist(lapply(sim_list, function(x) {
-  x$coefficients[2,1] # extract second row, first column for the estimate 
-})))
-
-# plot the simulated coefficients
-hist(sim_coefs)
-
-
-## Making the model part 2: Observed data 
-
-mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = nesting_os_xs_null, family = poisson)
-summary(mod_choice_consp_os_ps)
-
-# extract my observed coefficient
-obvs_coef <- summary(mod_choice_consp_os_ps)$coefficients[2,1]
-
-# plot my observed values with the simulated coefficients
-abline(v=obvs_coef)
-
-# range of 95%, i.e., if my observed value falls within this range, its not different from the null
-quantile(sim_coefs, c(0.025, 0.975))
-
-# Convert to dataframe
-df <- data.frame(sim_coefs = sim_coefs)
-
-ggplot(df, aes(x = sim_coefs)) +
-  geom_histogram(binwidth = 0.1) +
-  geom_vline(xintercept = obvs_coef, color = 'red', linetype = 'dashed', size = 1) 
-
-
-
 
 ```
