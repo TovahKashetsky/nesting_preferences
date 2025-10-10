@@ -8,18 +8,7 @@ editor: visual
 
 ## To Do List ##
 
-# count number of inner wall only nests
 
-# NN I 26 1a was a large pseudo until June 22, then a medium after
-### REMEMBER to not count nests unfinished when we removed them at the end of summer. E.g., 70_5a had one cell built but shouldnt be considered the last cell
-
-
-
-
-# excluded  nests that were eaten by birds or insect in parasite counts (neither parasitized or not)
-
-
-### remove straw filled length when its not nessecary 
 
 ## Columns ##
 
@@ -45,7 +34,7 @@ editor: visual
 # Available_cavities_prior: The number of cavities that were available for bees to nest in. E.g., if there are 2 new nests in a low-occupancy treatment, then there were 18 Available_cavities_prior, 2 new nests, and now 16 Available_post
 # Available_post = Osmia_ps_prior + Meg_ps_prior (+ non-target nests) = 18
 
-# SUm_unslead stuff can have NAs for when parasites are present
+# Sum_unsealed can have NAs for when parasites are present
 
 
 ```
@@ -1479,7 +1468,7 @@ active_nests_summary <- nesting_cells %>%
 active_nests_summary$Abandoned <- as.numeric(active_nests_summary$Abandoned)
 
 # Osmia
-# sum the number of nests that are no abandoned for each trapnest date combination 
+# sum the number of nests that are not abandoned for each trapnest date combination 
 summ_active_os <- active_nests_summary %>% 
   filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'osmia' & Status != 'pseudo') %>% 
   group_by(Date, Trapnest) %>% 
@@ -1882,7 +1871,6 @@ nesting_3 <- nesting_3 %>%
   select(-Occupant_inner)
 
 
-
 # based on this small df, make new column to incidcate these are abandoned or not
 # for the preferences df, make only the decidison to nest and continue building a zero (aka bee choice == 1 but for nest that eventually had cells)
 nesting <- nesting_3 %>%
@@ -1938,6 +1926,7 @@ nesting$Filled_length_mm <- as.numeric(nesting$Filled_length_mm)
 # round to nearest integer
 nesting$Straw_length <- round(nesting$Straw_length_mm)
 nesting$Filled_length <- round(nesting$Filled_length_mm)
+nesting <- nesting %>% select(-Filled_length_mm, -Straw_length_mm)
 
 # make binary
 nesting_cells_os <- nesting_cells_os %>% mutate(Cell_position_bi = if_else(Cell_position == 'last cell', 1,
@@ -1965,11 +1954,13 @@ length(unfinished_nests$Nest_ID) + length(nesting_investment$Nest_ID) # = length
 
 
 ## Separate Osmia and Megachile data frames 
-
 nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
 nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile') 
 
-# still has duplicates for the nests  
+# take only columns that make sense at the nest level
+nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Sealed, Nest_parasitized, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)
+
+# still has duplicates for the nests, and seperate os and meg 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none')
 

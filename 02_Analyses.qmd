@@ -32,7 +32,6 @@ editor: visual
 
 ```{r Load, include=FALSE}
 
-
 ## Loading packages
  
 library(glmmTMB)
@@ -48,6 +47,7 @@ library(effects)
 library(tidyverse)
 library(interactions) # for interact_plot
 library(betareg)
+
 
 ## Loading data
   # nest-level data for all cavities
@@ -68,16 +68,11 @@ nesting_investment_meg <- read_csv('data/investment_cleaned_megachile.csv')
 # checking form of Day_of_year
 plot(I(New_nests_os/ (Osmia_no_ps_prior)) ~ (Day_of_year), data = trapnesting_os)
 plot(I(New_nests_meg/ (Meg_no_ps_prior)) ~ (Day_of_year), data = trapnesting_meg)
-# inspect correlation 
+# inspect correlation for detectable and non detectable parasites
 plot(jitter(nesting_os$NDP_os_prior) ~ jitter(nesting_os$DP_os_prior))
 cor(nesting_os$NDP_os_prior, nesting_os$DP_os_prior) # good
 plot(jitter(nesting_meg$NDP_meg_prior) ~ jitter(nesting_meg$DP_meg_prior))
 cor(nesting_meg$NDP_meg_prior, nesting_meg$DP_meg_prior) # good
-
-
-
-
-
 
 
 ```
