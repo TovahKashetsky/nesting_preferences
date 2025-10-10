@@ -1,0 +1,19 @@
+"","Site","Subsite","Trapnest","Treatment","Straw_ID","Date","Day_of_year","Filled_length_mm","Straw_length_mm","Nest_ID","Status","Sealed","Nest_parasitized","Occupant","Good_days","Bee_choice","Available_post","New_nests_os","New_nests_meg","Available_cavities_prior","New_nests_sum","Osmia_ps_prior","Osmia_no_ps_prior","Meg_ps_prior","Meg_no_ps_prior","Osmia_active_mothers","Meg_active_mothers","Sum_unsealed_os","Sum_unsealed_meg","DP_os_prior","NDP_os_prior","NDP_ps_os_prior","DP_meg_prior","NDP_meg_prior","NDP_ps_meg_prior","Straw_length","Filled_length"
+"1","CP","AK","trapnest_104","Mid","a",2024-06-21,173,NA,NA,"104_17a","inner wall","not sealed","not parasitized","megachile",4,1,11,0,1,12,1,0,0,6,0,0,1,NA,1,0,0,0,0,0,6,NA,NA
+"2","BP","E","trapnest_13","Low","a",2023-06-23,174,NA,NA,"13_10a","empty",NA,NA,"megachile",3,NA,15,0,2,17,2,1,1,0.5,0.5,1,2,1,2,1,0,0,0,1,1,NA,NA
+"3","BP","O","trapnest_43","Low","a",2023-07-04,185,5.94,143.75,"43_12a","empty",NA,NA,"megachile",1,NA,16,0,2,18,2,0,0,0.5,0.5,0,2,NA,2,0,0,0,0,0,0,144,6
+"4","CP","T","trapnest_59","Mid","b",2023-07-28,209,6.69,137.98,"59_14b","inner wall","not sealed","not parasitized","megachile",0,1,12,0,1,13,1,0,0,5,1,0,1,NA,1,0,0,0,0,1,5,138,7
+"5","CP","X","trapnest_71","Mid","a",2023-07-17,198,NA,NA,"71_13a","inner wall","not sealed","not parasitized","megachile",2,1,11,0,1,12,1,0,0,6,0,0,1,NA,1,0,0,0,0,0,6,NA,NA
+"6","BP","AB","trapnest_77","Mid","b",2024-07-02,184,NA,NA,"77_12b","empty",NA,NA,"megachile",3,NA,12,0,0,12,0,0,0,6,1,0,0,NA,0,0,0,0,0,1,6,NA,NA
+"7","BP","AB","trapnest_77","Mid","b",2024-07-05,187,NA,NA,"77_12b","no change",NA,NA,"megachile",3,NA,10,0,1,11,1,0,0,7,2,0,1,NA,1,0,0,0,0,1,6,NA,NA
+"8","BP","AB","trapnest_78","High","b",2024-08-12,225,NA,NA,"78_3b","empty",NA,NA,"megachile",3,NA,6,0,0,6,0,0,0,12,2,0,0,NA,1,0,0,0,0,2,12,NA,NA
+"9","BP","AC","trapnest_79","Low","a",2024-07-02,184,NA,NA,"79_10a","empty",NA,NA,"megachile",3,NA,18,0,0,18,0,0,0,0,0,0,0,NA,NA,0,0,0,0,0,0,NA,NA
+"10","BP","AC","trapnest_79","Low","a",2024-07-05,187,NA,NA,"79_10a","no change",NA,NA,"megachile",3,NA,16,0,0,16,0,0,0,1,1,0,0,NA,0,0,0,0,0,0,0,NA,NA
+"11","BP","AE","trapnest_87","High","a",2024-06-21,173,NA,NA,"87_8a","empty",NA,NA,"megachile",4,NA,5,0,2,7,2,0,0,11.5,0.5,0,2,NA,2,0,0,0,0,0,11,NA,NA
+"12","BP","AE","trapnest_87","High","a",2024-06-25,177,NA,NA,"87_8a","no change",NA,NA,"megachile",1,NA,5,0,1,6,1,0,0,12,3,0,2,NA,2,0,0,0,1,1,10,NA,NA
+"13","CP","AG","trapnest_91","Low","a",2024-06-21,173,NA,NA,"91_15a","empty",NA,NA,"megachile",4,NA,16,1,1,18,2,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA,NA
+"14","CP","AG","trapnest_91","Low","a",2024-06-25,177,NA,NA,"91_15a","no change",NA,NA,"megachile",1,NA,15,0,0,15,0,1,1,2,2,1,1,1,1,0,1,1,0,1,1,NA,NA
+"15","CP","AH","trapnest_94","Low","a",2024-06-14,166,NA,NA,"94_17a","empty",NA,NA,"megachile",1,NA,17,0,1,18,1,0,0,0,0,0,1,NA,1,0,0,0,0,0,0,NA,NA
+"16","CP","AH","trapnest_94","Low","a",2024-06-17,169,NA,NA,"94_17a","no change",NA,NA,"megachile",3,NA,15,0,1,16,1,0,0,2,2,0,2,NA,2,0,0,0,0,1,1,NA,NA
+"17","CP","AH","trapnest_94","Low","a",2024-06-14,166,NA,NA,"94_9a","inner wall","not sealed","not parasitized","megachile",1,1,17,0,1,18,1,0,0,0,0,0,1,NA,1,0,0,0,0,0,0,NA,NA
+"18","CP","AI","trapnest_97","Low","a",2024-06-21,173,NA,NA,"97_7a","inner wall","not sealed","not parasitized","megachile",4,1,13,0,2,15,2,0,0,3.5,3.5,0,3,NA,3,0,0,0,0,4,4,NA,NA

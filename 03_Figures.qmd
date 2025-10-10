@@ -305,6 +305,21 @@ investment_os %>%
   scale_fill_manual(values = c("goldenrod2", "tomato2"), labels = c("Not parasitized", "Parasitized"), name = "Nest status") +
   labs(y = "Proportion of focal nest filled with cells", x = "Number of surrounding nests with detectable parasites") +
   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
+
+
+
+
+
+
+inner_walls_os %>% 
+  ggplot(aes(NDP_os_prior)) +
+  geom_histogram()
+
+inner_walls_meg %>% 
+  ggplot(aes(NDP_meg_prior)) +
+  geom_histogram()
+
+
 ```
 
 ```{r Old Figures, include=FALSE}
@@ -418,8 +433,9 @@ investment_os %>%
 #   ylim(-0.1, 0.5) +
 #   labs(y = 'Proportion of visits that are 1s', x = 'Number of available cavities prior to nesting')
 #
-#
-#
-#
-#
+
+
+
+
+
 ```
