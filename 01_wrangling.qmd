@@ -1937,20 +1937,21 @@ nesting_cells_meg <- nesting_cells_meg %>% mutate(Cell_position_bi = if_else(Cel
 
 
 ## Make df for just nest investment
-nesting_investment_0 <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo')
-nesting_investment_0 <- distinct(nesting_investment_0, Nest_ID, .keep_all= TRUE)
+nesting_investment <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo')
+# nesting_investment_0_old <- distinct(nesting_investment_0, Nest_ID, .keep_all= TRUE)
 
-# remove NAs 
-nesting_investment_0 <- nesting_investment_0 %>% filter(!is.na(Filled_length_mm))
+nesting_investment <- nesting_investment %>%
+  arrange(Date, Nest_ID) %>%
+  filter(Status != 'no change') %>% 
+  # then for each Nest_ID, pick the earliest date
+  group_by(Nest_ID) %>%
+  slice_max(Date, with_ties = FALSE) %>%
+  ungroup()
 
-# exclude nests that were built in the last day of each experimental chunk if they weren't sealed because I removed them before they were finished
-unfinished_nests <- nesting %>% 
-  filter(Date == '2023-06-29' & Sealed == 'not sealed' | Date == '2023-08-09' & Sealed == 'not sealed' | Date == '2024-08-12' & Sealed == 'not sealed') 
-Nest_ID_exclude <- print(unfinished_nests$Nest_ID)
-nesting_investment <- nesting_investment_0 %>%
-  filter(!Nest_ID %in% Nest_ID_exclude)
-length(unfinished_nests$Nest_ID) + length(nesting_investment$Nest_ID) # = length(nesting_investment_0$Nest_ID)
-# except that 11_14a and 12_17a didn't make the cut because they have NA values for nesting_investment_0, so = 260 not 262
+nesting_investment <- nesting_investment %>% filter(!is.na(Filled_length))
+
+# fitler out all nests that aren't end capped to exclude abandoned nests and nests not finished at the end of the experiment 
+nesting_investment <- nesting_investment %>% filter(Sealed == 'sealed')
 
 
 ## Separate Osmia and Megachile data frames 
@@ -1963,6 +1964,12 @@ nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date,
 # still has duplicates for the nests, and seperate os and meg 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none')
+
+# remove non-target columns
+nesting_os <- nesting_os %>% select(-New_nests_meg, -Meg_ps_prior, -Meg_no_ps_prior, -Sum_unsealed_meg, -DP_meg_prior, -NDP_meg_prior, -NDP_ps_meg_prior)
+
+nesting_meg <- nesting_meg %>% select(-New_nests_os, -Osmia_ps_prior, -Osmia_no_ps_prior, -Sum_unsealed_os, -DP_os_prior, -NDP_os_prior, -NDP_ps_os_prior)
+
 
 # is the math adding up? should be 43
 table(nesting_os$Abandoned_inner_wall) # 30

@@ -7,33 +7,9 @@ format:
 editor: visual
 ---
 
-**Response variables:**
-
--   New_nests_os: number of new osmia nests for each trapnest and date combination.
--   New_nests_meg: number of new megachile nests for each trapnest and date combination.
--   Prop_filled: proportion of the straw filled with cells, used as a measure of investment into a nest.
-
-**Predictor variables:**
-
--   Available_cavities_prior: number of available cavities that could have had a new nest built between visits.
--   Osmia_ps_prior: number of existing osmia in each trapnest per date, including pseudo nests.
--   Osmia_no_ps_prior: number of existing osmia in each trapnest per date, excluding pseudo nests.
--   Meg_ps_prior: number of existing megachile in each trapnest per date, including pseudo nests.
--   Meg_no_ps_prior: number of existing megachile in each trapnest per date, excluding pseudo nests.
--   Par_in_trapnest: number of parasites present in the trapnest when I log new bee nests (Bee_choice).
-
-**Additional variables:**
-
--   Good_days: number of days between visits with good enough weather for bee activity.
--   Day_of_year: the day of the year, a stand in for date.
--   Site: three sites in total.
--   Subsite: six subsites for each site, unique to each site.
--   Trapnest: 72 trapnests total, ach subsite contains three, unique to each subsite.
-
 ```{r Load, include=FALSE}
 
 ## Loading packages
- 
 library(glmmTMB)
 library(DHARMa)
 library(lme4)
@@ -160,9 +136,6 @@ sim_coefs_os_ps <- c(unlist(lapply(sim_list_os_ps_attr, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_os_ps)
-
 
 ## Making the model part 2: Observed data 
 
@@ -172,11 +145,9 @@ summary(mod_choice_consp_os_ps)
 # extract my observed coefficient
 obvs_coef_os_ps <- summary(mod_choice_consp_os_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_os_ps) 
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_os_ps, c(0.025, 0.975))
+obvs_coef_os_ps # falls outside of range
 
 # convert to dataframe
 df_coefs_os_ps <- data.frame(sim_coefs_os_ps = sim_coefs_os_ps)
@@ -184,6 +155,7 @@ df_coefs_os_ps <- data.frame(sim_coefs_os_ps = sim_coefs_os_ps)
 ggplot(df_coefs_os_ps, aes(x = sim_coefs_os_ps)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_os_ps, color = 'red', linetype = 'dashed', size = 1) 
+# reject the null - Osmia are attracted to congenerics 
 
 
 # MODEL 1.ii - Osmia excluding pseudo #
@@ -202,9 +174,6 @@ sim_coefs_os_no_ps <- c(unlist(lapply(sim_list_os_no_ps_attr, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_os_no_ps)
-
 
 ## Observed data 
 
@@ -214,11 +183,9 @@ summary(mod_choice_consp_os_no_ps)
 # extract my observed coefficient
 obvs_coef_os_no_ps <- summary(mod_choice_consp_os_no_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_os_no_ps) 
-
 # does my observed value fall outside this range, and we reject the null?
 quantile(sim_coefs_os_no_ps, c(0.025, 0.975))
+obvs_coef_os_no_ps # falls outside of range
 
 # convert to dataframe
 df_coefs_os_no_ps <- data.frame(sim_coefs_os_no_ps = sim_coefs_os_no_ps)
@@ -227,8 +194,7 @@ df_coefs_os_no_ps <- data.frame(sim_coefs_os_no_ps = sim_coefs_os_no_ps)
 ggplot(df_coefs_os_no_ps, aes(x = sim_coefs_os_no_ps)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_os_no_ps, color = 'red', linetype = 'dashed', size = 1) 
-
-
+# reject the null - Osmia are attracted to congenerics
 
 ```
 
@@ -260,7 +226,7 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ## Making the model part 1: Simulated data 
 
-# run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
+# run the model on each of the simulated data columns
 sim_list_em_ps_attr <- lapply(1:n_sim, function(x){
   my_formula <- paste0('Null_new_nests', x, ' ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson)
@@ -272,10 +238,6 @@ sim_coefs_meg_ps <- c(unlist(lapply(sim_list_em_ps_attr, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_meg_ps)
-
-
 ## Making the model part 2: Observed data 
 
 mod_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
@@ -284,11 +246,9 @@ summary(mod_choice_consp_meg_ps)
 # extract my observed coefficient
 obvs_coef_meg_ps <- summary(mod_choice_consp_meg_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-abline(v=obvs_coef_meg_ps) 
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_ps, c(0.025, 0.975))
+obvs_coef_meg_ps # not within this range
 
 # convert to dataframe
 df_coefs_meg_ps <- data.frame(sim_coefs_meg_ps = sim_coefs_meg_ps)
@@ -296,7 +256,7 @@ df_coefs_meg_ps <- data.frame(sim_coefs_meg_ps = sim_coefs_meg_ps)
 ggplot(df_coefs_meg_ps, aes(x = sim_coefs_meg_ps)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_meg_ps, color = 'red', linetype = 'dashed', size = 1) 
-
+# reject the null - Megachile are attracted to congenerics 
 
 # MODEL 1.iv - Megachile excluding pseudo #
 
@@ -314,9 +274,6 @@ sim_coefs_meg_no_ps <- c(unlist(lapply(sim_list_em_no_ps_attr, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_meg_no_ps)
-
 
 ## Making the model part 2: Observed data 
 
@@ -326,11 +283,9 @@ summary(mod_choice_consp_meg_no_ps)
 # extract my observed coefficient
 obvs_coef_meg_no_ps <- summary(mod_choice_consp_meg_no_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_meg_no_ps) 
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_no_ps, c(0.025, 0.975))
+obvs_coef_meg_no_ps # falls outside this range
 
 # convert to dataframe
 df_coefs_meg_no_ps <- data.frame(sim_coefs_meg_no_ps = sim_coefs_meg_no_ps)
@@ -338,8 +293,7 @@ df_coefs_meg_no_ps <- data.frame(sim_coefs_meg_no_ps = sim_coefs_meg_no_ps)
 ggplot(df_coefs_meg_no_ps, aes(x = sim_coefs_meg_no_ps)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_meg_no_ps, color = 'red', linetype = 'dashed', size = 1) 
-
-
+# reject the null - Megachile are attracted to congenerics 
 
 
 ```
@@ -365,7 +319,7 @@ check_model(mod_par_agg_os_ps) # good
 testDispersion(mod_par_agg_os_ps, type = 'DHARMa') # good
 testZeroInflation(mod_par_agg_os_ps) # good
 summary(mod_par_agg_os_ps) # no detected effects
-vif(mod_par_agg_os_ps)
+vif(mod_par_agg_os_ps) # good
 
 # plot
 values_osmia_ps <- seq(min(nesting_cells_os$Osmia_ps, na.rm = TRUE), 
@@ -374,7 +328,7 @@ values_osmia_ps <- seq(min(nesting_cells_os$Osmia_ps, na.rm = TRUE),
 marginal_effects_os_ps <- ggpredict(mod_par_agg_os_ps, 
                terms = "Osmia_ps [all]", 
                conditions = list(Osmia_ps = values_osmia_ps))
-plot(marginal_effects_os_ps, jitter = 0.04)
+plot(marginal_effects_os_ps, jitter = 0.04)  # more parasitism for least and most osmia numbers
 
 
 # MODEL 2_ii - Osmia parasite aggregation preferences, excluding pseudo #
@@ -395,9 +349,7 @@ values_osmia_no_ps <- seq(min(nesting_cells_os$Osmia_no_ps, na.rm = TRUE),
 marginal_effects_os_no_ps <- ggpredict(mod_par_agg_os_no_ps, 
                terms = "Osmia_no_ps [all]", 
                conditions = list(Osmia_no_ps = values_osmia_no_ps))
-plot(marginal_effects_os_no_ps, jitter = 0.04)
-
-#### blank figure 
+plot(marginal_effects_os_no_ps, jitter = 0.04) # trend with less parasitism for more osmia 
 
 
 # MODEL 2_iii - Osmia parasite aggregation preferences for active nests #
@@ -409,7 +361,7 @@ check_model(mod_par_agg_os_active) # good
 testDispersion(mod_par_agg_os_active, type = 'DHARMa') # good
 testZeroInflation(mod_par_agg_os_active) # good
 summary(mod_par_agg_os_active) # no detected effects
-vif(mod_par_agg_os_active)
+vif(mod_par_agg_os_active) # good
 
 # plot
 values_osmia_active <- seq(min(nesting_cells_os$Osmia_active_mothers, na.rm = TRUE), 
@@ -418,7 +370,7 @@ values_osmia_active <- seq(min(nesting_cells_os$Osmia_active_mothers, na.rm = TR
 marginal_effects_os_actives <- ggpredict(mod_par_agg_os_active, 
                terms = "Osmia_active_mothers [all]", 
                conditions = list(Osmia_active_mothers = values_osmia_active))
-plot(marginal_effects_os_actives, jitter = 0.04)
+plot(marginal_effects_os_actives, jitter = 0.04) # trend for more parasitism with more active mothers 
 
 ```
 
@@ -432,18 +384,18 @@ Model 2_vi - active nests
 
 ```{r Parasites_Attraction_Megachile, include=TRUE}
 
-# Relation between parasites and aggregation densities
+# Relation between parasites and aggregation densities (small sample size for Megachile)
 
 # MODEL 2_iv - Megachile parasite aggregation preferences, including pseudo #
 
 mod_par_agg_meg_ps <- glmer(Cell_parasitized ~ scale(Meg_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_ps)) # good
+plot(simulateResiduals(mod_par_agg_meg_ps)) # fine
 check_model(mod_par_agg_meg_ps) # good
-testDispersion(mod_par_agg_meg_ps, type = 'DHARMa') # good
+testDispersion(mod_par_agg_meg_ps, type = 'DHARMa') # close to being underdisperesed
 testZeroInflation(mod_par_agg_meg_ps) # good
 summary(mod_par_agg_meg_ps) # no detected effects
-vif(mod_par_agg_meg_ps)
+vif(mod_par_agg_meg_ps) # good
 
 # plot
 values_meg_ps <- seq(min(nesting_cells_meg$Meg_ps, na.rm = TRUE), 
@@ -452,7 +404,7 @@ values_meg_ps <- seq(min(nesting_cells_meg$Meg_ps, na.rm = TRUE),
 marginal_effects_meg_ps <- ggpredict(mod_par_agg_meg_ps, 
                terms = "Meg_ps [all]", 
                conditions = list(Meg_ps = values_meg_ps))
-plot(marginal_effects_meg_ps, jitter = 0.04)
+plot(marginal_effects_meg_ps, jitter = 0.04) # no trend
 
 
 # MODEL 2_v - Megachile parasite aggregation preferences, excluding pseudo #
@@ -464,7 +416,7 @@ check_model(mod_par_agg_meg_no_ps) # good
 testDispersion(mod_par_agg_meg_no_ps, type = 'DHARMa') # good
 testZeroInflation(mod_par_agg_meg_no_ps) # good
 summary(mod_par_agg_meg_no_ps) # no detected effects
-vif(mod_par_agg_meg_no_ps)
+vif(mod_par_agg_meg_no_ps) # good
 
 # plot
 values_meg_no_ps <- seq(min(nesting_cells_meg$Meg_no_ps, na.rm = TRUE), 
@@ -473,21 +425,19 @@ values_meg_no_ps <- seq(min(nesting_cells_meg$Meg_no_ps, na.rm = TRUE),
 marginal_effects_meg_no_ps <- ggpredict(mod_par_agg_meg_no_ps, 
                terms = "Meg_no_ps [all]", 
                conditions = list(Meg_no_ps = values_meg_no_ps))
-plot(marginal_effects_meg_no_ps, jitter = 0.04)
-
-#### blank figure 
+plot(marginal_effects_meg_no_ps, jitter = 0.04) # no trend 
 
 
 # MODEL 2_vi - Megachile parasite aggregation preferences for active nests #
 
 mod_par_agg_meg_active <- glmer(Cell_parasitized ~ scale(Meg_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_active)) # good
+plot(simulateResiduals(mod_par_agg_meg_active)) # not great
 check_model(mod_par_agg_meg_active) # good
-testDispersion(mod_par_agg_meg_active, type = 'DHARMa') #### poor
-testZeroInflation(mod_par_agg_meg_active) #### poor
+testDispersion(mod_par_agg_meg_active, type = 'DHARMa') # underdispersed
+testZeroInflation(mod_par_agg_meg_active) # zero inflation 
 summary(mod_par_agg_meg_active) # no detected effects
-vif(mod_par_agg_meg_active)
+vif(mod_par_agg_meg_active) # good
 
 # plot
 values_meg_active <- seq(min(nesting_cells_meg$Meg_active_mothers, na.rm = TRUE), 
@@ -496,7 +446,7 @@ values_meg_active <- seq(min(nesting_cells_meg$Meg_active_mothers, na.rm = TRUE)
 marginal_effects_meg_active <- ggpredict(mod_par_agg_meg_active, 
                terms = "Meg_active_mothers [all]", 
                conditions = list(Meg_active_mothers = values_meg_active))
-plot(marginal_effects_meg_active, jitter = 0.04)
+plot(marginal_effects_meg_active, jitter = 0.04) # no trend
 
 
 ```
@@ -511,7 +461,7 @@ Model 3a_ii - excluding pseudo
 
 # MODEL 3a_i - Osmia avoidance of parasites, including pseudo #
 
-# run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
+# run the model on each of the simulated data columns
 sim_list_os_ps_avoid <- lapply(1:n_sim, function(x){
   my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson())
@@ -523,9 +473,6 @@ sim_coefs_os_ps_avoid <- c(unlist(lapply(sim_list_os_ps_avoid, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_os_ps_avoid)
-
 
 ## Making the model part 2: Observed data 
 
@@ -535,11 +482,9 @@ summary(mod_choice_consp_par_os_ps)
 # extract my observed coefficient
 obvs_coef_os_ps_avoid <- summary(mod_choice_consp_par_os_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_os_ps_avoid)
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_os_ps_avoid, c(0.025, 0.975))
+obvs_coef_os_ps_avoid # close but falls within this range
 
 # Convert to dataframe
 df_coefs_os_ps_avoid <- data.frame(sim_coefs_os_ps_avoid = sim_coefs_os_ps_avoid)
@@ -547,6 +492,7 @@ df_coefs_os_ps_avoid <- data.frame(sim_coefs_os_ps_avoid = sim_coefs_os_ps_avoid
 ggplot(df_coefs_os_ps_avoid, aes(x = sim_coefs_os_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_os_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+# fail to reject the null - no evidence for Osmia avoiding nests with parasites
 
 
 # MODEL 3a_ii - Osmia avoidance of parasites, excluding pseudo #
@@ -563,9 +509,6 @@ sim_coefs_os_no_ps_avoid <- c(unlist(lapply(sim_list_os_no_ps_avoid, function(x)
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_os_no_ps_avoid)
-
 
 ## Making the model part 2: Observed data 
 
@@ -575,11 +518,9 @@ summary(mod_choice_consp_par_os_no_ps)
 # extract my observed coefficient
 obvs_coef_os_no_ps_avoid <- summary(mod_choice_consp_par_os_no_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_os_no_ps_avoid)
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_os_no_ps_avoid, c(0.025, 0.975))
+obvs_coef_os_no_ps_avoid # falls outside this range
 
 # Convert to dataframe
 df_coefs_os_no_ps_avoid <- data.frame(sim_coefs_os_no_ps_avoid = sim_coefs_os_no_ps_avoid)
@@ -587,7 +528,7 @@ df_coefs_os_no_ps_avoid <- data.frame(sim_coefs_os_no_ps_avoid = sim_coefs_os_no
 ggplot(df_coefs_os_no_ps_avoid, aes(x = sim_coefs_os_no_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_os_no_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
-
+# small effect but reject the null? - Osmia avoid nesitng near parasites?
 
 
 ```
@@ -603,7 +544,7 @@ Model 3a_iv - excluding pseudo
 
 # MODEL 3a_iii - Megachile avoidance of parasites, including pseudo #
 
-# run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
+# run the model on each of the simulated data columns
 sim_list_meg_ps_avoid <- lapply(1:n_sim, function(x){
   my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
   output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson())
@@ -615,10 +556,6 @@ sim_coefs_meg_ps_avoid <- c(unlist(lapply(sim_list_meg_ps_avoid, function(x) {
   x$coefficients[2,1] # extract second row, first column for the estimate 
 })))
 
-# plot the simulated coefficients
-hist(sim_coefs_meg_ps_avoid)
-
-
 ## Making the model part 2: Observed data 
 
 mod_choice_consp_par_meg_ps <- glmer(New_nests_meg ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
@@ -627,11 +564,9 @@ summary(mod_choice_consp_par_meg_ps)
 # extract my observed coefficient
 obvs_coef_meg_ps_avoid <- summary(mod_choice_consp_par_meg_ps)$coefficients[2,1]
 
-# plot my observed values with the simulated coefficients
-# abline(v=obvs_coef_meg_ps_avoid)
-
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_ps_avoid, c(0.025, 0.975))
+obvs_coef_meg_ps_avoid # falls within this range
 
 # Convert to dataframe
 df_coefs_meg_ps_avoid <- data.frame(sim_coefs_meg_ps_avoid = sim_coefs_meg_ps_avoid)
@@ -639,27 +574,28 @@ df_coefs_meg_ps_avoid <- data.frame(sim_coefs_meg_ps_avoid = sim_coefs_meg_ps_av
 ggplot(df_coefs_meg_ps_avoid, aes(x = sim_coefs_meg_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
   geom_vline(xintercept = obvs_coef_meg_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+# fail to reject the null - Megachile do not avoid nesitng near parasites
 
 
 # MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo #
-# 
+
+# running the simulation gets the error "Error: PIRLS loop resulted in NaN value"
+# too little data to run it
+
 # # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 # sim_list_meg_no_ps_avoid <- lapply(1:n_sim, function(x){
-#   my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
+#   my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)")
 #   output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson())
 #   summary(output)
 # } )
 # 
 # # take all of the simulated coefficients
 # sim_coefs_meg_no_ps_avoid <- c(unlist(lapply(sim_list_meg_no_ps_avoid, function(x) {
-#   x$coefficients[2,1] # extract second row, first column for the estimate 
+#   x$coefficients[2,1] # extract second row, first column for the estimate
 # })))
 # 
-# # plot the simulated coefficients
-# hist(sim_coefs_meg_no_ps_avoid)
 # 
-# 
-# ## Making the model part 2: Observed data 
+# ## Making the model part 2: Observed data
 # 
 # mod_choice_consp_par_meg_no_ps <- glmer(New_nests_meg ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 # summary(mod_choice_consp_par_meg_no_ps)
@@ -678,7 +614,7 @@ ggplot(df_coefs_meg_ps_avoid, aes(x = sim_coefs_meg_ps_avoid)) +
 # 
 # ggplot(df_coefs_meg_no_ps_avoid, aes(x = sim_coefs_meg_no_ps_avoid)) +
 #   geom_histogram(binwidth = 0.1) +
-#   geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+#   geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = "red2", linetype = "dashed", size = 1)
 
 
 ```
@@ -697,7 +633,7 @@ Model 3d_i - abandoned inner wall, Osmia
 
 Model 3d_ii - abandoned inner wall, Megachile
 
-```{r Investment, include=TRUE}
+```{r Nest_Investment, include=TRUE}
 
 # MODEL 3b_i - Osmia investment #
 
@@ -706,8 +642,10 @@ Model 3d_ii - abandoned inner wall, Megachile
 mod_invest_filled_os <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_os_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_os, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
 
 plot(simulateResiduals(mod_invest_filled_os)) # fine
-check_model(mod_invest_filled_os) # fine
-summary(mod_invest_filled_os) # significant effect of parasitized unsealed nests, if focal nest is parasitized, good days, day of year, and site
+check_model(mod_invest_filled_os) # fine, some influential points
+# check the influential points (red dots on the influential observations figure)
+nesting_cells_os[rownames(nesting_cells_os) %in% c(89, 69), ] # 
+summary(mod_invest_filled_os) # significant effect of if focal nest is parasitized, day of year, and year
 vif(mod_invest_filled_os) # good
 
 plot(ggpredict(mod_invest_filled_os, terms = c("DP_os_prior", "Nest_parasitized"))) 
@@ -719,9 +657,9 @@ plot(ggpredict(mod_invest_filled_os, terms = c("DP_os_prior", "Nest_parasitized"
 
 mod_invest_filled_meg <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_meg_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_meg, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
 
-plot(simulateResiduals(mod_invest_filled_meg)) # fine
+plot(simulateResiduals(mod_invest_filled_meg)) # poor
 check_model(mod_invest_filled_meg) # fine
-summary(mod_invest_filled_meg) # significant effect of parasitized unsealed nests, if focal nest is parasitized, good days, day of year, and site
+summary(mod_invest_filled_meg) # significant effect of detectable parasites in neighbouring nests, boardlerine effect of if focal nest is parasitized, day of year, site, and interaction of detectable parasite * focal nest parasitized
 vif(mod_invest_filled_meg) # good
 
 
@@ -733,22 +671,26 @@ plot(ggpredict(mod_invest_filled_meg, terms = c("DP_meg_prior", "Nest_parasitize
 mod_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
 
 plot(simulateResiduals(mod_last_cell_os)) # good
+check_model(mod_last_cell_os) # high VIF for year and site
+vif(mod_last_cell_os) # TERRIBLE - exclude 2024?
 summary(mod_last_cell_os) # significant effect of day of year
-vif(mod_last_cell_os) # good
 
 ggpredict(mod_last_cell_os, terms = "Cell_parasitized [all]") %>%
   plot(jitter = .04)
+
 
 # MODEL 3c_ii - Megachile nest termination #
 
 mod_last_cell_meg <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_meg, family = binomial)
 
 plot(simulateResiduals(mod_last_cell_meg)) # good
-summary(mod_last_cell_meg) # significant effect of day of year
+check_model(mod_last_cell_meg) # good
+summary(mod_last_cell_meg) # significant effect of day of year, almost site
 vif(mod_last_cell_meg) # good
 
 ggpredict(mod_last_cell_meg, terms = "Cell_parasitized [all]") %>%
   plot(jitter = .04)
+# slight trend for more likely to best last cell if its parasitized
 
 
 # MODEL 3d_i - Osmia abandoned inner walls including pseudo #
@@ -756,9 +698,12 @@ ggpredict(mod_last_cell_meg, terms = "Cell_parasitized [all]") %>%
 mod_inner_wall_os <- glmer(Abandoned_inner_wall ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_os, family = binomial)
 
 plot(simulateResiduals(mod_inner_wall_os)) # good
-summary(mod_inner_wall_os) # significant effect of day of year
 check_model(mod_inner_wall_os) # good
+summary(mod_inner_wall_os) # significant effect of day of year
 vif(mod_inner_wall_os) # good
+
+ggpredict(mod_inner_wall_os, terms = "DP_os_prior [all]") %>%
+  plot(jitter = .04)
 
 
 # MODEL 3d_ii - Megachile abandoned inner walls #
@@ -766,9 +711,9 @@ vif(mod_inner_wall_os) # good
 mod_inner_wall_meg <- glmer(Abandoned_inner_wall ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_meg, family = binomial)
 
 plot(simulateResiduals(mod_inner_wall_meg)) # fine
-summary(mod_inner_wall_meg) # no detected effects, close for site CP
 check_model(mod_inner_wall_meg) # high colinearity 
-vif(mod_inner_wall_meg) # pretty bad, small sample size 
+vif(mod_inner_wall_meg) # TERRIBLE - small sample size 
+summary(mod_inner_wall_meg) # no detected effects
 
 
 ```

@@ -6,44 +6,11 @@ format:
     toc: true
   docx: default
 editor: visual
-bibliography: references.bib
 ---
 
-## Background
-
-Strategies for raising offspring exist on a spectrum from cooperative breeding in tightly knit social groups to raising young in isolation who may not even encounter their parents or siblings after emerging. Raising young in proximity with others has benefits such as increased protection from predators and enhanced knowledge of local resources. However, proximity can increase the circulation of pathogens and foster competition if resources become scarce. Bees have adopted the entirety of this spectrum, as species range from solitary (e.g., most leafcutter bees: *Megachile* spp.) to advanced eusociality (e.g., honeybees: *Apis* spp.). Some species along this spectrum are facultatively social, meaning that within a population, they exhibit social polymorphism for their nesting strategy and thus can be solitary or social (e.g., some carpenter bees: *Xylocopa* spp.)
-
-Bees will nest in the ground or in above-ground cavities, depending on the species. Nesting in proximity to others is common among ground-nesting bees. There are a few outlined explanations for why ground-nesting bee aggregations may occur. Bees of the same species are likely to prefer the same site characteristics; thus, one location may be appealing to several individuals. Additionally, resource limitation can encourage aggregations, as bees nest near floral resources, and nesting locations themselves are resources. Philopatry, the behaviour of returning to have offspring at the location of birth, could also be a driving factor in aggregations. Finally, individuals could be attracted to conspecifics, as their presence could signal good-quality habitat. Nesting aggregation preferences have yet to be explicitely tested in cavity0nesting bees, despite trapnests and bee hotels commonly being used for research and citizen-based conservation. While there is evidence that cavity-nesting *Osmia* bees in one Colorado populationdo not consider presence of other individuals while choosing where to nest [@groulx2018], it remains unclear how aggregation density and parasitism interact in nest-site selection of cavity-nesting bees.
-
-## Objectives
-
-I began to address this research gap by studying nest-site selection of non-eusocial cavity-nesting bees by measuring their preferences for aggregations and avoidance of parasites. In the Greenbelt of Ottawa, I tested nesting preferences of orchard bees (*Osmia* spp.) and leafcutter bees (*Megachile* spp.). My two primary questions are:
-
-1.  **Do cavity-nesting bees have aggregation density preferences**? If bees have aggregation density preferences, they could prefer nesting in higher density aggregations because the presence of nesting conspecifics could indicate the presence of high-quality nesting habitat. Alternatively, bees could avoid the presence of conspecifics if density increases parasitism risk, thus prefer nesting in lower aggregation densities. If cavity-nesting bees do not consider aggregation density while selecting a nesting location, bees must use other nest-site characteristics when choosing where to build a nest.
-
-2.  **How does parasitism interact with nesting preferences**?
-
-    A. I will investigate the **relation between parasites and aggregation densities**. Parasites might target higher densities of nests because the presence of many host nests indicates more opportunities for parasitism. On the other hand, parasites may target lower densities of nests because there could be fewer chances of directly encountering a host, which could interrupt the act of parasitizing a nest.
-
-    B. I will measure **how parasitism rates affect nesting preferences** of bees. If parasites are density-dependent, bees may alter their own preferences in attempt to reduce chances of parasitism. However, regardless if parasites are density-dependent, their presence alone may influence nest-site selection by bees directly avoiding parasites.
-
-    C. I will measure **how the presence of parasites effects nest investment**. If bees can detect recent parasite activity in their own nest or adjacent nests, perhaps they reduce their investment into building their nest.
-
-## Methods
-
-I deployed trapnests containing 18 cavities each. The first half of the summer was dedicated towards the early-season orchard bees (*Osmia* spp.), while the second half was dedicated towards the later-season leafcutter bees (*Megachile* spp.). For each half of the summer, I deployed 36 trapnests spread evenly between two sites, for a total of 72. Trapnests were divided into three treatments to simulate variations in occupancy:
-
--   **Low-occupancy treatment**: the baseline of completed nests is zero. Once a bee nest is completed, we removed it for storage at the University of Ottawa in falcon tubes. The trapnest treatment should have little to no bee activity.
-
--   **Mid-occupancy treatment**: the baseline of completed nests was 6 out of 18 cavities occupied. Occupancy was simulated with pseudo nests built from old nesting material from real orchard or leafcutter bee nests, or the equivalent to what bees would use for building (mud for orchard bee season, leaves for leafcutter bee season). Once real nests were built, pseudo nests were removed to maintain baseline occupancy. If real nests surpassed the baseline occupancy, we removed them for storage in falcon tubes to maintain the baseline density.
-
--   **High-occupancy treatment**: the baseline of completed nests was 11 out of 18 cavities. Maintaining the baseline occupancy was identical to methods for the mid-occupancy treatment.
-
-In total, I have approximately 164 *Osmia* nests and 58 *Megachile* nests (IDed based on nesting material).
-
-![Figure 1: Example of a trapnest with various types of "occupied" cavities. Pseudo nests are empty inside, but appear to be sealed nests from the outside. Bee nests may either be completed (sealed) or in progress or abandoned (unsealed). Bee nests may also be parasitized. Non-target insects may be occupying the cavties as well, such as wasps or bees other than *Osmia* or *Megachile*.](Figures_files/figure-html/Labelled_nest.png)
-
 ```{r Prepping, include=FALSE}
+
+## Loading packages
 library(ggplot2)
 library(ggeffects)
 library(kableExtra)
@@ -51,30 +18,30 @@ library(lme4)
 library(tidyverse)
 
 
-nesting <- read_csv("data/nesting_cleaned_all_bees.csv")
-nesting_os <- read_csv("data/nesting_cleaned_osmia.csv")
-nesting_meg <- read_csv("data/nesting_cleaned_megachile.csv") # three columns with parasite and cell info blank, not dissected
-nesting_os_xs <- read_csv("data/nesting_cleaned_osmia_xs.csv")
-nesting_meg_xs <- read_csv("data/nesting_cleaned_megachile_xs.csv")
-investment <- read_csv("data/investment_cleaned.csv")
-investment_os <- investment %>% filter(Occupant == "osmia")
-parasite_sum_os_contains_cells <- read_csv("Data/parasite_sum_os_contains_cells.csv")
-nesting_cells_os <- read_csv("data/nesting_cells_cleaned_osia.csv")
+## Loading data
+  # nest-level data for all cavities
+nesting_os <- read_csv('data/nesting_cleaned_osmia.csv')
+nesting_meg <- read_csv('data/nesting_cleaned_megachile.csv') 
+  # trapnest-level data
+trapnesting_os <- read_csv('data/trapnesting_cleaned_osmia.csv')
+trapnesting_meg <- read_csv('data/trapnesting_cleaned_megachile.csv')
+  # cell-level data
+nesting_cells_os <- read_csv('data/nesting_cells_cleaned_osmia.csv')
+nesting_cells_meg <- read_csv('data/nesting_cells_cleaned_megachile.csv')
+  # nest-level data for investment measures
+nesting_investment_os <- read_csv('data/investment_cleaned_osmia.csv')
+nesting_investment_meg <- read_csv('data/investment_cleaned_megachile.csv')
 
 
 # number of nests
 nesting_os %>%
   filter(!is.na(Bee_choice)) %>%
-  summarize(nests_total = sum(Bee_choice)) # 164 osmia nests for osmia through the summer
+  summarize(nests_total = sum(Bee_choice)) # 167 osmia nests for osmia through the summer
 nesting_meg %>%
   filter(!is.na(Bee_choice)) %>%
-  summarize(nests_total = sum(Bee_choice)) # 58 megachile nests for osmia through the summer
+  summarize(nests_total = sum(Bee_choice)) # 140 megachile nests for osmia through the summer
 
-
-# making the model that isn't overdispersed that I can show
-# load('mod_choice_cav_os.Rdata')
-
-
+# set theme
 theme_set(theme_classic(base_size = 15))
 
 library("RColorBrewer")
@@ -84,20 +51,140 @@ display.brewer.pal(n = 9, name = "Blues")
 brewer.pal(n = 9, name = "Blues")
 
 
-
-
-## MEGACHILE
-
-meg <- nesting %>% filter(Occupant == "megachile" & Status != "pseudo" & Bee_choice == 1)
-hist(meg$Day_of_year)
-
-library(ggplot2)
-
-ggplot(meg, aes(x = Day_of_year)) +
-  geom_freqpoly(bins = 10)
 ```
 
-## Nesting per conspecific presence (including pseudo nests)
+```{r Simulations}
+
+
+## Create the function to simulate data
+
+# simulate the null hypothesis that bees are treating each cavity equally, thus nesting would be based just on availability
+# simulation without replacement so that if there are multiple new osmia nests, the number of available cavities goes down by one for each sequential new nest in that subsite-group combo
+
+# create a function to simulate the distribution of nests based on the null hypothesis that bees are nesting according to available cavities 
+simulate_nests <- function(avail_cavities, total_nests) {
+  n <- length(avail_cavities) # number of available cavities
+  nest_counts <- rep(0, n) # start with zero nests in each trapnest
+
+  # keep as zeros is no nests are built
+  if (total_nests == 0) {
+    return(nest_counts)
+  }
+
+  # look through each of the new nests to be randomly assigned
+  for (i in 1:total_nests) {
+    if (sum(avail_cavities) == 0) break  # stop if all cavities used
+    probability <- avail_cavities / sum(avail_cavities) # calculate probability proportional to the number of available cavities
+    chosen <- sample(1:n, size = 1, prob = probability) # randomly choose a trapnest for the new nest based on available cavities
+    nest_counts[chosen] <- nest_counts[chosen] + 1 # record it
+    avail_cavities[chosen] <- avail_cavities[chosen] - 1 # reduce the number of available cavities by 1, when we apply the function the loop will run again until no new nests are left
+  }
+  return(nest_counts) # return the vector with how many nests were randomly assigned
+}
+
+# indicate how many simulated data columns we want for the model
+n_sim <- 100 
+
+
+## Apply the function
+
+trapnesting_os_null <- trapnesting_os %>%
+  group_by(Subsite, Date) %>%
+  group_modify(~ { # simulate random nest distribution for subsite-date combo
+    for (i in 1:n_sim){ # make each of the columns we indicated that we want 
+    nest_counts <- simulate_nests(.x$Available_cavities_prior, sum(.x$New_nests_os)) # use available cavities as weights and sum the new nests
+    .x[[paste0('Null_new_nests', i)]] <- nest_counts # make the new column
+    }
+    .x # return the modified group
+  }
+  ) %>%
+  ungroup()
+
+
+## Apply the function
+
+trapnesting_meg_null <- trapnesting_meg %>%
+  group_by(Subsite, Date) %>%
+  group_modify(~ { # simulate random nest distribution for subsite-date combo
+    for (i in 1:n_sim){ # make each of the columns we indicated that we want 
+    nest_counts <- simulate_nests(.x$Available_cavities_prior, sum(.x$New_nests_meg)) # use available cavities as weights and sum the new nests
+    .x[[paste0('Null_new_nests', i)]] <- nest_counts # make the new column
+    }
+    .x # return the modified group
+  }
+  ) %>%
+  ungroup()
+
+
+```
+
+## Congeneric Attraction
+
+```{r Congeneric_Attraction}
+
+# make df with average of simulated data
+
+trapnesting_os_null <- trapnesting_os_null %>% mutate(Null_new_nests_mean = rowMeans(select(., Null_new_nests1:Null_new_nests100)))
+
+trapnesting_os_fig_data <- trapnesting_os_null %>%
+  select(Osmia_ps_prior, Null_new_nests_mean, New_nests_os) %>%
+  pivot_longer(
+    cols = c(Null_new_nests_mean, New_nests_os),
+    names_to = "Data_type",
+    values_to = "New_nests"
+  )
+
+
+ggplot(trapnesting_os_fig_data, aes(y = New_nests, x = Osmia_ps_prior, fill = Data_type)) +
+  geom_jitter() +
+  geom_smooth() +
+  scale_fill_manual(values = c("New_nests_os" = "#1b9e77",
+                               "Null_new_nests_mean" = "#d95f02"))
+
+
+
+
+trapnesting_os_fig_data <- trapnesting_os_null %>%
+  select(Treatment, Null_new_nests_mean, New_nests_os) %>%
+  pivot_longer(
+    cols = c(Null_new_nests_mean, New_nests_os),
+    names_to = "Data_type",
+    values_to = "New_nests"
+  )
+
+
+
+trapnesting_os_fig_data_sum <- trapnesting_os_fig_data %>%
+  group_by(Treatment, Data_type) %>%
+  summarise(mean_new_nests = mean(New_nests, na.rm = TRUE),
+            sd_new_nests = sd(New_nests, na.rm = TRUE),
+            n = n(),
+            se_new_nests = sd_new_nests / sqrt(n))
+
+
+
+ggplot(trapnesting_os_fig_data_sum, aes(x = Treatment, y = mean_new_nests, 
+                            fill = Data_type)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  geom_errorbar(aes(ymin = mean_new_nests - se_new_nests, 
+                    ymax = mean_new_nests + se_new_nests),
+                position = position_dodge(width = 0.8),
+                width = 0.3) +
+  labs(
+    x = "Occupancy Treatment",
+    y = "Average Number of New Nests",
+    fill = "Data Type"
+  ) +
+  scale_fill_manual(values = c("New_nests_os" = "#1b9e77",
+                               "Null_new_nests_mean" = "#d95f02"),
+                    labels = c("Observed", "Simulated")) +
+  theme_minimal(base_size = 14)
+
+### check how the error bars were calculated
+
+```
+
+## Nesting per congeneric presence (including pseudo nests)
 
 ```{r Conspecifics_with_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
 ### Probability
