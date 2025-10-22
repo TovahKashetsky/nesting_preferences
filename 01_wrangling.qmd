@@ -1025,7 +1025,7 @@ emergence_2023 <- emergence_2023 %>%
 emergence_2023 <- emergence_2023 %>% select(-Cell_position, -Cell_position_2)
 emergence_2023 <- emergence_2023 %>% rename(Cell_position = Cell_position_combined)
 
-# NOTE: the cell_number column does not always indicate the order of cells built, especially if there are multiple built on the same day. It's a way to distinguish the cell-level data. What's imrpotant is the date each cell was built, and weather its the last cell or not (Cell_position)
+# NOTE: the cell_number column does not always indicate the order of cells built for the 2024 data, especially if there are multiple built on the same day. It's a way to distinguish the cell-level data. What's imrpotant is the date each cell was built, and weather its the last cell or not (Cell_position)
 
 
 ## Make a cell number column for 2024 data, and fill in the blanks for the 2023 data
@@ -1060,7 +1060,7 @@ emergence <- emergence %>% select(Site, Subsite, Trapnest, Treatment, Cavity_siz
 ## Filter out non-target occupants
 
   # first, straight from the emergence data
-non_target <- c('heriades', 'hoplitis', 'hyleaus', 'masked bee', 'non-target bee', 'NA', 'resin bee', 'wasp', 'unknown')
+non_target <- c('heriades', 'hoplitis', 'hyleaus', 'masked bee', 'non-target bee', 'NA', 'resin bee', 'wasp')
 emergence <- emergence %>%
   group_by(Nest_ID) %>%
   filter(!any(Cell_occupant %in% non_target)) %>%  
@@ -1134,8 +1134,8 @@ setdiff(preferences$Date, emergence$Date) # some dates are in preferences but no
  # check for Nest_ID mismatches
 
 setdiff(emergence$Nest_ID, preferences$Nest_ID)  # IDs in emergence but not in preferences: 
-  # 18_8b: must be mislabelled, remove
-emerg_and_pref <- emerg_and_pref %>% filter(Nest_ID != '18_8b')
+  # 18_8b: must be mislabelled, remove. 64_14b, 73_10b and 75_5b are non-target bees that never developped
+emerg_and_pref <- emerg_and_pref %>% filter(Nest_ID != '18_8b' & Nest_ID != '64_14b' & Nest_ID != '73_10b' & Nest_ID != '75_5b')
 
 # see below for IDs in preferences but not in emergence
 # compare the nest IDs in the dfs of nests with activity
@@ -1180,13 +1180,12 @@ emerg_and_pref <- emerg_and_pref %>%
   mutate(Bee_choice = if_else(row_number() == min(which(Bee_choice == 1)), 1, NA)) %>%
   ungroup() # ignore warnings about using min() on NAs
 
-
 # numbers of new nests 
 sum(preferences$Bee_choice, na.rm = TRUE)  # 306, which includes the nests with only inner walls
 
 table(preferences %>% 
         filter(Bee_choice == 1) %>% 
-        pull(Contains_cells)) # 260, this includes only Megachile and Osmia nests that have at least 1 cell, and 46 that don't include cells
+        pull(Contains_cells)) # 261, this includes only Megachile and Osmia nests that have at least 1 cell, and 46 that don't include cells
 # check that there are no duplicates of contains_cells to make sure there are truly 261 new nests
 preferences %>%
   filter(Bee_choice == 1) %>%
@@ -1196,9 +1195,9 @@ preferences %>%
 # number of nests from emergence data
 length(unique(emergence$Nest_ID)) # 248 
 
-# are any of the Statuses NA?
+# are any of the Statuses NA? Should be none, remove because they are from non-target bees
+emerg_and_pref <- emerg_and_pref %>% filter(!is.na(Status))
 sum(is.na(emerg_and_pref$Status)) 
-
 
 
 ## Making values consistent for throughout the time the nest is in the trapnest
@@ -1551,39 +1550,39 @@ nesting_cells_os_0[duplicated(nesting_cells_os_0$Cell_ID),]
 nesting_cells_meg_0[duplicated(nesting_cells_meg_0$Cell_ID),] 
 
 
-## Sum the number of parasitized cells and not
+# ## Sum the number of parasitized cells and not
+# 
+# # Osmia
+# nesting_cells_os_sum <- nesting_cells_os_0 %>% 
+#   arrange(Date, Nest_ID) %>% 
+#   group_by(Date, Nest_ID) %>% 
+#   summarize(Sum_cell_parasitized = sum(Cell_parasitized))
+# nesting_cells_os_0 <- nesting_cells_os_0 %>% 
+#   arrange(Date, Nest_ID) %>% 
+#   group_by(Date, Nest_ID) %>% 
+#   mutate(Total_cells_per_date = NROW(Date))
+# # merge together
+# nesting_cells_os <- merge(nesting_cells_os_0, nesting_cells_os_sum)
+# nesting_cells_os <- nesting_cells_os %>% relocate(Sum_cell_parasitized, .after = last_col())
+# # do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
+# nesting_cells_os <- nesting_cells_os %>%
+#   mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
+# 
+# 
+# # Megachile
+# nesting_cells_meg_sum <- nesting_cells_meg_0 %>% 
+#   group_by(Date, Nest_ID) %>% 
+#   summarize(Sum_cell_parasitized = sum(Cell_parasitized))
+# nesting_cells_meg_0 <- nesting_cells_meg_0 %>% 
+#   group_by(Date, Nest_ID) %>% 
+#   mutate(Total_cells_per_date = NROW(Date))
+# # merge together
+# nesting_cells_meg <- merge(nesting_cells_meg_0, nesting_cells_meg_sum)
+# nesting_cells_meg <- nesting_cells_meg %>% relocate(Sum_cell_parasitized, .after = last_col())
+# # do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
+# nesting_cells_meg <- nesting_cells_meg %>%
+#   mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
 
-# Osmia
-nesting_cells_os_sum <- nesting_cells_os_0 %>% 
-  group_by(Date, Nest_ID) %>% 
-  summarize(Sum_cell_parasitized = sum(Cell_parasitized))
-nesting_cells_os_0 <- nesting_cells_os_0 %>% 
-  group_by(Date, Nest_ID) %>% 
-  mutate(Total_cells_per_date = NROW(Date))
-# merge together
-nesting_cells_os <- merge(nesting_cells_os_0, nesting_cells_os_sum)
-nesting_cells_os <- nesting_cells_os %>% relocate(Sum_cell_parasitized, .after = last_col())
-# do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
-nesting_cells_os <- nesting_cells_os %>%
-  mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
-# keep only one nest_ID - date combination
-nesting_cells_os <- distinct(nesting_cells_os, Date, Trapnest, .keep_all= TRUE)
-
-# Megachile
-nesting_cells_meg_sum <- nesting_cells_meg_0 %>% 
-  group_by(Date, Nest_ID) %>% 
-  summarize(Sum_cell_parasitized = sum(Cell_parasitized))
-nesting_cells_meg_0 <- nesting_cells_meg_0 %>% 
-  group_by(Date, Nest_ID) %>% 
-  mutate(Total_cells_per_date = NROW(Date))
-# merge together
-nesting_cells_meg <- merge(nesting_cells_meg_0, nesting_cells_meg_sum)
-nesting_cells_meg <- nesting_cells_meg %>% relocate(Sum_cell_parasitized, .after = last_col())
-# do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
-nesting_cells_meg <- nesting_cells_meg %>%
-  mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
-# keep only one nest_ID - date combination
-nesting_cells_meg <- distinct(nesting_cells_meg, Date, Trapnest, .keep_all= TRUE)
 
 
 ## Making day of the year
@@ -2026,8 +2025,8 @@ write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachile.csv')
 ```{r Descriptive}
 
 ## How long are the straws?
-mean(nesting_investment$Straw_length_mm) # 139.93 
-sd(nesting_investment$Straw_length_mm) # 9.93 
+mean(nesting_investment$Straw_length) # 140.7 
+sd(nesting_investment$Straw_length) # 9.7 
 
 
 ## How many instances were both of the rarest sized cavities occupied at the same time?
@@ -2052,7 +2051,7 @@ preferences_1 %>%
 
 
 ## How many nests were excluded from nest investment data because they weren't finished?
-length(Nest_ID_exclude) # 48
+# length(Nest_ID_exclude) # 48
 
 
 ## Verifying my treatments: How related are my treatments to the number of available cavities?
@@ -2083,7 +2082,7 @@ confirm_treatment_data %>%
   filter(Treatment == 'High') %>% 
   ungroup() %>%
   summarise(Min_high = min(Available_cavities_prior),
-            Max_high = max(Available_cavities_prior))
+            Max_high = max(Available_cavities_prior)) # 1, 9
 
 
 ## How many cells developed? 

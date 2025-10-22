@@ -298,6 +298,47 @@ ggplot(df_coefs_meg_no_ps, aes(x = sim_coefs_meg_no_ps)) +
 
 ```
 
+```{r Simple_Mean_Comparison}
+
+# Compare the three treatments to each other
+
+
+## Osmia ##
+
+# ANOVA
+osmia_cong_aov <- aov(New_nests_os ~ Treatment, data = trapnesting_os)
+# is it normally distrubuted?
+hist(osmia_cong_aov$residuals)
+qqPlot(osmia_cong_aov$residuals)
+# not normally distrubted, try Kruskal-Wallis
+summary(osmia_cong_aov)
+
+# Kruskal-Wallis
+osmia_cong_kw <-kruskal.test(New_nests_os ~ Treatment, data = trapnesting_os)
+# three threatments are not different
+osmia_cong_kw
+
+
+## Megahcile ## 
+
+# ANOVA
+meg_cong_aov <- aov(New_nests_meg ~ Treatment, data = trapnesting_meg)
+# is it normally distrubuted?
+hist(meg_cong_aov$residuals)
+qqPlot(meg_cong_aov$residuals)
+# not normally distrubted, try Kruskal-Wallis
+summary(meg_cong_aov)
+
+# Kruskal-Wallis
+meg_cong_kw <-kruskal.test( , data = trapnesting_meg)
+# three threatments are not different
+meg_cong_kw
+
+
+
+
+```
+
 ## Parasite Preferences - Osmia (Sapyga)
 
 Model 2_i - including pseudo
@@ -328,7 +369,7 @@ values_osmia_ps <- seq(min(nesting_cells_os$Osmia_ps, na.rm = TRUE),
 marginal_effects_os_ps <- ggpredict(mod_par_agg_os_ps, 
                terms = "Osmia_ps [all]", 
                conditions = list(Osmia_ps = values_osmia_ps))
-plot(marginal_effects_os_ps, jitter = 0.04)  # more parasitism for least and most osmia numbers
+plot(marginal_effects_os_ps)  # trend for less parasitism with increasing osmia numbers
 
 
 # MODEL 2_ii - Osmia parasite aggregation preferences, excluding pseudo #
@@ -349,7 +390,7 @@ values_osmia_no_ps <- seq(min(nesting_cells_os$Osmia_no_ps, na.rm = TRUE),
 marginal_effects_os_no_ps <- ggpredict(mod_par_agg_os_no_ps, 
                terms = "Osmia_no_ps [all]", 
                conditions = list(Osmia_no_ps = values_osmia_no_ps))
-plot(marginal_effects_os_no_ps, jitter = 0.04) # trend with less parasitism for more osmia 
+plot(marginal_effects_os_no_ps) # trend with less parasitism for more osmia 
 
 
 # MODEL 2_iii - Osmia parasite aggregation preferences for active nests #
@@ -370,7 +411,7 @@ values_osmia_active <- seq(min(nesting_cells_os$Osmia_active_mothers, na.rm = TR
 marginal_effects_os_actives <- ggpredict(mod_par_agg_os_active, 
                terms = "Osmia_active_mothers [all]", 
                conditions = list(Osmia_active_mothers = values_osmia_active))
-plot(marginal_effects_os_actives, jitter = 0.04) # trend for more parasitism with more active mothers 
+plot(marginal_effects_os_actives) # trend with less parasitism for more active osmia mothers
 
 ```
 
@@ -390,10 +431,10 @@ Model 2_vi - active nests
 
 mod_par_agg_meg_ps <- glmer(Cell_parasitized ~ scale(Meg_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_ps)) # fine
-check_model(mod_par_agg_meg_ps) # good
-testDispersion(mod_par_agg_meg_ps, type = 'DHARMa') # close to being underdisperesed
-testZeroInflation(mod_par_agg_meg_ps) # good
+plot(simulateResiduals(mod_par_agg_meg_ps)) # poor
+check_model(mod_par_agg_meg_ps) # fine
+testDispersion(mod_par_agg_meg_ps, type = 'DHARMa') # underdisperesed
+testZeroInflation(mod_par_agg_meg_ps) # zero inflation
 summary(mod_par_agg_meg_ps) # no detected effects
 vif(mod_par_agg_meg_ps) # good
 
@@ -404,17 +445,17 @@ values_meg_ps <- seq(min(nesting_cells_meg$Meg_ps, na.rm = TRUE),
 marginal_effects_meg_ps <- ggpredict(mod_par_agg_meg_ps, 
                terms = "Meg_ps [all]", 
                conditions = list(Meg_ps = values_meg_ps))
-plot(marginal_effects_meg_ps, jitter = 0.04) # no trend
+plot(marginal_effects_meg_ps) # no trend
 
 
 # MODEL 2_v - Megachile parasite aggregation preferences, excluding pseudo #
 
 mod_par_agg_meg_no_ps <- glmer(Cell_parasitized ~ scale(Meg_no_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_no_ps)) # good
-check_model(mod_par_agg_meg_no_ps) # good
-testDispersion(mod_par_agg_meg_no_ps, type = 'DHARMa') # good
-testZeroInflation(mod_par_agg_meg_no_ps) # good
+plot(simulateResiduals(mod_par_agg_meg_no_ps)) # poor
+check_model(mod_par_agg_meg_no_ps) # fine
+testDispersion(mod_par_agg_meg_no_ps, type = 'DHARMa') # underdispersed
+testZeroInflation(mod_par_agg_meg_no_ps) # zerio inflation
 summary(mod_par_agg_meg_no_ps) # no detected effects
 vif(mod_par_agg_meg_no_ps) # good
 
@@ -425,15 +466,15 @@ values_meg_no_ps <- seq(min(nesting_cells_meg$Meg_no_ps, na.rm = TRUE),
 marginal_effects_meg_no_ps <- ggpredict(mod_par_agg_meg_no_ps, 
                terms = "Meg_no_ps [all]", 
                conditions = list(Meg_no_ps = values_meg_no_ps))
-plot(marginal_effects_meg_no_ps, jitter = 0.04) # no trend 
+plot(marginal_effects_meg_no_ps) # no trend 
 
 
 # MODEL 2_vi - Megachile parasite aggregation preferences for active nests #
 
 mod_par_agg_meg_active <- glmer(Cell_parasitized ~ scale(Meg_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_active)) # not great
-check_model(mod_par_agg_meg_active) # good
+plot(simulateResiduals(mod_par_agg_meg_active)) # poor
+check_model(mod_par_agg_meg_active) # fine
 testDispersion(mod_par_agg_meg_active, type = 'DHARMa') # underdispersed
 testZeroInflation(mod_par_agg_meg_active) # zero inflation 
 summary(mod_par_agg_meg_active) # no detected effects
@@ -446,7 +487,7 @@ values_meg_active <- seq(min(nesting_cells_meg$Meg_active_mothers, na.rm = TRUE)
 marginal_effects_meg_active <- ggpredict(mod_par_agg_meg_active, 
                terms = "Meg_active_mothers [all]", 
                conditions = list(Meg_active_mothers = values_meg_active))
-plot(marginal_effects_meg_active, jitter = 0.04) # no trend
+plot(marginal_effects_meg_active) # no trend
 
 
 ```
