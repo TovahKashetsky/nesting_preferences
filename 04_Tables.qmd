@@ -1,0 +1,131 @@
+---
+title: "04_Tables"
+format: docx
+editor: visual
+---
+
+```{r Set_up, include=FALSE}
+
+library(tidyverse)
+library(broom)
+library(broom.mixed)
+
+
+# Load models
+mod_2i_par_agg_os_ps <- readRDS('Models/mod_2i_par_agg_os_ps.rds')
+mod_2ii_par_agg_os_no_ps <- readRDS('Models/mod_2ii_par_agg_os_no_ps.rds')
+mod_2iii_par_agg_os_active <- readRDS('Models/mod_2iii_par_agg_os_active.rds')
+mod_2iv_par_agg_meg_ps <- readRDS('Models/mod_2iv_par_agg_meg_ps.rds')
+mod_2v_par_agg_meg_no_ps <- readRDS('Models/mod_2v_par_agg_meg_no_ps.rds')
+mod_2vi_par_agg_meg_active <- readRDS('Models/mod_2vi_par_agg_meg_active.rds')
+mod_3bi_invest_filled_os <- readRDS('Models/mod_3bi_invest_filled_os.rds')
+mod_3bii_invest_filled_meg <- readRDS('Models/mod_3bii_invest_filled_meg.rds')
+mod_3ci_last_cell_os <- readRDS('Models/mod_3ci_last_cell_os.rds')
+mod_3cii_last_cell_meg <- readRDS('Models/mod_3cii_last_cell_meg.rds')
+mod_3di_inner_wall_os <- readRDS('Models/mod_3di_inner_wall_os.rds')
+mod_3dii_inner_wall_meg <- readRDS('Models/mod_3dii_inner_wall_meg.rds')
+
+
+```
+
+```{r Tidy_Tables, include=FALSE}
+
+## Create functions 
+
+# make a function that makes nice table with 2 decimal places, rounds them, makes the small numbers use exponents, and the p-value column to say < 0.0001 
+tidy_function <- function(model) {
+  tidy(model) %>%
+    mutate(
+      across(
+        c(estimate, std.error, statistic),
+        ~ case_when(
+            is.na(.) ~ NA, # NA is NA 
+            . == 0 ~ '0', # true zeros should be 0 not 0.00
+            abs(.) < 0.01 ~ formatC(., format = 'e', digits = 2), # tiny numbers
+            TRUE ~ sprintf('%.2f', .) # everything else should have 2 numbers after decimal
+        )
+      ),
+      p.value = case_when(
+        is.na(p.value) ~ NA, # NA is NA
+        p.value < 0.0001 ~ '< 0.0001', # small p-values show as < 0.0001
+        TRUE ~ sprintf('%.2f', p.value) # rest shoudl have 2 numbers after decimal
+      )
+    )
+}
+
+
+# make functon to replace sd__(Intercept) with the nested random effects, rename columns, rename ran_pars
+format_table_function <- function(df) {
+  df %>%
+    mutate(term_2 = ifelse(term == 'sd__(Intercept)', group, term)) %>%
+    select(-term, -group) %>%
+    rename(
+      Effect = effect,
+      Variable = term_2,
+      Estimate = estimate,
+      'Std. Error' = std.error,
+      'Z Value' = statistic,
+      'P-Value' = p.value
+    ) %>%
+    relocate(last_col(), .after = 1) %>% 
+  mutate(
+    Effect = dplyr::recode(Effect,
+                             'ran_pars' = 'random')) %>% 
+  mutate(
+    Variable = dplyr::recode(Variable,
+                             '(Intercept)' = 'Intercept',
+                             'scale(Osmia_ps)' = 'Neighbouring Osmia',
+                             'scale(Osmia_no_ps)' = 'Neighbouring Osmia excluding pseudo nests',
+                             'scale(Meg_ps)' = 'Neighbouring Megachile',
+                             'scale(Meg_no_ps)' = 'Neighbouring Megachile excluding pseudo nests',
+                             'scale(Osmia_active_mothers)' = 'Neighbouring active Osmia mothers',
+                             'scale(Meg_active_mothers)' = 'Neighbouring active Megachile mothers',
+                             'scale(DP_os_prior)' = 'Neighbouring Osmia nests with detectable parasites',
+                             'scale(NDP_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests',
+                             'scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites',
+                             'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with detectable parasites * Neighbouring Osmia nests with no detectable parasites', 
+                              'scale(DP_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites',
+                             'scale(NDP_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites, excluding pseudo nests',
+                             'scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites',
+                             'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites * Neighbouring Megachile nests with no detectable parasites',
+                             'Cell_parasitized' = 'Cell parasitism',
+                             'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
+                             'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
+                             'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
+                             'poly(Day_of_year, 2)1' = 'Day of year I',
+                             'poly(Day_of_year, 2)2' = 'Day of year II',
+                             'Yearyear_2024' = 'Year (2024)',
+                             'SiteCP' = 'Site (CP)', 
+                             'SiteNN' = 'Site (NN)',
+                             'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
+                             'Trapnest:Subsite' = 'Nest-box: Subsite'
+                             )) 
+}
+
+
+
+## Apply functions
+
+mod_2i_par_agg_os_ps_table <- tidy_function(mod_2i_par_agg_os_ps) %>% format_table_function()
+mod_2ii_par_agg_os_no_ps_table <- tidy_function(mod_2ii_par_agg_os_no_ps) %>% format_table_function()
+mod_2iii_par_agg_os_active_table <- tidy_function(mod_2iii_par_agg_os_active) %>% format_table_function()
+mod_2iv_par_agg_meg_ps_table <- tidy_function(mod_2iv_par_agg_meg_ps) %>% format_table_function()
+mod_2v_par_agg_meg_no_ps_table <- tidy_function(mod_2v_par_agg_meg_no_ps) %>% format_table_function()
+mod_2vi_par_agg_meg_active_table <- tidy_function(mod_2vi_par_agg_meg_active) %>% format_table_function()
+mod_3bi_invest_filled_os_table <- tidy_function(mod_3bi_invest_filled_os) %>% format_table_function()
+mod_3bii_invest_filled_meg_table <- tidy_function(mod_3bii_invest_filled_meg) %>% format_table_function()
+mod_3ci_last_cell_os_table <- tidy_function(mod_3ci_last_cell_os) %>% format_table_function()
+mod_3cii_last_cell_meg_table <- tidy_function(mod_3cii_last_cell_meg) %>% format_table_function()
+mod_3di_inner_wall_os_table <- tidy_function(mod_3di_inner_wall_os) %>% format_table_function()
+mod_3dii_inner_wall_meg_table <- tidy_function(mod_3dii_inner_wall_meg) %>% format_table_function()
+
+
+```
+
+```{r}
+
+mod_2i_par_agg_os_ps_table
+
+
+
+```

@@ -1,5 +1,5 @@
 ---
-title: "Analyses"
+title: 'Analyses'
 format: 
  html:
   self-contained: true
@@ -330,7 +330,7 @@ qqPlot(meg_cong_aov$residuals)
 summary(meg_cong_aov)
 
 # Kruskal-Wallis
-meg_cong_kw <-kruskal.test( , data = trapnesting_meg)
+meg_cong_kw <-kruskal.test( New_nests_meg ~ Treatment, data = trapnesting_meg)
 # three threatments are not different
 meg_cong_kw
 
@@ -353,65 +353,72 @@ Model 2_iii - active nests
 
 # MODEL 2_i - Osmia parasite aggregation preferences, including pseudo #
 
-mod_par_agg_os_ps <- glmer(Cell_parasitized ~ scale(Osmia_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_2i_par_agg_os_ps <- glmer(Cell_parasitized ~ scale(Osmia_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_os_ps)) # good
-check_model(mod_par_agg_os_ps) # good
-testDispersion(mod_par_agg_os_ps, type = 'DHARMa') # good
-testZeroInflation(mod_par_agg_os_ps) # good
-summary(mod_par_agg_os_ps) # no detected effects
-vif(mod_par_agg_os_ps) # good
+plot(simulateResiduals(mod_2i_par_agg_os_ps)) # good
+check_model(mod_2i_par_agg_os_ps) # good
+testDispersion(mod_2i_par_agg_os_ps, type = 'DHARMa') # good
+testZeroInflation(mod_2i_par_agg_os_ps) # good
+summary(mod_2i_par_agg_os_ps) # no detected effects
+vif(mod_2i_par_agg_os_ps) # good
 
 # plot
 values_osmia_ps <- seq(min(nesting_cells_os$Osmia_ps, na.rm = TRUE), 
                max(nesting_cells_os$Osmia_ps, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_os_ps <- ggpredict(mod_par_agg_os_ps, 
-               terms = "Osmia_ps [all]", 
+marginal_effects_os_ps <- ggpredict(mod_2i_par_agg_os_ps, 
+               terms = 'Osmia_ps [all]', 
                conditions = list(Osmia_ps = values_osmia_ps))
 plot(marginal_effects_os_ps)  # trend for less parasitism with increasing osmia numbers
 
 
 # MODEL 2_ii - Osmia parasite aggregation preferences, excluding pseudo #
 
-mod_par_agg_os_no_ps <- glmer(Cell_parasitized ~ scale(Osmia_no_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_2ii_par_agg_os_no_ps <- glmer(Cell_parasitized ~ scale(Osmia_no_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_os_no_ps)) # good
-check_model(mod_par_agg_os_no_ps) # good
-testDispersion(mod_par_agg_os_no_ps, type = 'DHARMa') # good
-testZeroInflation(mod_par_agg_os_no_ps) # good
-summary(mod_par_agg_os_no_ps) # no detected effects
-vif(mod_par_agg_os_no_ps)
+plot(simulateResiduals(mod_2ii_par_agg_os_no_ps)) # good
+check_model(mod_2ii_par_agg_os_no_ps) # good
+testDispersion(mod_2ii_par_agg_os_no_ps, type = 'DHARMa') # good
+testZeroInflation(mod_2ii_par_agg_os_no_ps) # good
+summary(mod_2ii_par_agg_os_no_ps) # no detected effects
+vif(mod_2ii_par_agg_os_no_ps)
 
 # plot
 values_osmia_no_ps <- seq(min(nesting_cells_os$Osmia_no_ps, na.rm = TRUE), 
                max(nesting_cells_os$Osmia_no_ps, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_os_no_ps <- ggpredict(mod_par_agg_os_no_ps, 
-               terms = "Osmia_no_ps [all]", 
+marginal_effects_os_no_ps <- ggpredict(mod_2ii_par_agg_os_no_ps, 
+               terms = 'Osmia_no_ps [all]', 
                conditions = list(Osmia_no_ps = values_osmia_no_ps))
 plot(marginal_effects_os_no_ps) # trend with less parasitism for more osmia 
 
 
 # MODEL 2_iii - Osmia parasite aggregation preferences for active nests #
 
-mod_par_agg_os_active <- glmer(Cell_parasitized ~ scale(Osmia_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
+mod_2iii_par_agg_os_active <- glmer(Cell_parasitized ~ scale(Osmia_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_os_active)) # good
-check_model(mod_par_agg_os_active) # good
-testDispersion(mod_par_agg_os_active, type = 'DHARMa') # good
-testZeroInflation(mod_par_agg_os_active) # good
-summary(mod_par_agg_os_active) # no detected effects
-vif(mod_par_agg_os_active) # good
+plot(simulateResiduals(mod_2iii_par_agg_os_active)) # good
+check_model(mod_2iii_par_agg_os_active) # good
+testDispersion(mod_2iii_par_agg_os_active, type = 'DHARMa') # good
+testZeroInflation(mod_2iii_par_agg_os_active) # good
+summary(mod_2iii_par_agg_os_active) # no detected effects
+vif(mod_2iii_par_agg_os_active) # good
 
 # plot
 values_osmia_active <- seq(min(nesting_cells_os$Osmia_active_mothers, na.rm = TRUE), 
                max(nesting_cells_os$Osmia_active_mothers, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_os_actives <- ggpredict(mod_par_agg_os_active, 
-               terms = "Osmia_active_mothers [all]", 
+marginal_effects_os_actives <- ggpredict(mod_2iii_par_agg_os_active, 
+               terms = 'Osmia_active_mothers [all]', 
                conditions = list(Osmia_active_mothers = values_osmia_active))
 plot(marginal_effects_os_actives) # trend with less parasitism for more active osmia mothers
+
+
+# save models
+saveRDS(mod_2i_par_agg_os_ps, file = 'Models/mod_2i_par_agg_os_ps.rds')
+saveRDS(mod_2ii_par_agg_os_no_ps, file = 'Models/mod_2ii_par_agg_os_no_ps.rds')
+saveRDS(mod_2iii_par_agg_os_active, file = 'Models/mod_2iii_par_agg_os_active.rds')
+
 
 ```
 
@@ -429,65 +436,71 @@ Model 2_vi - active nests
 
 # MODEL 2_iv - Megachile parasite aggregation preferences, including pseudo #
 
-mod_par_agg_meg_ps <- glmer(Cell_parasitized ~ scale(Meg_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
+mod_2iv_par_agg_meg_ps <- glmer(Cell_parasitized ~ scale(Meg_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_ps)) # poor
-check_model(mod_par_agg_meg_ps) # fine
-testDispersion(mod_par_agg_meg_ps, type = 'DHARMa') # underdisperesed
-testZeroInflation(mod_par_agg_meg_ps) # zero inflation
-summary(mod_par_agg_meg_ps) # no detected effects
-vif(mod_par_agg_meg_ps) # good
+plot(simulateResiduals(mod_2iv_par_agg_meg_ps)) # poor
+check_model(mod_2iv_par_agg_meg_ps) # fine
+testDispersion(mod_2iv_par_agg_meg_ps, type = 'DHARMa') # underdisperesed
+testZeroInflation(mod_2iv_par_agg_meg_ps) # zero inflation
+summary(mod_2iv_par_agg_meg_ps) # no detected effects
+vif(mod_2iv_par_agg_meg_ps) # good
 
 # plot
 values_meg_ps <- seq(min(nesting_cells_meg$Meg_ps, na.rm = TRUE), 
                max(nesting_cells_meg$Meg_ps, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_meg_ps <- ggpredict(mod_par_agg_meg_ps, 
-               terms = "Meg_ps [all]", 
+marginal_effects_meg_ps <- ggpredict(mod_2iv_par_agg_meg_ps, 
+               terms = 'Meg_ps [all]', 
                conditions = list(Meg_ps = values_meg_ps))
 plot(marginal_effects_meg_ps) # no trend
 
 
 # MODEL 2_v - Megachile parasite aggregation preferences, excluding pseudo #
 
-mod_par_agg_meg_no_ps <- glmer(Cell_parasitized ~ scale(Meg_no_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
+mod_2v_par_agg_meg_no_ps <- glmer(Cell_parasitized ~ scale(Meg_no_ps) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_no_ps)) # poor
-check_model(mod_par_agg_meg_no_ps) # fine
-testDispersion(mod_par_agg_meg_no_ps, type = 'DHARMa') # underdispersed
-testZeroInflation(mod_par_agg_meg_no_ps) # zerio inflation
-summary(mod_par_agg_meg_no_ps) # no detected effects
-vif(mod_par_agg_meg_no_ps) # good
+plot(simulateResiduals(mod_2v_par_agg_meg_no_ps)) # poor
+check_model(mod_2v_par_agg_meg_no_ps) # fine
+testDispersion(mod_2v_par_agg_meg_no_ps, type = 'DHARMa') # underdispersed
+testZeroInflation(mod_2v_par_agg_meg_no_ps) # zerio inflation
+summary(mod_2v_par_agg_meg_no_ps) # no detected effects
+vif(mod_2v_par_agg_meg_no_ps) # good
 
 # plot
 values_meg_no_ps <- seq(min(nesting_cells_meg$Meg_no_ps, na.rm = TRUE), 
                max(nesting_cells_meg$Meg_no_ps, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_meg_no_ps <- ggpredict(mod_par_agg_meg_no_ps, 
-               terms = "Meg_no_ps [all]", 
+marginal_effects_meg_no_ps <- ggpredict(mod_2v_par_agg_meg_no_ps, 
+               terms = 'Meg_no_ps [all]', 
                conditions = list(Meg_no_ps = values_meg_no_ps))
 plot(marginal_effects_meg_no_ps) # no trend 
 
 
 # MODEL 2_vi - Megachile parasite aggregation preferences for active nests #
 
-mod_par_agg_meg_active <- glmer(Cell_parasitized ~ scale(Meg_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
+mod_2vi_par_agg_meg_active <- glmer(Cell_parasitized ~ scale(Meg_active_mothers) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest/Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_par_agg_meg_active)) # poor
-check_model(mod_par_agg_meg_active) # fine
-testDispersion(mod_par_agg_meg_active, type = 'DHARMa') # underdispersed
-testZeroInflation(mod_par_agg_meg_active) # zero inflation 
-summary(mod_par_agg_meg_active) # no detected effects
-vif(mod_par_agg_meg_active) # good
+plot(simulateResiduals(mod_2vi_par_agg_meg_active)) # poor
+check_model(mod_2vi_par_agg_meg_active) # fine
+testDispersion(mod_2vi_par_agg_meg_active, type = 'DHARMa') # underdispersed
+testZeroInflation(mod_2vi_par_agg_meg_active) # zero inflation 
+summary(mod_2vi_par_agg_meg_active) # no detected effects
+vif(mod_2vi_par_agg_meg_active) # good
 
 # plot
 values_meg_active <- seq(min(nesting_cells_meg$Meg_active_mothers, na.rm = TRUE), 
                max(nesting_cells_meg$Meg_active_mothers, na.rm = TRUE), 
                length.out = 100)
-marginal_effects_meg_active <- ggpredict(mod_par_agg_meg_active, 
-               terms = "Meg_active_mothers [all]", 
+marginal_effects_meg_active <- ggpredict(mod_2vi_par_agg_meg_active, 
+               terms = 'Meg_active_mothers [all]', 
                conditions = list(Meg_active_mothers = values_meg_active))
 plot(marginal_effects_meg_active) # no trend
+
+
+# save models
+saveRDS(mod_2iv_par_agg_meg_ps, file = 'Models/mod_2iv_par_agg_meg_ps.rds')
+saveRDS(mod_2v_par_agg_meg_no_ps, file = 'Models/mod_2v_par_agg_meg_no_ps.rds')
+saveRDS(mod_2vi_par_agg_meg_active, file = 'Models/mod_2vi_par_agg_meg_active.rds')
 
 
 ```
@@ -504,7 +517,7 @@ Model 3a_ii - excluding pseudo
 
 # run the model on each of the simulated data columns
 sim_list_os_ps_avoid <- lapply(1:n_sim, function(x){
-  my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson())
   summary(output)
 } )
@@ -532,7 +545,7 @@ df_coefs_os_ps_avoid <- data.frame(sim_coefs_os_ps_avoid = sim_coefs_os_ps_avoid
 
 ggplot(df_coefs_os_ps_avoid, aes(x = sim_coefs_os_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
-  geom_vline(xintercept = obvs_coef_os_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+  geom_vline(xintercept = obvs_coef_os_ps_avoid, color = 'red2', linetype = 'dashed', size = 1) 
 # fail to reject the null - no evidence for Osmia avoiding nests with parasites
 
 
@@ -540,7 +553,7 @@ ggplot(df_coefs_os_ps_avoid, aes(x = sim_coefs_os_ps_avoid)) +
 
 # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 sim_list_os_no_ps_avoid <- lapply(1:n_sim, function(x){
-  my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson())
   summary(output)
 } )
@@ -568,7 +581,7 @@ df_coefs_os_no_ps_avoid <- data.frame(sim_coefs_os_no_ps_avoid = sim_coefs_os_no
 
 ggplot(df_coefs_os_no_ps_avoid, aes(x = sim_coefs_os_no_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
-  geom_vline(xintercept = obvs_coef_os_no_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+  geom_vline(xintercept = obvs_coef_os_no_ps_avoid, color = 'red2', linetype = 'dashed', size = 1) 
 # small effect but reject the null? - Osmia avoid nesitng near parasites?
 
 
@@ -587,7 +600,7 @@ Model 3a_iv - excluding pseudo
 
 # run the model on each of the simulated data columns
 sim_list_meg_ps_avoid <- lapply(1:n_sim, function(x){
-  my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)") 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson())
   summary(output)
 } )
@@ -614,18 +627,18 @@ df_coefs_meg_ps_avoid <- data.frame(sim_coefs_meg_ps_avoid = sim_coefs_meg_ps_av
 
 ggplot(df_coefs_meg_ps_avoid, aes(x = sim_coefs_meg_ps_avoid)) +
   geom_histogram(binwidth = 0.1) +
-  geom_vline(xintercept = obvs_coef_meg_ps_avoid, color = "red2", linetype = "dashed", size = 1) 
+  geom_vline(xintercept = obvs_coef_meg_ps_avoid, color = 'red2', linetype = 'dashed', size = 1) 
 # fail to reject the null - Megachile do not avoid nesitng near parasites
 
 
 # MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo #
 
-# running the simulation gets the error "Error: PIRLS loop resulted in NaN value"
+# running the simulation gets the error 'Error: PIRLS loop resulted in NaN value'
 # too little data to run it
 
 # # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 # sim_list_meg_no_ps_avoid <- lapply(1:n_sim, function(x){
-#   my_formula <- paste0("Null_new_nests", x, " ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)")
+#   my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)')
 #   output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson())
 #   summary(output)
 # } )
@@ -655,7 +668,7 @@ ggplot(df_coefs_meg_ps_avoid, aes(x = sim_coefs_meg_ps_avoid)) +
 # 
 # ggplot(df_coefs_meg_no_ps_avoid, aes(x = sim_coefs_meg_no_ps_avoid)) +
 #   geom_histogram(binwidth = 0.1) +
-#   geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = "red2", linetype = "dashed", size = 1)
+#   geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = 'red2', linetype = 'dashed', size = 1)
 
 
 ```
@@ -680,87 +693,95 @@ Model 3d_ii - abandoned inner wall, Megachile
 
 # Investment into a nest if other active nests or the nest itself is parasitized
 
-mod_invest_filled_os <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_os_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_os, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
+mod_3bi_invest_filled_os <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_os_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_os, family = binomial, control=glmerControl(optimizer='bobyqa', optCtrl=list(maxfun=1000000)))
 
-plot(simulateResiduals(mod_invest_filled_os)) # fine
-check_model(mod_invest_filled_os) # fine, some influential points
+plot(simulateResiduals(mod_3bi_invest_filled_os)) # fine
+check_model(mod_3bi_invest_filled_os) # fine, some influential points
 # check the influential points (red dots on the influential observations figure)
 nesting_cells_os[rownames(nesting_cells_os) %in% c(89, 69), ] # 
-summary(mod_invest_filled_os) # significant effect of if focal nest is parasitized, day of year, and year
-vif(mod_invest_filled_os) # good
+summary(mod_3bi_invest_filled_os) # significant effect of if focal nest is parasitized, day of year, and year
+vif(mod_3bi_invest_filled_os) # good
 
-plot(ggpredict(mod_invest_filled_os, terms = c("DP_os_prior", "Nest_parasitized"))) 
+plot(ggpredict(mod_3bi_invest_filled_os, terms = c('DP_os_prior', 'Nest_parasitized'))) 
 
 
 # MODEL 3b_ii - Megachile investment #
 
 # Investment into a nest if other active nests or the nest itself is parasitized
 
-mod_invest_filled_meg <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_meg_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_meg, family = binomial, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=1000000)))
+mod_3bii_invest_filled_meg <- glmer(cbind(Filled_length, Straw_length) ~ scale(DP_meg_prior) * Nest_parasitized + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_investment_meg, family = binomial, control=glmerControl(optimizer='bobyqa', optCtrl=list(maxfun=1000000)))
 
-plot(simulateResiduals(mod_invest_filled_meg)) # poor
-check_model(mod_invest_filled_meg) # fine
-summary(mod_invest_filled_meg) # significant effect of detectable parasites in neighbouring nests, boardlerine effect of if focal nest is parasitized, day of year, site, and interaction of detectable parasite * focal nest parasitized
-vif(mod_invest_filled_meg) # good
+plot(simulateResiduals(mod_3bii_invest_filled_meg)) # poor
+check_model(mod_3bii_invest_filled_meg) # fine
+summary(mod_3bii_invest_filled_meg) # significant effect of detectable parasites in neighbouring nests, boardlerine effect of if focal nest is parasitized, day of year, site, and interaction of detectable parasite * focal nest parasitized
+vif(mod_3bii_invest_filled_meg) # good
 
 
-plot(ggpredict(mod_invest_filled_meg, terms = c("DP_meg_prior", "Nest_parasitized"))) 
+plot(ggpredict(mod_3bii_invest_filled_meg, terms = c('DP_meg_prior', 'Nest_parasitized'))) 
 
 
 # MODEL 3c_i - Osmia nest termination #
 
-mod_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
+mod_3ci_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
 
-plot(simulateResiduals(mod_last_cell_os)) # good
-check_model(mod_last_cell_os) # high VIF for year and site
-vif(mod_last_cell_os) # TERRIBLE - exclude 2024?
-summary(mod_last_cell_os) # significant effect of day of year
+plot(simulateResiduals(mod_3ci_last_cell_os)) # good
+check_model(mod_3ci_last_cell_os) # high VIF for year and site
+vif(mod_3ci_last_cell_os) # TERRIBLE - exclude 2024?
+summary(mod_3ci_last_cell_os) # significant effect of day of year
 
-ggpredict(mod_last_cell_os, terms = "Cell_parasitized [all]") %>%
+ggpredict(mod_3ci_last_cell_os, terms = 'Cell_parasitized [all]') %>%
   plot(jitter = .04)
 
 
 # MODEL 3c_ii - Megachile nest termination #
 
-mod_last_cell_meg <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_meg, family = binomial)
+mod_3cii_last_cell_meg <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_meg, family = binomial)
 
-plot(simulateResiduals(mod_last_cell_meg)) # good
-check_model(mod_last_cell_meg) # good
-summary(mod_last_cell_meg) # significant effect of day of year, almost site
-vif(mod_last_cell_meg) # good
+plot(simulateResiduals(mod_3cii_last_cell_meg)) # good
+check_model(mod_3cii_last_cell_meg) # good
+summary(mod_3cii_last_cell_meg) # significant effect of day of year, almost site
+vif(mod_3cii_last_cell_meg) # good
 
-ggpredict(mod_last_cell_meg, terms = "Cell_parasitized [all]") %>%
+ggpredict(mod_3cii_last_cell_meg, terms = 'Cell_parasitized [all]') %>%
   plot(jitter = .04)
 # slight trend for more likely to best last cell if its parasitized
 
 
 # MODEL 3d_i - Osmia abandoned inner walls including pseudo #
 
-mod_inner_wall_os <- glmer(Abandoned_inner_wall ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_os, family = binomial)
+mod_3di_inner_wall_os <- glmer(Abandoned_inner_wall ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_os, family = binomial)
 
-plot(simulateResiduals(mod_inner_wall_os)) # good
-check_model(mod_inner_wall_os) # good
-summary(mod_inner_wall_os) # significant effect of day of year
-vif(mod_inner_wall_os) # good
+plot(simulateResiduals(mod_3di_inner_wall_os)) # good
+check_model(mod_3di_inner_wall_os) # good
+summary(mod_3di_inner_wall_os) # significant effect of day of year
+vif(mod_3di_inner_wall_os) # good
 
-ggpredict(mod_inner_wall_os, terms = "DP_os_prior [all]") %>%
+ggpredict(mod_3di_inner_wall_os, terms = 'DP_os_prior [all]') %>%
   plot(jitter = .04)
 
 
 # MODEL 3d_ii - Megachile abandoned inner walls #
 
-mod_inner_wall_meg <- glmer(Abandoned_inner_wall ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_meg, family = binomial)
+mod_3dii_inner_wall_meg <- glmer(Abandoned_inner_wall ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = nesting_meg, family = binomial)
 
-plot(simulateResiduals(mod_inner_wall_meg)) # fine
-check_model(mod_inner_wall_meg) # high colinearity 
-vif(mod_inner_wall_meg) # TERRIBLE - small sample size 
-summary(mod_inner_wall_meg) # no detected effects
+plot(simulateResiduals(mod_3dii_inner_wall_meg)) # fine
+check_model(mod_3dii_inner_wall_meg) # high colinearity 
+vif(mod_3dii_inner_wall_meg) # TERRIBLE  
+summary(mod_3dii_inner_wall_meg) # no detected effects
+
+
+# save models
+saveRDS(mod_3bi_invest_filled_os, file = 'Models/mod_3bi_invest_filled_os.rds')
+saveRDS(mod_3bii_invest_filled_meg, file = 'Models/mod_3bii_invest_filled_meg.rds')
+saveRDS(mod_3ci_last_cell_os, file = 'Models/mod_3ci_last_cell_os.rds')
+saveRDS(mod_3cii_last_cell_meg, file = 'Models/mod_3cii_last_cell_meg.rds')
+saveRDS(mod_3di_inner_wall_os, file = 'Models/mod_3di_inner_wall_os.rds')
+saveRDS(mod_3dii_inner_wall_meg, file = 'Models/mod_3dii_inner_wall_meg.rds')
 
 
 ```
 
 ```{r Ignore, include=FALSE}
-
 
 
 ## checking unscaled estimates --- this is old as of May 2025, not sure where these numbers (0.2578, etc.) came from
@@ -782,6 +803,81 @@ sd_os_ps_prior <- sd(nesting_os$Osmia_ps_prior)
 scaled_estimate_os_ps <- 0.85564
 unscaled_estimate_os_ps <- scaled_estimate_os_ps * mean_os_ps_prior + mean_os_ps_prior
 unscaled_estimate_os_ps
+
+
+```
+
+```{r Tables}
+
+library(broom)
+
+# make a function that makes nice table with 2 decimal places, rounds them, makes the small numbers use exponents, and the p-value column to say < 0.0001 
+tidy_function <- function(model) {
+  tidy(model) %>%
+    mutate(
+      across(
+        c(estimate, std.error, statistic),
+        ~ case_when(
+            is.na(.) ~ NA, # NA is NA 
+            . == 0 ~ '0', # true zeros should be 0 not 0.00
+            abs(.) < 0.01 ~ formatC(., format = 'e', digits = 2), # tiny numbers
+            TRUE ~ sprintf('%.2f', .) # everything else should have 2 numbers after decimal
+        )
+      ),
+      p.value = case_when(
+        is.na(p.value) ~ NA, # NA is NA
+        p.value < 0.0001 ~ '< 0.0001', # small p-values show as < 0.0001
+        TRUE ~ sprintf('%.2f', p.value) # rest shoudl have 2 numbers after decimal
+      )
+    )
+}
+
+
+# make functon to replace sd__(Intercept) with the nested random effects, rename columns, rename ran_pars
+format_table_function <- function(df) {
+  df %>%
+    mutate(term_2 = ifelse(term == 'sd__(Intercept)', group, term)) %>%
+    select(-term, -group) %>%
+    rename(
+      Effect = effect,
+      Variable = term_2,
+      Estimate = estimate,
+      'Std. Error' = std.error,
+      'Z Value' = statistic,
+      'P-Value' = p.value
+    ) %>%
+    relocate(last_col(), .after = 1) %>% 
+  mutate(
+    Effect = dplyr::recode(Effect,
+                             'ran_pars' = 'random'))
+}
+
+
+
+
+# apply functions
+table <- tidy_function(mod_2i_par_agg_os_ps)
+table <- format_table_function(table)
+
+
+# replace variable names 
+table <- table %>% 
+  mutate(
+    Variable = dplyr::recode(Variable,
+                             '(Intercept)' = 'Intercept',
+                             'scale(Osmia_ps)' = 'Neighbouring Osmia',
+                             'poly(Day_of_year, 2)1' = 'Day of year I',
+                             'poly(Day_of_year, 2)2' = 'Day of year II',
+                             'Yearyear_2024' = 'Year (2024)',
+                             'SiteCP' = 'Site (CP)', 
+                             'SiteNN' = 'Site (NN)',
+                             'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
+                             'Trapnest:Subsite' = 'Nest-box: Subsite'
+                             )) 
+
+
+
+
 
 
 ```
