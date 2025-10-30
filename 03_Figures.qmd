@@ -54,7 +54,7 @@ brewer.pal(n = 9, name = "Blues")
 
 ```
 
-```{r Simulations}
+```{r Simulations, include=FALSE}
 
 
 ## Create the function to simulate data
@@ -119,9 +119,9 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ```
 
-## Congeneric Attraction
+## Congeneric Attraction Osmia
 
-```{r Congeneric_Attraction_Osmia}
+```{r Congeneric_Attraction_Osmia, echo=FALSE, warning=FALSE, message=FALSE}
 
 
  ## Geom_smooth plot ##
@@ -154,9 +154,9 @@ trapnesting_os_fig_num_no_zero <- trapnesting_os_fig_num %>% filter(New_nests > 
 ggplot(trapnesting_os_fig_num_no_zero, aes(y = New_nests, x = Osmia_ps_prior, color = Data_type, fill = Data_type)) +
   geom_jitter(alpha = 0.5) +
   geom_smooth(method='lm') + # method.args = list(family = 'poisson')
-  scale_fill_manual(values = c("Observed" = "#B6686B",
+  scale_fill_manual(values = c("Observed" = "#50898E",
                                "Expected" = "#F0C282")) +
-  scale_color_manual(values = c("Observed" = "#B6686B",
+  scale_color_manual(values = c("Observed" = "#50898E",
                                "Expected" = "#F0C282"))
 
 
@@ -194,7 +194,7 @@ cong_attr_os$Treatment <- factor(cong_attr_os$Treatment,
 ggplot(cong_attr_os, aes(x = Treatment, y = Mean, fill = Data_type)) +
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
   scale_fill_manual(
-    values = c("Sum_exp" = "#F0C282", "Sum_obs" = "#B6686B"),
+    values = c("Sum_exp" = "#F0C282", "Sum_obs" = "#50898E"),
     name = "Data Type") + 
   geom_errorbar(
     aes(ymin = CI_low, ymax = CI_high),
@@ -205,110 +205,35 @@ ggplot(cong_attr_os, aes(x = Treatment, y = Mean, fill = Data_type)) +
 
 ```
 
-```{r Congeneric_Attraction_Osmia_Proportional_Figures}
+## Congeneric attraction with proportional box plots in Osmia
 
+```{r Congeneric_Attraction_Osmia_Proportional_Figures, echo=FALSE, warning=FALSE, message=FALSE}
 
+## Osmia ##
 
-x <- trapnesting_os_null %>% 
-  select(Treatment, Trapnest, Date, New_nests_os, Available_cavities_prior, Osmia_ps_prior) 
+# order the levels so it shows properly in figure
+trapnesting_os_null$Treatment <- factor(trapnesting_os_null$Treatment, 
+                                    levels = c("Low", "Mid", "High"))
 
-x_sum <- x %>% 
-  group_by(Trapnest) %>% 
-  summarise(Mean_new_nests = mean(New_nests_os))
+# make proportion of new nests / available cavities
+Prop_each <- trapnesting_os_null %>% 
+  select(Trapnest, Treatment, Date, New_nests_os, Available_cavities_prior) %>% 
+  group_by(Trapnest, Treatment) %>%
+  summarise(sum_New_nests_os = sum(New_nests_os), sum_Available_cavities_prior = sum(Available_cavities_prior)) %>% group_by(Trapnest, Treatment) %>% 
+  summarise(Prop_new_of_avail = (sum_New_nests_os/sum_Available_cavities_prior))
 
-# wayyy too small
-# remove some zeros accross the three treatments just for the sake of the figure
-
-
-
-
-
-# how many zeros are there per treatment?
-x %>%
-  group_by(Treatment, New_nests_os) %>%
-  summarise(n = n())
-
-# remove 600 * 3 ### but isnt proportional??
-x2 <- x %>%
-  group_by(Treatment) %>%
-  mutate(
-    zero_row = New_nests_os == 0,
-    remove_flag = if_else(
-      zero_row & row_number() %in% sample(
-        which(New_nests_os == 0),
-        size = floor(1800 / 3), 
-        replace = FALSE
-      ),
-      TRUE, FALSE
-    )
-  ) %>%
-  ungroup() %>%
-  filter(!remove_flag) %>%
-  select(-zero_row, -remove_flag)
-
-table(x$New_nests_os)
-table(x2$New_nests_os)
-
-
-x2 <- x2 %>% 
-  pivot_longer(
-    cols = c(New_nests_os, Available_cavities_prior, Osmia_ps_prior),
-    names_to = 'Cavities',
-    values_to = 'Count')
-
-ggplot(x2, aes(y = Count, x = Treatment, fill = Cavities)) +
-  geom_bar(position="fill", stat="identity")
-
-
-
-
-## sum all new nests and available and occupied
-
-
-y <- trapnesting_os_null %>% 
-  select(Treatment, Trapnest, Date, New_nests_os, Available_cavities_prior, Osmia_ps_prior) 
-
-
-# total
-
-y_sum <- y %>% 
-  group_by(Trapnest, Treatment) %>% 
-  summarise(total_new = sum(New_nests_os), total_avail = sum(Available_cavities_prior), total_os_prior = sum(Osmia_ps_prior))
-
-y_sum <- y_sum %>% 
-  pivot_longer(
-    cols = c(total_new, total_avail, total_os_prior),
-    names_to = 'Cavities',
-    values_to = 'Sum')
-
-
-ggplot(y_sum, aes(y = Sum, x = Treatment, fill = Cavities)) +
-  geom_bar(position="fill", stat="identity")
-
-
-
-# average 
-
-y2_sum <- y %>% 
-  group_by(Trapnest, Treatment) %>% 
-  summarise(mean_new = mean(New_nests_os), mean_avail = mean(Available_cavities_prior), mean_os_prior = mean(Osmia_ps_prior))
-
-y2_sum <- y2_sum %>% 
-  pivot_longer(
-    cols = c(mean_new, mean_avail, mean_os_prior),
-    names_to = 'Cavities',
-    values_to = 'Mean')
-
-
-ggplot(y2_sum, aes(y = Mean, x = Treatment, fill = Cavities)) +
-  geom_bar(position="fill", stat="identity")
+Prop_each_day %>% 
+  ggplot(aes(y = Prop_new_of_avail, x = Treatment)) +
+  geom_bar(stat="identity")
 
 
 
 
 ```
 
-```{r Congeneric_Attraction_Megachile}
+## Congeneric Attraction Megachile
+
+```{r Congeneric_Attraction_Megachile, echo=FALSE, warning=FALSE, message=FALSE}
 
 
  ## Geom_smooth plot ##
@@ -392,7 +317,9 @@ ggplot(cong_attr_meg, aes(x = Treatment, y = Mean, fill = Data_type)) +
 
 ```
 
-```{r Parasite_Attraction_Osmia}
+## Sapyga attraction to Osmia
+
+```{r Parasite_Attraction_Osmia, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 # number of parasitized cells
@@ -425,16 +352,11 @@ prop_par_sum_os <- prop_par_sum_os %>%
     values_to = "Count")
 
 
-# proportion
+# filled
 prop_par_sum_os %>% 
   ggplot(aes(y = Count, x = Treatment, fill = Cells)) + 
-  geom_bar(position="fill", stat="identity")
-
-# stacked
-prop_par_sum_os %>% 
-  ggplot(aes(y = Count, x = Treatment, fill = Cells)) + 
-  geom_bar(position="stack", stat="identity")
-
+  geom_bar(position="fill", stat="identity") +
+  labs(title = 'Osmia cells')
 
 
 
@@ -449,24 +371,80 @@ prop_par_nest_os <- nesting_cells_os %>%
 prop_par_nest_sum_os <- prop_par_nest_os %>% 
   count(Treatment, Nest_parasitized)
 
-
-# stacked
-prop_par_nest_sum_os %>% 
-  ggplot(aes(y = n, x = Treatment, fill = Nest_parasitized)) + 
-  geom_bar(position="stack", stat="identity")
-
 # filled
 prop_par_nest_sum_os %>% 
   ggplot(aes(y = n, x = Treatment, fill = Nest_parasitized)) + 
-  geom_bar(position="fill", stat="identity")
+  geom_bar(position="fill", stat="identity") +
+  labs(title = 'Osmia nests')
 
 
 
 ```
 
-## 
+```{r Parasite_Attraction_Megachile, echo=FALSE, warning=FALSE, message=FALSE}
 
-```{r Parasite_Avoidance_Osmia}
+
+# number of parasitized cells
+
+max_cell_num_meg <- nesting_cells_meg %>% 
+  select(Treatment, Nest_ID, Cell_number) %>% 
+  group_by(Nest_ID) %>% 
+  slice_max(Cell_number)
+  
+max_par_num_meg <- nesting_cells_meg %>% 
+  select(Treatment, Nest_ID, Cumulative_par) %>% 
+  group_by(Nest_ID) %>% 
+  slice_max(Cumulative_par, with_ties = FALSE)
+
+# nest-level
+prop_par_nest_meg <- right_join(max_cell_num_meg, max_par_num_meg)
+
+# treatment-level
+prop_par_sum_meg <- prop_par_nest_meg %>% 
+  group_by(Treatment) %>% 
+  summarise(Total_cells = sum(Cell_number), Total_par = sum(Cumulative_par))
+# make into columns for the figure
+prop_par_sum_meg <- prop_par_sum_meg %>% 
+  mutate(Total_not_par = Total_cells - Total_par)
+prop_par_sum_meg <- prop_par_sum_meg %>% select(-Total_cells)
+prop_par_sum_meg <- prop_par_sum_meg %>% 
+  pivot_longer(
+    cols = c(Total_not_par, Total_par),
+    names_to = "Cells",
+    values_to = "Count")
+
+
+# filled
+prop_par_sum_meg %>% 
+  ggplot(aes(y = Count, x = Treatment, fill = Cells)) + 
+  geom_bar(position="fill", stat="identity") +
+  labs(title = 'Megachile cells')
+
+
+
+# number of parasitized nests
+prop_par_nest_meg <- nesting_cells_meg %>% 
+  select(Treatment, Nest_ID, Nest_parasitized) %>% 
+  arrange(Nest_parasitized, Nest_ID) %>% 
+  group_by(Nest_ID) %>% 
+  slice_tail(n = 1) %>% 
+  ungroup()
+
+prop_par_nest_sum_meg <- prop_par_nest_meg %>% 
+  count(Treatment, Nest_parasitized)
+
+# filled
+prop_par_nest_sum_meg %>% 
+  ggplot(aes(y = n, x = Treatment, fill = Nest_parasitized)) + 
+  geom_bar(position="fill", stat="identity") +
+  labs(title = 'Megachile nests')
+
+
+```
+
+## Parasite avoidance in Osmia
+
+```{r Parasite_Avoidance_Osmia, echo=FALSE, warning=FALSE, message=FALSE}
 
 New_nests_os ~ scale(DP_os_prior) * scale(NDP_ps_os_prior)
 
@@ -480,7 +458,8 @@ trapnesting_os_null %>%
   filter(New_nests_os != 0) %>% 
   ggplot(aes(y = New_nests_os, x = NDP_ps_os_prior, color = DP_os_prior, group = DP_os_prior)) +
   geom_jitter(height = 0.09, width = 0.09, alpha = 0.4) +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  labs(title = 'Zero new_nests removed')
 
 # try a bubble plot
 
@@ -488,195 +467,190 @@ trapnesting_os_null %>%
 trapnesting_os_null %>%
   ggplot(aes(y = DP_os_prior, x = NDP_ps_os_prior, size = New_nests_os)) +
   geom_point(alpha=0.3) +
-    scale_size(range = c(.1, 5))
+    scale_size(range = c(.1, 5)) +
+  labs(title = 'Showing detectable parasites vs non detectable parasites')
 
 
 
 ```
-
-## Nesting per congeneric presence (including pseudo nests)
 
 ```{r Conspecifics_with_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
 ### Probability
-
-# create a probability by successes/ successes + failures
-os_fig_data <- nesting_os_xs %>% mutate(Probability_new_nest = New_nests_os / Available_cavities_prior)
-
-## Osmia
-
-os_fig_data %>%
-  ggplot(aes(x = Osmia_ps_prior, y = Probability_new_nest)) +
-  geom_jitter(colour = "goldenrod2", alpha = 0.5, height = 0.05, width = 0.1) +
-  stat_smooth(method = "glm", colour = "goldenrod2", fill = "goldenrod2") +
-  labs(x = "Number of " ~ italic(Osmia) ~ " in trapnest", y = "Number of new nests / \n Number of potential nests") +
-  theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
-  xlim(0, 18) +
-  ylim(0, 1)
-
-
-
-### Raw data
-
-## Osmia
-
-nesting_os_xs %>%
-  ggplot(aes(Osmia_ps_prior, New_nests_os)) +
-  geom_jitter(height = 0.05, alpha = 0.5, colour = "steelblue2") +
-  geom_smooth(method = "lm", colour = "indianred3", fill = "indianred3") +
-  labs(x = "Osmia", y = "Number of new nests each visit") +
-  xlim(0, 18)
-
-## Megachile
-
-nesting_meg_xs %>%
-  ggplot(aes(Meg_ps_prior, New_nests_meg)) +
-  geom_jitter(height = 0.05, alpha = 0.5, colour = "goldenrod2") +
-  geom_smooth(method = "glm", colour = "indianred3", fill = "indianred3") +
-  labs(x = "Available cavities", y = "Number of new nests each visit") +
-  xlim(0, 18)
+# 
+# # create a probability by successes/ successes + failures
+# os_fig_data <- nesting_os_xs %>% mutate(Probability_new_nest = New_nests_os / Available_cavities_prior)
+# 
+# ## Osmia
+# 
+# os_fig_data %>%
+#   ggplot(aes(x = Osmia_ps_prior, y = Probability_new_nest)) +
+#   geom_jitter(colour = "goldenrod2", alpha = 0.5, height = 0.05, width = 0.1) +
+#   stat_smooth(method = "glm", colour = "goldenrod2", fill = "goldenrod2") +
+#   labs(x = "Number of " ~ italic(Osmia) ~ " in trapnest", y = "Number of new nests / \n Number of potential nests") +
+#   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
+#   xlim(0, 18) +
+#   ylim(0, 1)
+# 
+# 
+# 
+# ### Raw data
+# 
+# ## Osmia
+# 
+# nesting_os_xs %>%
+#   ggplot(aes(Osmia_ps_prior, New_nests_os)) +
+#   geom_jitter(height = 0.05, alpha = 0.5, colour = "steelblue2") +
+#   geom_smooth(method = "lm", colour = "indianred3", fill = "indianred3") +
+#   labs(x = "Osmia", y = "Number of new nests each visit") +
+#   xlim(0, 18)
+# 
+# ## Megachile
+# 
+# nesting_meg_xs %>%
+#   ggplot(aes(Meg_ps_prior, New_nests_meg)) +
+#   geom_jitter(height = 0.05, alpha = 0.5, colour = "goldenrod2") +
+#   geom_smooth(method = "glm", colour = "indianred3", fill = "indianred3") +
+#   labs(x = "Available cavities", y = "Number of new nests each visit") +
+#   xlim(0, 18)
 ```
-
-## Nesting per conspecific presence (excluding pseudo nests)
 
 ```{r Conspecifics_without_pseudo, echo=FALSE, warning=FALSE, message=FALSE}
-### Osmia
-
-nesting_os_xs %>%
-  ggplot(aes(Osmia_no_ps_prior, New_nests_os)) +
-  geom_jitter(height = 0.05, alpha = 0.5, colour = "steelblue2") +
-  geom_smooth(method = "glm", colour = "rosybrown", fill = "rosybrown") +
-  labs(x = "Available cavities", y = "Number of new nests each visit") +
-  xlim(0, 18)
-
-### Megachile
-
-nesting_meg_xs %>%
-  ggplot(aes(Meg_no_ps_prior, New_nests_meg)) +
-  geom_jitter(height = 0.05, alpha = 0.5, colour = "goldenrod2") +
-  geom_smooth(method = "glm", colour = "rosybrown", fill = "rosybrown") +
-  labs(x = "Available cavities", y = "Number of new nests each visit") +
-  xlim(0, 18)
+# ### Osmia
+# 
+# nesting_os_xs %>%
+#   ggplot(aes(Osmia_no_ps_prior, New_nests_os)) +
+#   geom_jitter(height = 0.05, alpha = 0.5, colour = "steelblue2") +
+#   geom_smooth(method = "glm", colour = "rosybrown", fill = "rosybrown") +
+#   labs(x = "Available cavities", y = "Number of new nests each visit") +
+#   xlim(0, 18)
+# 
+# ### Megachile
+# 
+# nesting_meg_xs %>%
+#   ggplot(aes(Meg_no_ps_prior, New_nests_meg)) +
+#   geom_jitter(height = 0.05, alpha = 0.5, colour = "goldenrod2") +
+#   geom_smooth(method = "glm", colour = "rosybrown", fill = "rosybrown") +
+#   labs(x = "Available cavities", y = "Number of new nests each visit") +
+#   xlim(0, 18)
 ```
 
-## Parasitism
+## 
 
-```{r Wrangling Parasitism data, ignore=TRUE}
+```{r Wrangling Parasitism data, include=FALSE}
 ## Change data to make a stacked bar plot
-
-cells_os <- pivot_longer(nesting_cells_os,
-  cols = c(Sum_cell_not_parasitized, Sum_cell_parasitized),
-  names_to = "Parasitized",
-  values_to = "Cell_count"
-)
-
-
-cells_os$Parasitized <- factor(cells_os$Parasitized, levels = c("Sum_cell_parasitized", "Sum_cell_not_parasitized"))
+# 
+# cells_os <- pivot_longer(nesting_cells_os,
+#   cols = c(Sum_cell_not_parasitized, Sum_cell_parasitized),
+#   names_to = "Parasitized",
+#   values_to = "Cell_count"
+# )
+# 
+# 
+# cells_os$Parasitized <- factor(cells_os$Parasitized, levels = c("Sum_cell_parasitized", "Sum_cell_not_parasitized"))
 ```
 
 ```{r Parasitism, echo=FALSE, warning=FALSE, message=FALSE}
 # Relation between parasites and aggregation densities, with pseudo
-
-cells_os %>%
-  ggplot(aes(Osmia_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
-  geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
-  scale_fill_manual(values = c("plum", "seagreen3")) +
-  scale_colour_manual(values = c("plum", "seagreen3"))
-
-
-# Relation between parasites and aggregation densities, without pseudo
-
-cells_os %>%
-  ggplot(aes(Osmia_no_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
-  geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
-  scale_fill_manual(values = c("plum", "seagreen3")) +
-  scale_colour_manual(values = c("plum", "seagreen3"))
-
-
-# Relation between parasites and aggregation densities, only unsealed
-
-cells_os %>%
-  ggplot(aes(Sum_unsealed_os_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
-  geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
-  scale_fill_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
-  scale_colour_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
-  labs(y = "Number of cells", x = "Number of active " ~ italic(Osmia) ~ " nests") +
-  theme(legend.title = element_blank()) +
-  theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
+# 
+# cells_os %>%
+#   ggplot(aes(Osmia_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+#   geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
+#   scale_fill_manual(values = c("plum", "seagreen3")) +
+#   scale_colour_manual(values = c("plum", "seagreen3"))
+# 
+# 
+# # Relation between parasites and aggregation densities, without pseudo
+# 
+# cells_os %>%
+#   ggplot(aes(Osmia_no_ps_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+#   geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
+#   scale_fill_manual(values = c("plum", "seagreen3")) +
+#   scale_colour_manual(values = c("plum", "seagreen3"))
+# 
+# 
+# # Relation between parasites and aggregation densities, only unsealed
+# 
+# cells_os %>%
+#   ggplot(aes(Sum_unsealed_os_no_iw, Cell_count, fill = Parasitized, colour = Parasitized)) +
+#   geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
+#   scale_fill_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
+#   scale_colour_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
+#   labs(y = "Number of cells", x = "Number of active " ~ italic(Osmia) ~ " nests") +
+#   theme(legend.title = element_blank()) +
+#   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
 ```
 
-```{r Preferences and Parasites}
-# make proportion of new nests
-nests_os_xs <- nesting_os_xs %>% mutate(Proportion_new_nests_os = New_nests_os / Available_cavities_prior)
-
-# scale DP_os_prior
-nests_os_xs$DP_os_scaled <- scale(nests_os_xs$DP_os_prior)
-
-# make numeric
-nests_os_xs$DP_os_scaled <- as.numeric(nests_os_xs$DP_os_scaled)
-
-# make mean + and - 1 SD
-nests_os_xs <- nests_os_xs %>%
-  mutate(
-    mean_DP_os_scaled = mean(DP_os_scaled, na.rm = TRUE),
-    sd_DP_os_scaled = sd(DP_os_scaled, na.rm = TRUE),
-    DP_os_category = case_when(
-      DP_os_scaled < mean_DP_os_scaled - sd_DP_os_scaled ~ "Mean - 1 SD",
-      DP_os_scaled > mean_DP_os_scaled + sd_DP_os_scaled ~ "Mean + 1 SD",
-      TRUE ~ "Mean"
-    )
-  ) %>%
-  select(-mean_DP_os_scaled, -sd_DP_os_scaled) # Optionally remove the intermediate columns
-
-
-mean(nests_os_xs$DP_os_scaled)
-
-
-
-# How the presence of parasites effects nesting preferences, with pseudo
-
-# With interaction
-
-nests_os_xs %>%
-  ggplot(aes(NDP_ps_os_prior, Proportion_new_nests_os, colour = DP_os_category, group = DP_os_category)) +
-  geom_jitter(colour = "goldenrod2", height = 0.1, width = 0.1, alpha = 0.6) +
-  geom_smooth(method = "glm", aes(colour = DP_os_category, fill = DP_os_category)) +
-  scale_colour_manual(values = c("tomato3", "tomato"), name = ("Number of nests with \ndetectable parasites"), breaks = c("Mean + 1 SD", "Mean")) +
-  scale_fill_manual(values = c("tomato3", "tomato"), name = ("Number of nests with \ndetectable parasites"), breaks = c("Mean + 1 SD", "Mean")) +
-  labs(y = "Number of new nests / \n Number of potential nests", x = "Number of nests without \ndetectable parasites") +
-  theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
-  xlim(0, 18) +
-  ylim(0, 1)
-
-
-# Without interaction
-
-nests_os_xs %>%
-  ggplot(aes(DP_os_prior, Proportion_new_nests_os)) +
-  geom_jitter(colour = "goldenrod2", height = 0.1, width = 0.1, alpha = 0.6) +
-  geom_smooth(method = "glm", colour = "tomato2", fill = "tomato2") +
-  labs(y = "Number of new nests / \n Number of potential nests", x = "Number of nests with detectable parasites") +
-  theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
-  xlim(0, 3.5) +
-  ylim(0, 1)
+```{r Preferences and Parasites, echo=FALSE, warning=FALSE, message=FALSE}
+# # make proportion of new nests
+# nests_os_xs <- nesting_os_xs %>% mutate(Proportion_new_nests_os = New_nests_os / Available_cavities_prior)
+# 
+# # scale DP_os_prior
+# nests_os_xs$DP_os_scaled <- scale(nests_os_xs$DP_os_prior)
+# 
+# # make numeric
+# nests_os_xs$DP_os_scaled <- as.numeric(nests_os_xs$DP_os_scaled)
+# 
+# # make mean + and - 1 SD
+# nests_os_xs <- nests_os_xs %>%
+#   mutate(
+#     mean_DP_os_scaled = mean(DP_os_scaled, na.rm = TRUE),
+#     sd_DP_os_scaled = sd(DP_os_scaled, na.rm = TRUE),
+#     DP_os_category = case_when(
+#       DP_os_scaled < mean_DP_os_scaled - sd_DP_os_scaled ~ "Mean - 1 SD",
+#       DP_os_scaled > mean_DP_os_scaled + sd_DP_os_scaled ~ "Mean + 1 SD",
+#       TRUE ~ "Mean"
+#     )
+#   ) %>%
+#   select(-mean_DP_os_scaled, -sd_DP_os_scaled) # Optionally remove the intermediate columns
+# 
+# 
+# mean(nests_os_xs$DP_os_scaled)
+# 
+# 
+# 
+# # How the presence of parasites effects nesting preferences, with pseudo
+# 
+# # With interaction
+# 
+# nests_os_xs %>%
+#   ggplot(aes(NDP_ps_os_prior, Proportion_new_nests_os, colour = DP_os_category, group = DP_os_category)) +
+#   geom_jitter(colour = "goldenrod2", height = 0.1, width = 0.1, alpha = 0.6) +
+#   geom_smooth(method = "glm", aes(colour = DP_os_category, fill = DP_os_category)) +
+#   scale_colour_manual(values = c("tomato3", "tomato"), name = ("Number of nests with \ndetectable parasites"), breaks = c("Mean + 1 SD", "Mean")) +
+#   scale_fill_manual(values = c("tomato3", "tomato"), name = ("Number of nests with \ndetectable parasites"), breaks = c("Mean + 1 SD", "Mean")) +
+#   labs(y = "Number of new nests / \n Number of potential nests", x = "Number of nests without \ndetectable parasites") +
+#   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
+#   xlim(0, 18) +
+#   ylim(0, 1)
+# 
+# 
+# # Without interaction
+# 
+# nests_os_xs %>%
+#   ggplot(aes(DP_os_prior, Proportion_new_nests_os)) +
+#   geom_jitter(colour = "goldenrod2", height = 0.1, width = 0.1, alpha = 0.6) +
+#   geom_smooth(method = "glm", colour = "tomato2", fill = "tomato2") +
+#   labs(y = "Number of new nests / \n Number of potential nests", x = "Number of nests with detectable parasites") +
+#   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black")) +
+#   xlim(0, 3.5) +
+#   ylim(0, 1)
 ```
-
-The most recent figure shows osmia density of unsealed nests, but shows cumulative parasites and doesn't count the current nest
 
 ## Nest Investment
 
 ```{r Last Cell, echo=FALSE, warning=FALSE, message=FALSE}
-# Is the last cell more likely to be parasitized?
-cells_os$Last_cell <- as.factor(cells_os$Last_cell)
-
-
-cells_os %>%
-  ggplot(aes(Last_cell, Cell_count, fill = Parasitized, colour = Parasitized)) +
-  geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
-  scale_fill_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
-  scale_colour_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
-  labs(y = "Number of cells", x = "Cell position") +
-  scale_x_discrete(labels = c("Not last cell", "Last cell")) +
-  theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
+# # Is the last cell more likely to be parasitized?
+# cells_os$Last_cell <- as.factor(cells_os$Last_cell)
+# 
+# 
+# cells_os %>%
+#   ggplot(aes(Last_cell, Cell_count, fill = Parasitized, colour = Parasitized)) +
+#   geom_bar(stat = "identity") + # to make this a proportion of cells, add "position='fill'"
+#   scale_fill_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
+#   scale_colour_manual(values = c("tomato2", "goldenrod2"), labels = c("Parasitized", "Not Parasitized"), name = ("Cell status")) +
+#   labs(y = "Number of cells", x = "Cell position") +
+#   scale_x_discrete(labels = c("Not last cell", "Last cell")) +
+#   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
 ```
 
 ```{r Investment, echo=FALSE, warning=FALSE, message=FALSE}
@@ -700,7 +674,7 @@ nesting_investment_os %>%
     labels = c("Not parasitized", "Parasitized"),
     name = "Nest status") +
   scale_fill_manual(values = c("goldenrod2", "tomato2"), labels = c("Not parasitized", "Parasitized"), name = "Nest status") +
-  labs(y = "Proportion of focal nest filled with cells", x = "Number of surrounding nests with detectable parasites") +
+  labs(y = "Proportion of focal nest filled with cells", x = "Number of surrounding nests with detectable parasites", title = "Osmia") +
   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
 
 
@@ -719,13 +693,15 @@ nesting_investment_meg %>%
     labels = c("Not parasitized", "Parasitized"),
     name = "Nest status") +
   scale_fill_manual(values = c("goldenrod2", "tomato2"), labels = c("Not parasitized", "Parasitized"), name = "Nest status") +
-  labs(y = "Proportion of focal nest filled with cells", x = "Number of surrounding nests with detectable parasites") +
+  labs(y = "Proportion of focal nest filled with cells", x = "Number of surrounding nests with detectable parasites", title = "Megachile") +
   theme(axis.text.x = element_text(colour = "black"), axis.text.y = element_text(colour = "black"))
 
 
 ```
 
-```{r Nest_Termination, include=FALSE}
+Nest Termination
+
+```{r Nest_Termination,echo=FALSE, warning=FALSE, message=FALSE}
 
 # osmia 
 
@@ -734,10 +710,14 @@ nesting_cells_os_fig <- nesting_cells_os %>% select(Nest_ID, Cell_ID, Cell_posit
 nesting_cells_os_fig <- nesting_cells_os_fig %>% 
   mutate(Cell_parasitized_word = ifelse(Cell_parasitized == 1, 'Parasitized', 'Not parasitized'))
 
-nesting_cells_os_fig %>% 
+nesting_cells_os_fig <- nesting_cells_os_fig %>% 
   filter(Cell_position == 'last cell' | Cell_position == 'not last cell') %>% 
   ggplot(aes(x = Cell_position, fill = Cell_parasitized_word, group = Cell_parasitized_word)) +
-  geom_bar(position = 'fill')
+  geom_bar(position = 'fill') +
+  labs(title = 'Osmia')
+
+nesting_cells_os_fig
+
 
  # megachile
 
@@ -746,15 +726,19 @@ nesting_cells_meg_fig <- nesting_cells_meg %>% select(Nest_ID, Cell_ID, Cell_pos
 nesting_cells_meg_fig <- nesting_cells_meg_fig %>% 
   mutate(Cell_parasitized_word = ifelse(Cell_parasitized == 1, 'Parasitized', 'Not parasitized'))
 
-nesting_cells_meg_fig %>% 
+nesting_cells_meg_fig <- nesting_cells_meg_fig %>% 
   filter(Cell_position == 'last cell' | Cell_position == 'not last cell') %>% 
   ggplot(aes(x = Cell_position, fill = Cell_parasitized_word, group = Cell_parasitized_word)) +
-  geom_bar(position = 'fill')
+  geom_bar(position = 'fill')+
+  labs(title = 'Megachile')
 
+nesting_cells_meg_fig 
 
 ```
 
-```{r Inner_Walls}
+## Abandoning inner walls
+
+```{r Inner_Walls, echo=FALSE, warning=FALSE, message=FALSE}
 
 # osmia
 
