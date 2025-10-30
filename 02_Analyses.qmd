@@ -57,39 +57,96 @@ cor(nesting_os$NDP_os_prior, nesting_os$DP_os_prior) # good
 plot(jitter(nesting_meg$NDP_meg_prior) ~ jitter(nesting_meg$DP_meg_prior))
 cor(nesting_meg$NDP_meg_prior, nesting_meg$DP_meg_prior) # good
 
+
+## Cleaning data to reduce large standard error values from small sample sizes
+
 # how many Osmia in each year?
+# note the numbers may vary slightly because of what nests were dissected, moldy, eaten, or did not emerge 
 nesting_os %>% 
   group_by(Year) %>% 
   filter(Status != 'pseudo' & Status != 'empty') %>% 
   summarise(Count = length(unique(Nest_ID)))
-# only 5 in 2024, remove?
+# 162 in 202023 and only 5 in 2024, remove
+nesting_os <- nesting_os %>% filter(Year != 'year_2024')
+# same for trapnesting data?
+trapnesting_os %>% 
+  group_by(Year) %>% 
+  summarise(Count = sum(New_nests_os)) # yes, 5
+trapnesting_os <- trapnesting_os %>% filter(Year != 'year_2024')
+# same for cell data?
+nesting_cells_os %>% 
+  group_by(Year) %>% 
+  summarise(Count = length(unique(Nest_ID))) # yes, 4
+nesting_cells_os <- nesting_cells_os %>% filter(Year != 'year_2024')
+# same for investment data?
+nesting_investment_os %>% 
+  group_by(Year) %>% 
+  summarise(Count = length(unique(Nest_ID))) # yes, 1
+nesting_investment_os <- nesting_investment_os %>% filter(Year != 'year_2024')
 
 # how many Osmia at each site?
 nesting_os %>% 
   group_by(Site) %>% 
   filter(Status != 'pseudo' & Status != 'empty') %>% 
   summarise(Count = length(unique(Nest_ID)))
-# only 1 at CP, remove?
+# before previous removal, 109 at BP, 54 at NN, only 4 at CP, remove
+nesting_os <- nesting_os %>% filter(Site != 'CP')
+# same for trapnesting data?
+trapnesting_os %>% 
+  group_by(Site) %>% 
+  summarise(Count = sum(New_nests_os))
+# before previous removal, 109 at BP, 54 at NN, only 4 at CP, remove
+trapnesting_os <- trapnesting_os %>% filter(Site != 'CP')
+# same for cell data?
+nesting_cells_os %>% 
+  group_by(Site) %>% 
+  summarise(Count = length(unique(Nest_ID))) # yes, 4
+nesting_cells_os <- nesting_cells_os %>% filter(Site != 'CP')
+# same for investment data?
+nesting_investment_os %>% 
+  group_by(Site) %>% 
+  summarise(Count = length(unique(Nest_ID))) # all good, no CP
+
 
 # how many Megachile in each year?
 nesting_meg %>% 
   group_by(Year) %>% 
   filter(Status != 'pseudo' & Status != 'empty') %>% 
   summarise(Count = length(unique(Nest_ID)))
-# good spread
+# 64 in 2023, 76 in 2024, good spread
+trapnesting_meg %>% 
+  group_by(Year) %>% 
+  summarise(Count = sum(New_nests_meg)) # yes, 64 and 76
+# same for cell data?
+nesting_cells_meg %>% 
+  group_by(Year) %>% 
+  summarise(Count = length(unique(Nest_ID))) # yes, 44 and 64
+# same for investment data?
+nesting_investment_meg %>% 
+  group_by(Year) %>% 
+  summarise(Count = length(unique(Nest_ID))) # fine, so few because of 40+ nests weren't sealed on the last day
 
 # how many Megachile at each site?
 nesting_meg %>% 
   group_by(Site) %>% 
   filter(Status != 'pseudo' & Status != 'empty') %>% 
   summarise(Count = length(unique(Nest_ID)))
-# only 3 at NN, remove?
-
-
-## Cleaning data to reduce large standard error values from small sample sizes
-
-# remove 2024 data from Osmia data
-nesting_cells_os <- nesting_cells_os %>% filter(Year != 'year_2024')
+# BP has 98, CP has 39, only 3 at NN, remove
+nesting_meg <- nesting_meg %>% filter(Site != 'NN')
+# same with trapnesting?
+trapnesting_meg %>% 
+  group_by(Site) %>% 
+  summarise(Count = sum(New_nests_meg)) # 3 at NN
+trapnesting_meg <- trapnesting_meg %>% filter(Site != 'NN')
+# same for cell data?
+nesting_cells_meg %>% 
+  group_by(Site) %>% 
+  summarise(Count = length(unique(Nest_ID))) # 2 at NN
+nesting_cells_meg <- nesting_cells_meg %>% filter(Site != 'NN')
+# same for investment data?
+nesting_investment_meg %>% 
+  group_by(Site) %>% 
+  summarise(Count = length(unique(Nest_ID))) # good
 
 
 ```
@@ -168,7 +225,7 @@ trapnesting_os_null <- trapnesting_os %>%
 
 # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 sim_list_os_ps_attr <- lapply(1:n_sim, function(x){
-  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson)
   summary(output)
 } ) 
@@ -181,7 +238,7 @@ sim_coefs_os_ps <- c(unlist(lapply(sim_list_os_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_os_ps)
 
 # extract my observed coefficient
@@ -202,7 +259,7 @@ hist_1i <- ggplot(df_coefs_os_ps, aes(x = sim_coefs_os_ps)) +
 
 
 ## Reporting
-# save model with observed data to easily make table with?????
+
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_ps < df_coefs_os_ps) # none are larger
 # save
@@ -215,7 +272,7 @@ ggsave("Figures/hist_1i.png", plot = hist_1i, width = 5, height = 4)
 
 # run the model on each of the simulated data columns
 sim_list_os_no_ps_attr <- lapply(1:n_sim, function(x){
-  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson)
   summary(output)
 } ) 
@@ -228,7 +285,7 @@ sim_coefs_os_no_ps <- c(unlist(lapply(sim_list_os_no_ps_attr, function(x) {
 
 ## Observed data 
 
-mod_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_os_no_ps)
 
 # extract my observed coefficient
@@ -554,7 +611,7 @@ Model 3a_ii - excluding pseudo
 
 # run the model on each of the simulated data columns
 sim_list_os_ps_avoid <- lapply(1:n_sim, function(x){
-  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson())
   summary(output)
 } )
@@ -567,7 +624,7 @@ sim_coefs_os_ps_avoid <- c(unlist(lapply(sim_list_os_ps_avoid, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_par_os_ps <- glmer(New_nests_os ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_choice_consp_par_os_ps <- glmer(New_nests_os ~ scale(DP_os_prior) * scale(NDP_ps_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_par_os_ps)
 
 # extract my observed coefficient
@@ -599,7 +656,7 @@ ggsave("Figures/hist_3ai.png", plot = hist_3ai, width = 5, height = 4)
 
 # run the model on each of the simulated data columns, which will create the summary outputs of each simulated data model
 sim_list_os_no_ps_avoid <- lapply(1:n_sim, function(x){
-  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
   output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson())
   summary(output)
 } )
@@ -612,7 +669,7 @@ sim_coefs_os_no_ps_avoid <- c(unlist(lapply(sim_list_os_no_ps_avoid, function(x)
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_par_os_no_ps <- glmer(New_nests_os ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_choice_consp_par_os_no_ps <- glmer(New_nests_os ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_par_os_no_ps)
 
 # extract my observed coefficient
@@ -785,7 +842,7 @@ plot(ggpredict(mod_3bii_invest_filled_meg, terms = c('DP_meg_prior', 'Nest_paras
 
 # MODEL 3c_i - Osmia nest termination #
 
-mod_3ci_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Year + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
+mod_3ci_last_cell_os <- glmer(Cell_position_bi ~ Cell_parasitized + poly(Day_of_year,2) + Site + (1|Nest_ID), data = nesting_cells_os, family = binomial)
 
 plot(simulateResiduals(mod_3ci_last_cell_os)) # good
 check_model(mod_3ci_last_cell_os) # high VIF for year and site

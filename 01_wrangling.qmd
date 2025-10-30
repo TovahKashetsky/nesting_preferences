@@ -1936,8 +1936,7 @@ nesting_cells_meg <- nesting_cells_meg %>% mutate(Cell_position_bi = if_else(Cel
 
 
 ## Make df for just nest investment
-nesting_investment <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo')
-# nesting_investment_0_old <- distinct(nesting_investment_0, Nest_ID, .keep_all= TRUE)
+nesting_investment <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo' & Status != 'empty')
 
 nesting_investment <- nesting_investment %>%
   arrange(Date, Nest_ID) %>%
@@ -1948,6 +1947,8 @@ nesting_investment <- nesting_investment %>%
   ungroup()
 
 nesting_investment <- nesting_investment %>% filter(!is.na(Filled_length))
+table(nesting_investment$Occupant)
+# 123 megachile, 137 osmia
 
 # fitler out all nests that aren't end capped to exclude abandoned nests and nests not finished at the end of the experiment 
 nesting_investment <- nesting_investment %>% filter(Sealed == 'sealed')
