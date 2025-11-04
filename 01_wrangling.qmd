@@ -981,7 +981,7 @@ preferences <- preferences_1 %>% select(Date, Site, Subsite, Treatment, Trapnest
 preferences <- preferences %>% mutate(New_nests_sum = if_else(!is.na(New_nests_os) & is.na(New_nests_meg), New_nests_os, if_else(is.na(New_nests_os) & !is.na(New_nests_meg), New_nests_meg, (New_nests_os + New_nests_meg))))
 
 preferences <- preferences %>% mutate(Available_cavities_prior = Available_post + New_nests_sum)
- 
+
 # filter out wasps and non-targets from choices, after we counted them as occupied cavities, but do this in the next chunk
 
 
@@ -1423,7 +1423,7 @@ parasite_bin_os <- nesting_cells %>%
 parasite_bin_os <- parasite_bin_os %>% mutate(Nest_parasitized = if_else(Max_par == 0, 'no', 
                                                                    if_else(Max_par >= 1, 'yes', NA)))
 table(parasite_bin_os$Nest_parasitized)
-# 74 no and 47 yes
+# 75 no and 47 yes
 
  # Megachile
 parasite_bin_meg <- nesting_cells %>%
@@ -1435,7 +1435,7 @@ parasite_bin_meg <- nesting_cells %>%
 parasite_bin_meg <- parasite_bin_meg %>% mutate(Nest_parasitized = if_else(Max_par == 0, 'no', 
                                                                    if_else(Max_par >= 1, 'yes', NA)))
 table(parasite_bin_meg$Nest_parasitized)
-# 89 no and 12 yes
+# 89 no and 13 yes
 
 # make binary sealed column 
 nesting_cells <- nesting_cells %>% 
@@ -1494,7 +1494,6 @@ nesting_cells <- nesting_cells %>%
   mutate(Meg_active_mothers = replace_na(Meg_active_mothers, 0))
 
 
-######## CHECK - nests that are the current Bee_choice, if parasitized, are counted in the number of par in trapnest. Fix this. Leads to impossible values in parasite figures 
 ```
 
 ```{r Parasite_Wrangling_for_Models}
@@ -1586,8 +1585,8 @@ nesting_cells_meg_0[duplicated(nesting_cells_meg_0$Cell_ID),]
 
 
 ## Making day of the year
-nesting_cells_os <- nesting_cells_os %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
-nesting_cells_meg <- nesting_cells_meg %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
+nesting_cells_os <- nesting_cells_os_0 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
+nesting_cells_meg <- nesting_cells_meg_0 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
 nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,format='%d/%m/%Y')))
 
 ```
@@ -1953,10 +1952,11 @@ table(nesting_investment$Occupant)
 # fitler out all nests that aren't end capped to exclude abandoned nests and nests not finished at the end of the experiment 
 nesting_investment <- nesting_investment %>% filter(Sealed == 'sealed')
 
-
 ## Separate Osmia and Megachile data frames 
 nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
+table(nesting_investment_os$Occupant) # 108
 nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile') 
+table(nesting_investment_meg$Occupant) # 61
 
 # take only columns that make sense at the nest level
 nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Sealed, Nest_parasitized, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)

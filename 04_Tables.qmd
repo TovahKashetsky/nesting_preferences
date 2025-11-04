@@ -2,7 +2,7 @@
 title: 
   Social influence and anti-parasite defences during nest-site selection of
   solitary cavity-nesting bees
-subtitle: "Supplementary Material: GLMM Output"
+subtitle: Supplementary Material: Model Summaries
 format: 
   docx:
     reference-doc: custom-reference-doc.docx
@@ -32,7 +32,7 @@ mod_3bii_invest_filled_meg <- readRDS('Models/mod_3bii_invest_filled_meg.rds')
 mod_3ci_last_cell_os <- readRDS('Models/mod_3ci_last_cell_os.rds')
 mod_3cii_last_cell_meg <- readRDS('Models/mod_3cii_last_cell_meg.rds')
 mod_3di_inner_wall_os <- readRDS('Models/mod_3di_inner_wall_os.rds')
-mod_3dii_inner_wall_meg <- readRDS('Models/mod_3dii_inner_wall_meg.rds')
+# mod_3dii_inner_wall_meg <- readRDS('Models/mod_3dii_inner_wall_meg.rds')
 
 
 ```
@@ -196,12 +196,12 @@ mod_3bii_invest_filled_meg_table <- tidy_function_lmer(mod_3bii_invest_filled_me
 mod_3ci_last_cell_os_table <- tidy_function_glmer(mod_3ci_last_cell_os) %>% format_table_function_glmer()
 mod_3cii_last_cell_meg_table <- tidy_function_glmer(mod_3cii_last_cell_meg) %>% format_table_function_glmer()
 mod_3di_inner_wall_os_table <- tidy_function_glmer(mod_3di_inner_wall_os) %>% format_table_function_glmer()
-mod_3dii_inner_wall_meg_table <- tidy_function_glmer(mod_3dii_inner_wall_meg) %>% format_table_function_glmer()
+# mod_3dii_inner_wall_meg_table <- tidy_function_glmer(mod_3dii_inner_wall_meg) %>% format_table_function_glmer()
 
 
 ```
 
-**Table S5.** Summary of the GLMM for model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics.
+**Table S5.** Summary of the GLMM for prediction 1, model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics.
 
 ```{r Model_1_i, echo=FALSE, message=FALSE}
 
@@ -240,9 +240,9 @@ include_graphics("Figures/hist_1i.png")
 
 ```
 
-**Figure S2.** Histogram of coefficients from the 100 models (model 1_i) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S2.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_i.
 
-**Table S6.** Summary of the GLMM for model 1_ii testing for an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics.
+**Table S6.** Summary of the GLMM for prediction 1, model 1_ii testing for an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics.
 
 ```{r Model_1_ii, echo=FALSE, results='asis'}
 
@@ -281,9 +281,9 @@ include_graphics("Figures/hist_1ii.png")
 
 ```
 
-**Figure S3.** Histogram of coefficients from the 100 models (model 1_ii) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S3.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_ii.
 
-**Table S7.** Summary of the GLMM for model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics.
+**Table S7.** Summary of the GLMM for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics.
 
 ```{r Model_1_iii, echo=FALSE}
 
@@ -322,9 +322,9 @@ include_graphics("Figures/hist_1iii.png")
 
 ```
 
-**Figure S4.** Histogram of coefficients from the 100 models (model 1_iii) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S4.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iii.
 
-**Table S8.** Summary of the GLMM for model 1_iv testing for an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics.
+**Table S8.** Summary of the GLMM for prediction 1, model 1_iv testing for an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics.
 
 ```{r Model_1_iv, echo=FALSE}
 
@@ -363,7 +363,7 @@ include_graphics("Figures/hist_1iv.png")
 
 ```
 
-**Figure S5.** Histogram of coefficients from the 100 models (model 1_iv) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S5.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iv.
 
 **Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*), including pseudo nests as *Osmia*.
 
@@ -390,7 +390,7 @@ mod_2i_table
 
 ```
 
-**Table S10.** Summary of the GLMM output from model 2_ii testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
+**Table S10.** Summary of the GLMM output from model 2_ii for prediction 2, testing an attraction to *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
 
 ```{r Model_2_ii, echo=FALSE}
  
@@ -414,7 +414,7 @@ mod_2ii_table
 
 ```
 
-**Table S11.** Summary of the GLMM output from model 2_iii testing for an attraction to active *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
+**Table S11.** Summary of the GLMM output from model 2_iii for prediction 2, testing an attraction to active *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
 
 ```{r Model_2_iii, echo=FALSE}
  
@@ -438,7 +438,7 @@ mod_2iii_table
 
 ```
 
-**Table S12.** Summary of the GLMM output from model 2_iv testing for an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*.
+**Table S12.** Summary of the GLMM output from model 2_iv for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*.
 
 ```{r Model_2_iv, echo=FALSE}
 
@@ -463,7 +463,7 @@ mod_2iv_table
 
 ```
 
-**Table S13.** Summary of the GLMM output from model 2_v testing for an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S13.** Summary of the GLMM output from model 2_v for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
 
 ```{r Model_2_v, echo=FALSE}
 
@@ -487,7 +487,7 @@ mod_2v_table
 
 ```
 
-**Table S14.** Summary of the GLMM output from model 2_vi testing for an attraction to active *Megachile* nests of brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S14.** Summary of the GLMM output from model 2_vi for prediction 2, testing an attraction to active *Megachile* nests of brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
 
 ```{r Model_2_vi, echo=FALSE}
 
@@ -511,7 +511,7 @@ mod_2vi_table
 
 ```
 
-**Table S15.** Summary of the GLMM output from model 3a_i testing for an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congeneric nests with no detectable parasites.
+**Table S15.** Summary of the GLMM output from model 3a_i for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congeneric nests with no detectable parasites.
 
 ```{r Model_3a_i, echo=FALSE}
 
@@ -551,9 +551,9 @@ include_graphics("Figures/hist_3ai.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models (model 3_i) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_i.
 
-**Table S16.** Summary of the GLMM output from model 3a_ii testing for an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites.
+**Table S16.** Summary of the GLMM output from model 3a_ii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites.
 
 ```{r Model_3a_ii, echo=FALSE}
 
@@ -592,9 +592,9 @@ include_graphics("Figures/hist_3aii.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models (model 3_ii) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_ii.
 
-**Table S17.** Summary of the GLMM output from model 3a_iii testing for an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites. Due to the small sample size, we could not execute the model excluding pseudo nests, thus there is no table for output from model 3a_iv.
+**Table S17.** Summary of the GLMM output from model 3a_iii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites. Due to the small sample size, we could not execute the model excluding pseudo nests, thus there is no table for output from model 3a_iv.
 
 ```{r Model_3a_iii, echo=FALSE}
 
@@ -633,9 +633,9 @@ include_graphics("Figures/hist_3aiii.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models (model 3_iii) using simulated data (grey bars) and the coefficient from the model using observed data (red line).
+**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_iii.
 
-**Table S18.** Summary of the GLMM output from model 3b_i testing for a change in nest investment of *Osmia* in response to parasites.
+**Table S18.** Summary of the GLMM output from model 3b_i for prediction 3b, testing a change in nest investment of *Osmia* in response to brood parasites.
 
 ```{r Model_3b_i, echo=FALSE}
 
@@ -659,7 +659,7 @@ mod_3bi_table
 
 ```
 
-**Table S19.** Summary of the GLMM output from model 3b_ii testing for a change in nest investment of *Megachile* in response to parasites.
+**Table S19.** Summary of the GLMM output from model 3b_ii for prediction 3b, testing a change in nest investment of *Megachile* in response to brood parasites.
 
 ```{r Model_3b_ii, echo=FALSE}
 
@@ -683,7 +683,7 @@ mod_3bii_table
 
 ```
 
-**Table S20.** Summary of the GLMM output from model 3c_i testing if cell parasitization predicts nest termination in *Osmia*.
+**Table S20.** Summary of the GLMM output from model 3c_i for prediction 3c, testing if brood cell parasitization predicts nest termination in *Osmia*.
 
 ```{r Model_3c_i, echo=FALSE}
 
@@ -707,7 +707,7 @@ mod_3ci_table
 
 ```
 
-**Table S21.** Summary of the GLMM output from model 3c_ii testing if cell parasitization predicts nest termination in *Megachile*.
+**Table S21.** Summary of the GLMM output from model 3c_ii for prediction 3c, testing if brood cell parasitization predicts nest termination in *Megachile*.
 
 ```{r Model_3c_ii, echo=FALSE}
 
@@ -731,7 +731,7 @@ mod_3cii_table
 
 ```
 
-**Table S22.** Summary of the GLMM output from model 3d_i testing abandoning inner walls in response to parasites in *Osmia*.
+**Table S22.** Summary of the GLMM output from model 3d_i for prediction 3d, testing abandoning inner walls as a response to brood parasites in *Osmia*.
 
 ```{r Model_3d_i, echo=FALSE}
 
@@ -755,26 +755,26 @@ mod_3di_table
 
 ```
 
-**Table S23.** Summary of the GLMM output from model 3d_i testing abandoning inner walls in response to parasites in *Megachile*.
-
 ```{r Model_3d_ii, echo=FALSE}
 
-# create table
-mod_3dii_table <- flextable(mod_3dii_inner_wall_meg_table)
-# remove all borders 
-mod_3dii_table <- border_remove(mod_3dii_table)
-# add only top and bottom horizontal lines 
-mod_3dii_table <- hline_top(mod_3dii_table, part = "all",
-                border = officer::fp_border(color = "black", width = 1))
-mod_3dii_table <- hline_bottom(mod_3dii_table, part = "all",
-                   border = officer::fp_border(color = "black", width = 1))
-# set Times New Roman font 
-mod_3dii_table <- font(mod_3dii_table, fontname = "Times New Roman", part = "all") %>%
-  fontsize(size = 12, part = "all") %>% 
-  bold(part = "header", bold = TRUE)
-# make table take up full width of word doc
-mod_3dii_table <- mod_3dii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+# Table S23. Summary of the GLMM output from model 3d_i for prediction 3d, testing abandoning inner walls in response to brood parasites in Megachile.
 
-mod_3dii_table
+# # create table
+# mod_3dii_table <- flextable(mod_3dii_inner_wall_meg_table)
+# # remove all borders 
+# mod_3dii_table <- border_remove(mod_3dii_table)
+# # add only top and bottom horizontal lines 
+# mod_3dii_table <- hline_top(mod_3dii_table, part = "all",
+#                 border = officer::fp_border(color = "black", width = 1))
+# mod_3dii_table <- hline_bottom(mod_3dii_table, part = "all",
+#                    border = officer::fp_border(color = "black", width = 1))
+# # set Times New Roman font 
+# mod_3dii_table <- font(mod_3dii_table, fontname = "Times New Roman", part = "all") %>%
+#   fontsize(size = 12, part = "all") %>% 
+#   bold(part = "header", bold = TRUE)
+# # make table take up full width of word doc
+# mod_3dii_table <- mod_3dii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+# 
+# mod_3dii_table
 
 ```
