@@ -16,6 +16,10 @@ library(ggeffects)
 library(kableExtra)
 library(lme4)
 library(tidyverse)
+library(patchwork)
+library(gridExtra)
+library(grid)
+library(cowplot)
 
 
 ## Loading data
@@ -57,6 +61,15 @@ nesting_meg <- nesting_meg %>% filter(Site != 'NN')
 trapnesting_meg <- trapnesting_meg %>% filter(Site != 'NN')
 nesting_cells_meg <- nesting_cells_meg %>% filter(Site != 'NN')
 
+
+
+# ## what if I remove unkowns from nesting cell data
+# table(nesting_cells_os$Cell_occupant)
+# nesting_cells_os <- nesting_cells_os %>% filter(Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
+# 
+# table(nesting_cells_meg$Cell_occupant)
+# nesting_cells_meg <- nesting_cells_meg %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'parasite')
+# 
 
 ```
 
@@ -127,6 +140,7 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ```{r Ordering_treatments, include=FALSE}
 
+
 ## Ordering treatments
 trapnesting_os_null$Treatment <- factor(trapnesting_os_null$Treatment, 
                                     levels = c("Low", "Mid", "High"))
@@ -147,7 +161,7 @@ trapnesting_meg_null <- trapnesting_meg_null %>% mutate(Null_new_nests_mean = ro
 
 ## Congeneric Attraction
 
-```{r Congeneric_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P1_Congeneric_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 ## Osmia ##
@@ -245,18 +259,18 @@ Fig_p1_meg <- P1_meg_sum %>%
     breaks = c("Prop_new_of_avail_null", "Prop_new_of_avail_obs"),
     labels = c("Simulated", "Observed")
   ) +
-  labs(y = NULL)
+  labs(y = NULL, x = NULL)
 
 
-## Combine figures
-
-library(patchwork)
-library(gridExtra)
-library(grid)
-library(cowplot)
+## Combine figures 
 
 
-combined_p1 <-  Fig_p1_os / Fig_p1_meg
+combined_p1 <-  Fig_p1_os | Fig_p1_meg + theme(legend.box = "vertical",
+      legend.position = "right")
+
+# make lengends stack ontop of each other
+combined_p1 <- combined_p1 + plot_layout(guides = "collect") &
+  theme(legend.box = "vertical") 
 
 Fig_p1 <- combined_p1 + plot_annotation(tag_levels = NULL) &
   theme(plot.margin = margin(5, 5, 5, 5))
@@ -274,14 +288,29 @@ P1_left_label <- ggplot() +
     plot.margin       = margin(0, 0, 0, 0)
   )
 
+P1_bottom_label <- ggplot() +
+    annotate("text",
+           x = 0.5, y = 0.5,
+           label = "Occupant density treatment",
+           angle = 0,
+           size = 5) +
+  theme_void() +
+  theme(
+    panel.background  = element_rect(fill = "white", colour = NA),
+    plot.background   = element_rect(fill = "white", colour = NA),
+    plot.margin       = margin(0, 0, 0, 0)
+  )
+
 # combine them into a single plot object
-Fig_p1 <- plot_grid(P1_left_label, Fig_p1, ncol = 2, rel_widths = c(0.05, 0.95))
+Fig_p1 <- cowplot::plot_grid(P1_left_label, Fig_p1, ncol = 2, rel_widths = c(0.05, 0.95))
+Fig_p1 <- cowplot::plot_grid(Fig_p1, P1_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave("Figures/Fig_p1.png", Fig_p1, width = 8, height = 10, dpi = 300)
+ggsave("Figures/Fig_p1.png", Fig_p1, width = 10, height = 5, dpi = 300)
 
-
-
+# sample size
+sum(trapnesting_os_null$New_nests_os) # 161
+sum(trapnesting_meg_null$New_nests_meg) # 137
 
 
 ## Congenerics as continuous variable 
@@ -314,7 +343,7 @@ ggsave("Figures/Fig_p1.png", Fig_p1, width = 8, height = 10, dpi = 300)
 
 ## Parasite Attraction
 
-```{r Parasite_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P2_Parasite_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 ## Osmia ##
@@ -439,23 +468,35 @@ P2_bottom_label <- ggplot() +
   )
   
 # add left and bottom labels
-Fig_p2 <- plot_grid(P2_left_label, combined_p2, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Fig_p2 <- plot_grid(Fig_p2, P2_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
+Fig_p2 <- cowplot::plot_grid(P2_left_label, combined_p2, ncol = 2, rel_widths = c(0.05, 0.95)) 
+Fig_p2 <- cowplot::plot_grid(Fig_p2, P2_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 
 # save
 ggsave("Figures/Fig_p2.png", Fig_p2, width = 8, height = 4, dpi = 300)
 
-# caption: of the nests that were dissected
 
+# sample size
+table(P2_os$Nest_parasitized) # 75 no, 54 yes
+table(P2_meg$Nest_parasitized) # 92 no, 13 yes
 
-
-
+nesting_cells_os %>% 
+  filter(Cell_occupant == 'parasite') %>% 
+  count(Species_or_subtype, Nest_ID)
+# sapyga: 52 / (54 + 75) = 40% 
+# melittobia: 2 / (54 + 75) = 1.5%
+nesting_cells_meg %>% 
+  filter(Cell_occupant == 'parasite') %>% 
+  count(Species_or_subtype, Nest_ID)
+# chalcid: 3 / (92 + 13) = 2.9%
+# coelioxys: 5 / (92 + 13) = 4.8%
+# meloidae: 3 / (92 + 13) = 2.9%
+# melittobia: 2 / (92 + 13) = 1.9%
 ```
 
 ## Parasite Avoidance 
 
-```{r Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3a_Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 ## Osmia ##
@@ -489,7 +530,8 @@ P3a_meg <- trapnesting_meg_null %>%
 
 # Combine 
         
-combined_p3a <- P3a_os + P3a_meg + plot_layout(ncol = 2, widths = c(4, 3), guides = "collect") 
+combined_p3a <- P3a_os + P3a_meg + 
+  plot_layout(ncol = 2, widths = c(4, 3), guides = "collect") 
 combined_p3a 
 
 # make labels, needs white background so it's not png
@@ -519,8 +561,8 @@ P3a_bottom_label <- ggplot() +
   )
   
 # add left and bottom labels
-Fig_p3a <- plot_grid(P3a_left_label, combined_p3a, ncol = 2, rel_widths = c(0.05, 0.95))
-Fig_p3a <- plot_grid(Fig_p3a, P3a_bottom_label, ncol = 1, rel_heights = c(1, 0.06))
+Fig_p3a <- cowplot::plot_grid(P3a_left_label, combined_p3a, ncol = 2, rel_widths = c(0.05, 0.95))
+Fig_p3a <- cowplot::plot_grid(Fig_p3a, P3a_bottom_label, ncol = 1, rel_heights = c(1, 0.06))
 
 # save
 ggsave("Figures/Fig_p3a.png", Fig_p3a, width = 8, height = 4, dpi = 300) 
@@ -530,7 +572,7 @@ ggsave("Figures/Fig_p3a.png", Fig_p3a, width = 8, height = 4, dpi = 300)
 
 
 
-```{r Investment, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3b_Investment, echo=FALSE, warning=FALSE, message=FALSE}
 
 ## Osmia ##
 
@@ -618,8 +660,8 @@ P3b_bottom_label <- ggplot() +
   )
   
 # add left and bottom labels
-Fig_p3b <- plot_grid(P3b_left_label, combined_p3b, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Fig_p3b <- plot_grid(Fig_p3b, P3b_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
+Fig_p3b <- cowplot::plot_grid(P3b_left_label, combined_p3b, ncol = 2, rel_widths = c(0.05, 0.95)) 
+Fig_p3b <- cowplot::plot_grid(Fig_p3b, P3b_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
 ggsave("Figures/Fig_p3b.png", Fig_p3b, width = 11, height = 4, dpi = 300) 
@@ -629,7 +671,7 @@ ggsave("Figures/Fig_p3b.png", Fig_p3b, width = 11, height = 4, dpi = 300)
 
 Nest Termination
 
-```{r Nest_Termination,echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3c_Nest_Termination,echo=FALSE, warning=FALSE, message=FALSE}
 
 ## Osmia ##
 
@@ -672,6 +714,10 @@ Fig_p3c_meg <- nesting_cells_meg_fig %>%
 
 combined_p3c <-  Fig_p3c_os | Fig_p3c_meg
 
+# make lengends stack ontop of each other
+combined_p3c <- combined_p3c + plot_layout(guides = "collect") &
+  theme(legend.box = "vertical") 
+
 Fig_p3c <- combined_p3c + plot_annotation(tag_levels = NULL) &
   theme(plot.margin = margin(5, 5, 5, 5))
 
@@ -702,11 +748,11 @@ P3c_bottom_label <- ggplot() +
   )
   
 # add left and bottom labels
-Fig_p3c <- plot_grid(P3c_left_label, combined_p3c, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Fig_p3c <- plot_grid(Fig_p3c, P3c_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
+Fig_p3c <- cowplot::plot_grid(P3c_left_label, combined_p3c, ncol = 2, rel_widths = c(0.05, 0.95)) 
+Fig_p3c <- cowplot::plot_grid(Fig_p3c, P3c_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave("Figures/Fig_p3c.png", Fig_p3c, width = 11, height = 4, dpi = 300) 
+ggsave("Figures/Fig_p3c.png", Fig_p3c, width = 9, height = 4, dpi = 300) 
 
 
 

@@ -108,6 +108,8 @@ inner_wall_started_2023_1 <- long_data_2023 %>%
   filter(Status == 'inner wall started') %>%
   distinct(Nest_ID, .keep_all = TRUE) # might contain nests that eventually had cells, check in chunk Inner_Wall_Only 
 
+# how many were eaten in 2023?
+long_data_2023 %>% filter(Status == 'eaten') # 5
 
 # Replace some input for statuses of how they should be treated
 long_data_2023$Status <- replace(long_data_2023$Status, long_data_2023$Status == 'eaten', 'empty')
@@ -1083,10 +1085,11 @@ preferences <- preferences %>% filter(Occupant == 'osmia' | Occupant =='megachil
 
 ## Wrangle number of cells and parasites
 
-# create column to say if cell is parasitized or not
+# create column to say if cell is parasitized or not, or NA for unknowns
 table(emergence$Cell_occupant)
 emergence <- emergence %>% 
-  mutate(Cell_parasitized = if_else(Cell_occupant == 'parasite', 1, 0))
+  mutate(Cell_parasitized = if_else(Cell_occupant == 'parasite', 1,
+                                    if_else(Cell_occupant == 'osmia' | Cell_occupant == 'megachile', 0, NA)))
 
 # take number of cells total for that nest and date combo
 emergence <- emergence %>% 
@@ -1102,18 +1105,27 @@ emergence %>%
 
 ## Make column to say nest is parasitized or not for when a parasite is in a cell, from that date onwards
 
-# make column to say for each date, if a cell has parasites, then count cumulative parasites in a new column
+# make column to say for each date, if a cell has parasites, then count cumulative parasites in a new column, and keep the value even when the cells between bees and parasites are NAs (e.g., mold or empty)
 emergence <- emergence %>% 
   arrange(Nest_ID, Date) %>% 
   group_by(Nest_ID) %>% 
-  mutate(Cumulative_par = cumsum(Cell_parasitized))
+  mutate(Tempor_cum = cumsum(replace_na(Cell_parasitized, 0)), # temporarily replace NA with 0
+          seen_any = cumsum(!is.na(Cell_parasitized)), 
+          Cumulative_par = if_else(seen_any == 0, NA_real_, Tempor_cum)) %>% 
+  select(-Tempor_cum, -seen_any)
+
+#### STILL some megachile and osmia not showing up in cum par
+view(nesting_cells_x %>% filter(is.na(Cumulative_par)))
+
+#### but not coming from emergence data here. 
+
 
 # take max number of parasites for a nest_ID - date combo
 # e.g., on 2023-06-14 for 13_18a (cells 1 and 2), both are parasitized, so take the highest parasite count for that date, so say for 13_18a on 2023-06-14, there's 2 parasites
 emergence <- emergence %>% 
   group_by(Date, Nest_ID) %>% 
   mutate(Cumulative_par_max = max(Cumulative_par)) %>% 
-  ungroup()
+  ungroup() 
 
 
 ## Bind emergence and preferences data 
@@ -1181,7 +1193,7 @@ emerg_and_pref <- emerg_and_pref %>%
   ungroup() # ignore warnings about using min() on NAs
 
 # numbers of new nests 
-sum(preferences$Bee_choice, na.rm = TRUE)  # 306, which includes the nests with only inner walls
+sum(preferences$Bee_choice, na.rm = TRUE)  # 307, which includes the nests with only inner walls
 
 table(preferences %>% 
         filter(Bee_choice == 1) %>% 
@@ -1193,11 +1205,11 @@ preferences %>%
   filter(n_distinct(Contains_cells) > 1) %>%
   ungroup() # 0
 # number of nests from emergence data
-length(unique(emergence$Nest_ID)) # 248 
+length(unique(emergence$Nest_ID)) # 247 
 
 # are any of the Statuses NA? Should be none, remove because they are from non-target bees
 emerg_and_pref <- emerg_and_pref %>% filter(!is.na(Status))
-sum(is.na(emerg_and_pref$Status)) 
+sum(is.na(emerg_and_pref$Status)) # 0
 
 
 ## Making values consistent for throughout the time the nest is in the trapnest
@@ -1377,8 +1389,12 @@ nesting_cells$Sealed <- replace(nesting_cells$Sealed, nesting_cells$Sealed == 'N
 
 # nesting_cells is the nesting data with cell-level observations
 
+###### CHECK - not working 
 
 ## Make column to say nest is parasitized or not, binary
+
+
+nesting_cells_x <- nesting_cells %>% filter(Status != 'pseudo' & Status != 'empty')
 
 nesting_cells <- nesting_cells %>% mutate(Nest_parasitized = if_else(is.na(Cumulative_par), NA, 
                                                    if_else(Cumulative_par == 0, 'not parasitized',
@@ -1423,7 +1439,7 @@ parasite_bin_os <- nesting_cells %>%
 parasite_bin_os <- parasite_bin_os %>% mutate(Nest_parasitized = if_else(Max_par == 0, 'no', 
                                                                    if_else(Max_par >= 1, 'yes', NA)))
 table(parasite_bin_os$Nest_parasitized)
-# 75 no and 47 yes
+# 75 no and 47 yes ####### CHECK saying now 14 and 41
 
  # Megachile
 parasite_bin_meg <- nesting_cells %>%
@@ -1541,47 +1557,12 @@ nesting_cells_meg_0 <- nesting_cells %>% filter(!is.na(Cell_ID) & Occupant == 'm
 length(unique(nesting_cells_os_0$Cell_ID)) # 749 cells, so we need a df of that length
 nesting_cells_os_0 <- inner_join(nesting_cells_os_0, unsealed_summary_os)
 
-length(unique(nesting_cells_meg_0$Cell_ID)) # 425 cells
+length(unique(nesting_cells_meg_0$Cell_ID)) # 424 cells
 nesting_cells_meg_0 <- inner_join(nesting_cells_meg_0, unsealed_summary_meg)
 
 # check for duplicates
 nesting_cells_os_0[duplicated(nesting_cells_os_0$Cell_ID),] 
 nesting_cells_meg_0[duplicated(nesting_cells_meg_0$Cell_ID),] 
-
-
-# ## Sum the number of parasitized cells and not
-# 
-# # Osmia
-# nesting_cells_os_sum <- nesting_cells_os_0 %>% 
-#   arrange(Date, Nest_ID) %>% 
-#   group_by(Date, Nest_ID) %>% 
-#   summarize(Sum_cell_parasitized = sum(Cell_parasitized))
-# nesting_cells_os_0 <- nesting_cells_os_0 %>% 
-#   arrange(Date, Nest_ID) %>% 
-#   group_by(Date, Nest_ID) %>% 
-#   mutate(Total_cells_per_date = NROW(Date))
-# # merge together
-# nesting_cells_os <- merge(nesting_cells_os_0, nesting_cells_os_sum)
-# nesting_cells_os <- nesting_cells_os %>% relocate(Sum_cell_parasitized, .after = last_col())
-# # do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
-# nesting_cells_os <- nesting_cells_os %>%
-#   mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
-# 
-# 
-# # Megachile
-# nesting_cells_meg_sum <- nesting_cells_meg_0 %>% 
-#   group_by(Date, Nest_ID) %>% 
-#   summarize(Sum_cell_parasitized = sum(Cell_parasitized))
-# nesting_cells_meg_0 <- nesting_cells_meg_0 %>% 
-#   group_by(Date, Nest_ID) %>% 
-#   mutate(Total_cells_per_date = NROW(Date))
-# # merge together
-# nesting_cells_meg <- merge(nesting_cells_meg_0, nesting_cells_meg_sum)
-# nesting_cells_meg <- nesting_cells_meg %>% relocate(Sum_cell_parasitized, .after = last_col())
-# # do the math to get Sum_cell_not_parasitized = Total number of cells - Sum_cell_parasitized
-# nesting_cells_meg <- nesting_cells_meg %>%
-#   mutate(Sum_cell_not_parasitized = (Total_cells_per_date - Sum_cell_parasitized))
-
 
 
 ## Making day of the year
@@ -1605,15 +1586,10 @@ nesting_1 <- nesting_1 %>% mutate(Day_of_year = lubridate::yday(as.Date(Date,for
 
 ```{r Detectable_and_No_Detectable_Parasites}
 
-### CHECK - April 24th 2024, NAs for parasites are not counted for either DP or NDP. How should NAs be counted?
-
-### CHECK - are there instances where the nest itself is parasitized the first day its built, meaning the data would say theres 1 parasite in the trapnest but its actually 0 when it first nested because the focal nest itself is parasitized?
-
-
 
 # In order to measure nesting preferences of bees to see if affected by parasites, I need to separate the nests with detectable parasites (DP) from the nests with no detectable parasites (NDP)
 # this is about to get messy, so I'm making a smaller df 
-nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Available_cavities_prior, Osmia_ps:Meg_no_ps, Osmia_active_mothers, Meg_active_mothers, Nest_parasitized, Active_bin)  
+nesting_2 <- nesting_1 %>% select(Trapnest, Date, Nest_ID, Status, Occupant, Bee_choice, New_nests_os, New_nests_meg, Available_cavities_prior, Osmia_ps:Meg_no_ps, Osmia_active_mothers, Meg_active_mothers, Nest_parasitized, Active_bin) 
 
 # first I make the columns with the total numbers for DP and NDP and NDP with pseudo nests, then I need to calculate the number of those three columns prior to the new bees nesting there. So if there was 1 or more new nests in DP or NDP(_ps), I calculate (total nests in that group - new nests) + (n-1)/2 for the group that the new nest is a part of. If there's new nests for the other group (e.g., new DP nest, but from the new NDP nest perspective), we do (total nests in that group - 1/2 * new nests).
 
@@ -2004,6 +1980,9 @@ trapnesting_os %>%
 trapnesting_meg %>% 
   summarize(nests_total = sum(New_nests_meg)) # 140 megachile nests 
 
+#remove NAs from emergence data for analyses 
+nesting_cells_os <- nesting_cells_os %>% filter(!is.na(Cell_parasitized))
+nesting_cells_meg <- nesting_cells_meg %>% filter(!is.na(Cell_parasitized))
 
 ## Saving wrangled data
 
@@ -2090,6 +2069,19 @@ confirm_treatment_data %>%
 table(nesting_cells_os$Cell_occupant)
 table(nesting_cells_meg$Cell_occupant)
 
+nesting_cells_os %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
+length(nesting_cells_os$Cell_occupant)
+# 286 / 749 were identifiable
+
+nesting_cells_meg %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
+length(nesting_cells_meg$Cell_occupant)
+# 142 / 424 were identifiable
+# (286 + 143) / (723 + 408)
+
+# how many nests in the emergence data
+length(unique(nesting_cells_os$Nest_ID)) # 134
+length(unique(nesting_cells_meg$Nest_ID)) # 107
+
 ## how many nests per year?
 nesting %>% 
   group_by(Occupant, Year) %>% 
@@ -2098,7 +2090,6 @@ nesting %>%
 #             2023  2024 
 # Osmia       162   5
 # Megachile   64    76
-
 
 
 ```

@@ -2,7 +2,7 @@
 title: 
   Social influence and anti-parasite defences during nest-site selection of
   solitary cavity-nesting bees
-subtitle: Supplementary Material: Model Summaries
+subtitle: "Supplementary Material: Model Summaries"
 format: 
   docx:
     reference-doc: custom-reference-doc.docx
@@ -54,34 +54,83 @@ tidy_function_glmer <- function(model) {
             TRUE ~ sprintf('%.2f', .) # everything else should have 2 numbers after decimal
         )
       ),
+
+      # keep numeric p-value for comparisons
+      p.value.num = p.value,
+      
+      # create formatted p-value text
       p.value = case_when(
-        is.na(p.value) ~ NA, # NA is NA
-        p.value < 0.0001 ~ '< 0.0001', # small p-values show as < 0.0001
-        TRUE ~ sprintf('%.2f', p.value) # rest should have 2 numbers after decimal
+        is.na(p.value.num) ~ " ",
+        p.value.num < 0.0001 ~ '< 0.0001',
+        p.value.num < 0.001  ~ '< 0.001',
+        p.value.num < 0.01   ~ '< 0.01',
+        TRUE ~ sprintf('%.2f', p.value.num)
+      ),
+      
+      # now add stars based on numeric p-value
+      p.value = paste0(
+        p.value,
+        case_when(
+          is.na(p.value.num) ~ " ",
+          p.value.num < 0.0001 ~ " ***",
+          p.value.num < 0.001  ~ " **",
+          p.value.num < 0.05   ~ " *",
+          TRUE ~ ""
+        )
       )
-    )
+    ) %>%
+    select(-p.value.num) # remove temporary numeric column
 }
 
-# make function but for lmer
+
 tidy_function_lmer <- function(model) {
   tidy(model) %>%
     mutate(
       across(
         c(estimate, std.error, df, statistic),
         ~ case_when(
-            is.na(.) ~ NA, # NA is NA 
-            . == 0 ~ '0', # true zeros should be 0 not 0.00
-            abs(.) < 0.01 ~ formatC(., format = 'e', digits = 2), # tiny numbers
-            TRUE ~ sprintf('%.2f', .) # everything else should have 2 numbers after decimal
+          is.na(.) ~ NA, # NA is NA 
+          . == 0 ~ '0', # true zeros should be 0 not 0.00
+          abs(.) < 0.01 ~ formatC(., format = 'e', digits = 2), # tiny numbers
+          TRUE ~ sprintf('%.2f', .) # everything else 2 decimals
         )
       ),
+      # keep numeric p-value for comparisons
+      p.value.num = p.value,
+      
+      # create formatted p-value text
       p.value = case_when(
-        is.na(p.value) ~ NA, # NA is NA
-        p.value < 0.0001 ~ '< 0.0001', # small p-values show as < 0.0001
-        TRUE ~ sprintf('%.2f', p.value) # rest should have 2 numbers after decimal
+        is.na(p.value.num) ~ " ",
+        p.value.num < 0.0001 ~ '< 0.0001',
+        p.value.num < 0.001  ~ '< 0.001',
+        p.value.num < 0.01   ~ '< 0.01',
+        TRUE ~ sprintf('%.2f', p.value.num)
+      ),
+      
+      # now add stars based on numeric p-value
+      p.value = paste0(
+        p.value,
+        case_when(
+          is.na(p.value.num) ~ " ",
+          p.value.num < 0.0001 ~ " ***",
+          p.value.num < 0.001  ~ " **",
+          p.value.num < 0.05   ~ " *",
+          TRUE ~ ""
+        )
       )
-    )
+    ) %>%
+    select(-p.value.num) # remove temporary numeric column
 }
+
+
+
+
+
+
+
+
+
+
 
 # make functon to replace sd__(Intercept) with the nested random effects, rename columns, rename ran_pars
 format_table_function_glmer <- function(df) {
@@ -101,35 +150,36 @@ format_table_function_glmer <- function(df) {
     Effect = dplyr::recode(Effect,
                              'ran_pars' = 'random')
     ) %>% 
-  mutate(
-    Variable = dplyr::recode(Variable,
-                             '(Intercept)' = 'Intercept',
-                             'scale(Osmia_ps)' = 'Neighbouring Osmia',
-                             'scale(Osmia_no_ps)' = 'Neighbouring Osmia excluding pseudo nests',
-                             'scale(Meg_ps)' = 'Neighbouring Megachile',
-                             'scale(Meg_no_ps)' = 'Neighbouring Megachile excluding pseudo nests',
-                             'scale(Osmia_active_mothers)' = 'Neighbouring active Osmia mothers',
-                             'scale(Meg_active_mothers)' = 'Neighbouring active Megachile mothers',
-                             'scale(DP_os_prior)' = 'Neighbouring Osmia nests with detectable parasites',
-                             'scale(NDP_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests',
-                             'scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites',
-                             'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with detectable parasites * Neighbouring Osmia nests with no detectable parasites', 
-                              'scale(DP_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites',
-                             'scale(NDP_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites, excluding pseudo nests',
-                             'scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites',
-                             'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites * Neighbouring Megachile nests with no detectable parasites',
-                             'Cell_parasitized' = 'Cell parasitism',
-                             'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
-                             'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
-                             'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
-                             'poly(Day_of_year, 2)1' = 'Day of year I',
-                             'poly(Day_of_year, 2)2' = 'Day of year II',
-                             'Yearyear_2024' = 'Year (2024)',
-                             'SiteCP' = 'Site (CP)', 
-                             'SiteNN' = 'Site (NN)',
-                             'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
-                             'Trapnest:Subsite' = 'Nest-box: Subsite'
-                             )) 
+    mutate(
+      Variable = dplyr::recode(Variable,
+                               '(Intercept)' = 'Intercept',
+                               'scale(Osmia_ps)' = 'Neighbouring Osmia',
+                               'scale(Osmia_no_ps)' = 'Neighbouring Osmia excluding pseudo nests',
+                               'scale(Meg_ps)' = 'Neighbouring Megachile',
+                               'scale(Meg_no_ps)' = 'Neighbouring Megachile excluding pseudo nests',
+                               'scale(Osmia_active_mothers)' = 'Neighbouring active Osmia mothers',
+                               'scale(Meg_active_mothers)' = 'Neighbouring active Megachile mothers',
+                               'scale(DP_os_prior)' = 'Neighbouring Osmia nests with detectable parasites',
+                               'scale(NDP_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites',
+                               'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with detectable parasites * Neighbouring Osmia nests with no detectable parasites',
+                               'scale(DP_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites',
+                               'scale(NDP_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites',
+                               'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites * Neighbouring Megachile nests with no detectable parasites',
+                               'Cell_parasitized' = 'Cell parasitism',
+                               'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
+                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
+                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
+                               'poly(Day_of_year, 2)1' = 'Day of year I',
+                               'poly(Day_of_year, 2)2' = 'Day of year II',
+                               'Yearyear_2024' = 'Year (2024)',
+                               'SiteCP' = 'Site (CP)',
+                               'SiteNN' = 'Site (NN)',
+                               'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
+                               'Trapnest:Subsite' = 'Nest-box: Subsite'
+   )
+ )
 } 
 
 # same with lmer
@@ -179,8 +229,10 @@ format_table_function_lmer <- function(df) {
                              'SiteCP' = 'Site (CP)', 
                              'SiteNN' = 'Site (NN)',
                              'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
-                             'Trapnest:Subsite' = 'Nest-box: Subsite'
-                             )) 
+                             'Trapnest:Subsite' = 'Nest-box: Subsite',
+                             'sd__Observation' = 'Residual SD'
+    )
+ )
 } 
 
 ## Apply functions
@@ -365,7 +417,7 @@ include_graphics("Figures/hist_1iv.png")
 
 **Figure S5.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iv.
 
-**Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*), including pseudo nests as *Osmia*.
+**Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), including pseudo nests as *Osmia*.
 
 ```{r Model_2_i, echo=FALSE}
 
@@ -383,19 +435,21 @@ mod_2i_table <- font(mod_2i_table, fontname = "Times New Roman", part = "all") %
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # set width
-mod_2i_table <- mod_2i_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
-
+mod_2i_table <- mod_2i_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.6, .8, .8, .8, 1.1))
+# # bold rows with significant p-value
+# mod_2i_table <- mod_2i_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2i_table
 
 ```
 
-**Table S10.** Summary of the GLMM output from model 2_ii for prediction 2, testing an attraction to *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
+**Table S10.** Summary of the GLMM output from model 2_ii for prediction 2, testing an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia*.
 
 ```{r Model_2_ii, echo=FALSE}
- 
+
 # create table
-mod_2ii_table <- flextable(mod_2ii_par_agg_os_no_ps_table)
+mod_2ii_table <- flextable(mod_2ii_par_agg_os_no_ps_table) 
+
 # remove all borders 
 mod_2ii_table <- border_remove(mod_2ii_table)
 # add only top and bottom horizontal lines 
@@ -408,13 +462,15 @@ mod_2ii_table <- font(mod_2ii_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE) 
 # set width
-mod_2ii_table <- mod_2ii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_2ii_table <- mod_2ii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_2ii_table <- mod_2ii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2ii_table
 
 ```
 
-**Table S11.** Summary of the GLMM output from model 2_iii for prediction 2, testing an attraction to active *Osmia* nests of brood parasites (*Sapyga*), excluding pseudo nests as *Osmia*.
+**Table S11.** Summary of the GLMM output from model 2_iii for prediction 2, testing an attraction to active *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia*.
 
 ```{r Model_2_iii, echo=FALSE}
  
@@ -432,13 +488,15 @@ mod_2iii_table <- font(mod_2iii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # set width
-mod_2iii_table <- mod_2iii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8)) 
+mod_2iii_table <- mod_2iii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2)) 
+# # bold rows with significant p-value
+# mod_2iii_table <- mod_2iii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2iii_table
 
 ```
 
-**Table S12.** Summary of the GLMM output from model 2_iv for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*.
+**Table S12.** Summary of the GLMM output from model 2_iv for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*.
 
 ```{r Model_2_iv, echo=FALSE}
 
@@ -456,14 +514,16 @@ mod_2iv_table <- font(mod_2iv_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # width
-mod_2iv_table <- mod_2iv_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_2iv_table <- mod_2iv_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_2iv_table <- mod_2iv_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2iv_table
 
 
 ```
 
-**Table S13.** Summary of the GLMM output from model 2_v for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S13.** Summary of the GLMM output from model 2_v for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
 
 ```{r Model_2_v, echo=FALSE}
 
@@ -481,13 +541,15 @@ mod_2v_table <- font(mod_2v_table, fontname = "Times New Roman", part = "all") %
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE) 
 # make table take up full width of word doc
-mod_2v_table <- mod_2v_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_2v_table <- mod_2v_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_2v_table <- mod_2v_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2v_table
 
 ```
 
-**Table S14.** Summary of the GLMM output from model 2_vi for prediction 2, testing an attraction to active *Megachile* nests of brood parasites (*Meloid, Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S14.** Summary of the GLMM output from model 2_vi for prediction 2, testing an attraction to active *Megachile* nests of brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
 
 ```{r Model_2_vi, echo=FALSE}
 
@@ -505,7 +567,9 @@ mod_2vi_table <- font(mod_2vi_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_2vi_table <- mod_2vi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_2vi_table <- mod_2vi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_2vi_table <- mod_2vi_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2vi_table
 
@@ -653,7 +717,9 @@ mod_3bi_table <- font(mod_3bi_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3bi_table <- mod_3bi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .7, .7, .7, .7))
+mod_3bi_table <- mod_3bi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .65, .65, .65, 1.1))
+# # bold rows with significant p-value
+# mod_3bi_table <- mod_3bi_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_3bi_table 
 
@@ -677,7 +743,9 @@ mod_3bii_table <- font(mod_3bii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3bii_table <- mod_3bii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .7, .7, .7, .7))
+mod_3bii_table <- mod_3bii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .65, .65, .65, 1.1))
+# # bold rows with significant p-value
+# mod_3bii_table <- mod_3bii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_3bii_table
 
@@ -701,7 +769,9 @@ mod_3ci_table <- font(mod_3ci_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3ci_table <- mod_3ci_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_3ci_table <- mod_3ci_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_3ci_table <- mod_3ci_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_3ci_table
 
@@ -725,7 +795,9 @@ mod_3cii_table <- font(mod_3cii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3cii_table <- mod_3cii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_3cii_table <- mod_3cii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_3cii_table <- mod_3cii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_3cii_table
 
@@ -749,7 +821,9 @@ mod_3di_table <- font(mod_3di_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3di_table <- mod_3di_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+mod_3di_table <- mod_3di_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+# # bold rows with significant p-value
+# mod_3di_table <- mod_3di_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_3di_table
 
@@ -773,7 +847,7 @@ mod_3di_table
 #   fontsize(size = 12, part = "all") %>% 
 #   bold(part = "header", bold = TRUE)
 # # make table take up full width of word doc
-# mod_3dii_table <- mod_3dii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, .8))
+# mod_3dii_table <- mod_3dii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
 # 
 # mod_3dii_table
 

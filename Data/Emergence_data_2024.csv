@@ -325,7 +325,7 @@ CP,AI,98,Mid,medium,12,a,98_12a,not last cell,2024-07-02,empty,,,,"mother found 
 CP,AI,98,Mid,medium,12,a,98_12a,not last cell,2024-06-28,parasite,coelioxys,in collection,,
 CP,AI,98,Mid,medium,12,a,98_12a,not last cell,2024-06-28,parasite,coelioxys,in collection,,
 CP,AI,98,Mid,medium,16,a,98_16a,last cell,2024-07-08,parasite,meloidae,in collection,,
-CP,AI,98,Mid,medium,16,a,98_16a,not last cell,2024-07-08,parasite,,,,
+CP,AI,98,Mid,medium,16,a,98_16a,not last cell,2024-07-08,parasite,meloidae,,,
 CP,AI,98,Mid,medium,16,a,98_16a,not last cell,2024-07-05,megachile,pugnata,in collection,male,
 CP,AI,98,Mid,medium,16,a,98_16a,not last cell,2024-07-05,megachile,pugnata,in collection,female,
 CP,AI,99,High,small,4,a,99_4a,last cell,2024-06-28,unknown larva,,,,
