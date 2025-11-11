@@ -123,15 +123,6 @@ tidy_function_lmer <- function(model) {
 }
 
 
-
-
-
-
-
-
-
-
-
 # make functon to replace sd__(Intercept) with the nested random effects, rename columns, rename ran_pars
 format_table_function_glmer <- function(df) {
   df %>%
@@ -153,20 +144,20 @@ format_table_function_glmer <- function(df) {
     mutate(
       Variable = dplyr::recode(Variable,
                                '(Intercept)' = 'Intercept',
-                               'scale(Osmia_ps)' = 'Neighbouring Osmia',
-                               'scale(Osmia_no_ps)' = 'Neighbouring Osmia excluding pseudo nests',
-                               'scale(Meg_ps)' = 'Neighbouring Megachile',
-                               'scale(Meg_no_ps)' = 'Neighbouring Megachile excluding pseudo nests',
-                               'scale(Osmia_active_mothers)' = 'Neighbouring active Osmia mothers',
-                               'scale(Meg_active_mothers)' = 'Neighbouring active Megachile mothers',
-                               'scale(DP_os_prior)' = 'Neighbouring Osmia nests with detectable parasites',
-                               'scale(NDP_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests',
-                               'scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites',
-                               'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with detectable parasites * Neighbouring Osmia nests with no detectable parasites',
-                               'scale(DP_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites',
-                               'scale(NDP_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites, excluding pseudo nests',
-                               'scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites',
-                               'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites * Neighbouring Megachile nests with no detectable parasites',
+                               'scale(Osmia_ps)' = 'Neighbouring congeneric nests, including pseudo nests',
+                               'scale(Osmia_no_ps)' = 'Neighbouring congeneric nests, excluding pseudo nests',
+                               'scale(Meg_ps)' = 'Neighbouring congeneric nests, including pseudo nests',
+                               'scale(Meg_no_ps)' = 'Neighbouring congeneric nests excluding pseudo nests',
+                               'scale(Osmia_active_mothers)' = 'Neighbouring active host mothers',
+                               'scale(Meg_active_mothers)' = 'Neighbouring active host mothers',
+                               'scale(DP_os_prior)' = 'Neighbouring congeneric nests with detectable parasites',
+                               'scale(NDP_os_prior)' = 'Neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_os_prior)' = 'Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring congeneric nests with detectable parasites * Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_meg_prior)' = 'Neighbouring congeneric nests with detectable parasites',
+                               'scale(NDP_meg_prior)' = 'Neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_meg_prior)' = 'Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring congeneric nests with detectable parasites * Neighbouring congeneric nests with no detectable parasites',
                                'Cell_parasitized' = 'Cell parasitism',
                                'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
                                'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
@@ -181,6 +172,49 @@ format_table_function_glmer <- function(df) {
    )
  )
 } 
+
+# make different labels for parasite one
+format_table_function_par <- function(df) {
+  df %>%
+    mutate(term_2 = ifelse(term == 'sd__(Intercept)', group, term)) %>%
+    select(-term, -group) %>%
+    rename(
+      Effect = effect,
+      Variable = term_2,
+      Estimate = estimate,
+      'Std. Error' = std.error,
+      'Z Value' = statistic,
+      'P-Value' = p.value
+    ) %>%
+    relocate(last_col(), .after = 1) %>% 
+  mutate(
+    Effect = dplyr::recode(Effect,
+                             'ran_pars' = 'random')
+    ) %>% 
+    mutate(
+      Variable = dplyr::recode(Variable,
+                               '(Intercept)' = 'Intercept',
+                               'scale(Osmia_ps)' = 'Neighbouring host nests, including pseudo nests',
+                               'scale(Osmia_no_ps)' = 'Neighbouring host nests, excluding pseudo nests',
+                               'scale(Meg_ps)' = 'Neighbouring host nests, including pseudo nests',
+                               'scale(Meg_no_ps)' = 'Neighbouring host nests, excluding pseudo nests',
+                               'scale(Osmia_active_mothers)' = 'Neighbouring active host mothers',
+                               'scale(Meg_active_mothers)' = 'Neighbouring active host mothers',
+                               'Cell_parasitized' = 'Cell parasitism',
+                               'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
+                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
+                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
+                               'poly(Day_of_year, 2)1' = 'Day of year I',
+                               'poly(Day_of_year, 2)2' = 'Day of year II',
+                               'Yearyear_2024' = 'Year (2024)',
+                               'SiteCP' = 'Site (CP)',
+                               'SiteNN' = 'Site (NN)',
+                               'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
+                               'Trapnest:Subsite' = 'Nest-box: Subsite'
+   )
+ )
+} 
+
 
 # same with lmer
 # make functon to replace sd__(Intercept) with the nested random effects, rename columns, rename ran_pars
@@ -204,45 +238,45 @@ format_table_function_lmer <- function(df) {
     ) %>% 
   mutate(
     Variable = dplyr::recode(Variable,
-                             '(Intercept)' = 'Intercept',
-                             'scale(Osmia_ps)' = 'Neighbouring Osmia',
-                             'scale(Osmia_no_ps)' = 'Neighbouring Osmia excluding pseudo nests',
-                             'scale(Meg_ps)' = 'Neighbouring Megachile',
-                             'scale(Meg_no_ps)' = 'Neighbouring Megachile excluding pseudo nests',
-                             'scale(Osmia_active_mothers)' = 'Neighbouring active Osmia mothers',
-                             'scale(Meg_active_mothers)' = 'Neighbouring active Megachile mothers',
-                             'scale(DP_os_prior)' = 'Neighbouring Osmia nests with detectable parasites',
-                             'scale(NDP_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests',
-                             'scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with no detectable parasites',
-                             'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring Osmia nests with detectable parasites * Neighbouring Osmia nests with no detectable parasites', 
-                              'scale(DP_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites',
-                             'scale(NDP_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites, excluding pseudo nests',
-                             'scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with no detectable parasites',
-                             'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring Megachile nests with detectable parasites * Neighbouring Megachile nests with no detectable parasites',
-                             'Cell_parasitized' = 'Cell parasitism',
-                             'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
-                             'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
-                             'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
-                             'poly(Day_of_year, 2)1' = 'Day of year I',
-                             'poly(Day_of_year, 2)2' = 'Day of year II',
-                             'Yearyear_2024' = 'Year (2024)',
-                             'SiteCP' = 'Site (CP)', 
-                             'SiteNN' = 'Site (NN)',
-                             'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
-                             'Trapnest:Subsite' = 'Nest-box: Subsite',
-                             'sd__Observation' = 'Residual SD'
-    )
+                               '(Intercept)' = 'Intercept',
+                               'scale(Osmia_ps)' = 'Neighbouring congeneric nests, including pseudo nests',
+                               'scale(Osmia_no_ps)' = 'Neighbouring congeneric nests, excluding pseudo nests',
+                               'scale(Meg_ps)' = 'Neighbouring congeneric nests, including pseudo nests',
+                               'scale(Meg_no_ps)' = 'Neighbouring congeneric nests, excluding pseudo nests',
+                               'scale(Osmia_active_mothers)' = 'Neighbouring active host mothers',
+                               'scale(Meg_active_mothers)' = 'Neighbouring active host mothers',
+                               'scale(DP_os_prior)' = 'Neighbouring congeneric nests with detectable parasites',
+                               'scale(NDP_os_prior)' = 'Neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_os_prior)' = 'Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_os_prior):scale(NDP_ps_os_prior)' = 'Neighbouring congeneric nests with detectable parasites * Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_meg_prior)' = 'Neighbouring congeneric nests with detectable parasites',
+                               'scale(NDP_meg_prior)' = 'Neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
+                               'scale(NDP_ps_meg_prior)' = 'Neighbouring congeneric nests with no detectable parasites',
+                               'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Neighbouring congeneric nests with detectable parasites * Neighbouring congeneric nests with no detectable parasites',
+                               'Cell_parasitized' = 'Cell parasitism',
+                               'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
+                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
+                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Neighbouring Megachile nests with detectable parasites * Nest parasitism (parasitized)',
+                               'poly(Day_of_year, 2)1' = 'Day of year I',
+                               'poly(Day_of_year, 2)2' = 'Day of year II',
+                               'Yearyear_2024' = 'Year (2024)',
+                               'SiteCP' = 'Site (CP)',
+                               'SiteNN' = 'Site (NN)',
+                               'Nest_ID:Trapnest:Subsite' = 'Nest ID: Nest-box: Subsite',
+                               'Trapnest:Subsite' = 'Nest-box: Subsite',
+                               'sd__Observation' = 'Residual SD'
+   )
  )
 } 
 
 ## Apply functions
 
-mod_2i_par_agg_os_ps_table <- tidy_function_glmer(mod_2i_par_agg_os_ps) %>% format_table_function_glmer() 
-mod_2ii_par_agg_os_no_ps_table <- tidy_function_glmer(mod_2ii_par_agg_os_no_ps) %>% format_table_function_glmer() 
-mod_2iii_par_agg_os_active_table <- tidy_function_glmer(mod_2iii_par_agg_os_active) %>% format_table_function_glmer() 
-mod_2iv_par_agg_meg_ps_table <- tidy_function_glmer(mod_2iv_par_agg_meg_ps) %>% format_table_function_glmer()
-mod_2v_par_agg_meg_no_ps_table <- tidy_function_glmer(mod_2v_par_agg_meg_no_ps) %>% format_table_function_glmer() 
-mod_2vi_par_agg_meg_active_table <- tidy_function_glmer(mod_2vi_par_agg_meg_active) %>% format_table_function_glmer() 
+mod_2i_par_agg_os_ps_table <- tidy_function_glmer(mod_2i_par_agg_os_ps) %>% format_table_function_par() 
+mod_2ii_par_agg_os_no_ps_table <- tidy_function_glmer(mod_2ii_par_agg_os_no_ps) %>% format_table_function_par() 
+mod_2iii_par_agg_os_active_table <- tidy_function_glmer(mod_2iii_par_agg_os_active) %>% format_table_function_par() 
+mod_2iv_par_agg_meg_ps_table <- tidy_function_glmer(mod_2iv_par_agg_meg_ps) %>% format_table_function_par()
+mod_2v_par_agg_meg_no_ps_table <- tidy_function_glmer(mod_2v_par_agg_meg_no_ps) %>% format_table_function_par() 
+mod_2vi_par_agg_meg_active_table <- tidy_function_glmer(mod_2vi_par_agg_meg_active) %>% format_table_function_par() 
 mod_3bi_invest_filled_os_table <- tidy_function_lmer(mod_3bi_invest_filled_os) %>% format_table_function_lmer() # lmer
 mod_3bii_invest_filled_meg_table <- tidy_function_lmer(mod_3bii_invest_filled_meg) %>% format_table_function_lmer() # lmer
 mod_3ci_last_cell_os_table <- tidy_function_glmer(mod_3ci_last_cell_os) %>% format_table_function_glmer()
@@ -253,14 +287,14 @@ mod_3di_inner_wall_os_table <- tidy_function_glmer(mod_3di_inner_wall_os) %>% fo
 
 ```
 
-**Table S5.** Summary of the GLMM for prediction 1, model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics.
+**Table S5.** Summary of the GLMM for prediction 1, model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics, n = 161 nests.
 
 ```{r Model_1_i, echo=FALSE, message=FALSE}
 
 # make df for table, best way to make it uniform with others
 table_1i <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Osmia including pseudo nests",
+  "fixed",   "Neighbouring congeneric nests including pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -294,14 +328,14 @@ include_graphics("Figures/hist_1i.png")
 
 **Figure S2.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_i.
 
-**Table S6.** Summary of the GLMM for prediction 1, model 1_ii testing for an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics.
+**Table S6.** Summary of the GLMM for prediction 1, model 1_ii testing for an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics, n = 161 nests.
 
 ```{r Model_1_ii, echo=FALSE, results='asis'}
 
 # make df for table
 table_1ii <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Osmia excluding pseudo nests",
+  "fixed",   "Neighbouring congeneric nests excluding pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -335,14 +369,14 @@ include_graphics("Figures/hist_1ii.png")
 
 **Figure S3.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_ii.
 
-**Table S7.** Summary of the GLMM for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics.
+**Table S7.** Summary of the GLMM for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics, n = 137 nests.
 
 ```{r Model_1_iii, echo=FALSE}
 
 # make df for table
 table_1iii <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Megachile including pseudo nests",
+  "fixed",   "Neighbouring congeneric nests including pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -376,14 +410,14 @@ include_graphics("Figures/hist_1iii.png")
 
 **Figure S4.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iii.
 
-**Table S8.** Summary of the GLMM for prediction 1, model 1_iv testing for an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics.
+**Table S8.** Summary of the GLMM for prediction 1, model 1_iv testing for an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics, n = 137 nests.
 
 ```{r Model_1_iv, echo=FALSE}
 
 # make df for table
 table_1iv <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Megachile excluding pseudo nests",
+  "fixed",   "Neighbouring congeneric nests excluding pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -417,7 +451,7 @@ include_graphics("Figures/hist_1iv.png")
 
 **Figure S5.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iv.
 
-**Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), including pseudo nests as *Osmia*.
+**Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), including pseudo nests as *Osmia,* n = 286 cells. Asterisks indicate significance for the following tables.
 
 ```{r Model_2_i, echo=FALSE}
 
@@ -443,7 +477,7 @@ mod_2i_table
 
 ```
 
-**Table S10.** Summary of the GLMM output from model 2_ii for prediction 2, testing an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia*.
+**Table S10.** Summary of the GLMM output from model 2_ii for prediction 2, testing an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia*, n = 286 cells.
 
 ```{r Model_2_ii, echo=FALSE}
 
@@ -462,7 +496,7 @@ mod_2ii_table <- font(mod_2ii_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE) 
 # set width
-mod_2ii_table <- mod_2ii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+mod_2ii_table <- mod_2ii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_2ii_table <- mod_2ii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -470,7 +504,7 @@ mod_2ii_table
 
 ```
 
-**Table S11.** Summary of the GLMM output from model 2_iii for prediction 2, testing an attraction to active *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia*.
+**Table S11.** Summary of the GLMM output from model 2_iii for prediction 2, testing an attraction to active *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), excluding pseudo nests as *Osmia,* n = 286 cells.
 
 ```{r Model_2_iii, echo=FALSE}
  
@@ -488,7 +522,7 @@ mod_2iii_table <- font(mod_2iii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # set width
-mod_2iii_table <- mod_2iii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2)) 
+mod_2iii_table <- mod_2iii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2)) 
 # # bold rows with significant p-value
 # mod_2iii_table <- mod_2iii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -496,7 +530,7 @@ mod_2iii_table
 
 ```
 
-**Table S12.** Summary of the GLMM output from model 2_iv for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*.
+**Table S12.** Summary of the GLMM output from model 2_iv for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), including pseudo nests as *Megachile*, n = 142 cells.
 
 ```{r Model_2_iv, echo=FALSE}
 
@@ -514,7 +548,7 @@ mod_2iv_table <- font(mod_2iv_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # width
-mod_2iv_table <- mod_2iv_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+mod_2iv_table <- mod_2iv_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_2iv_table <- mod_2iv_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -523,7 +557,7 @@ mod_2iv_table
 
 ```
 
-**Table S13.** Summary of the GLMM output from model 2_v for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S13.** Summary of the GLMM output from model 2_v for prediction 2, testing an attraction to *Megachile* in brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*, n = 142 cells.
 
 ```{r Model_2_v, echo=FALSE}
 
@@ -541,7 +575,7 @@ mod_2v_table <- font(mod_2v_table, fontname = "Times New Roman", part = "all") %
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE) 
 # make table take up full width of word doc
-mod_2v_table <- mod_2v_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+mod_2v_table <- mod_2v_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_2v_table <- mod_2v_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -549,7 +583,7 @@ mod_2v_table
 
 ```
 
-**Table S14.** Summary of the GLMM output from model 2_vi for prediction 2, testing an attraction to active *Megachile* nests of brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*.
+**Table S14.** Summary of the GLMM output from model 2_vi for prediction 2, testing an attraction to active *Megachile* nests of brood parasites (*Meloid*, *Melittobia*, *Chalcid*, and *Coelioxys*), excluding pseudo nests as *Megachile*, n = 142 cells.
 
 ```{r Model_2_vi, echo=FALSE}
 
@@ -567,7 +601,7 @@ mod_2vi_table <- font(mod_2vi_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_2vi_table <- mod_2vi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.4, .8, .8, .8, 1.2))
+mod_2vi_table <- mod_2vi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_2vi_table <- mod_2vi_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -575,15 +609,15 @@ mod_2vi_table
 
 ```
 
-**Table S15.** Summary of the GLMM output from model 3a_i for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congeneric nests with no detectable parasites.
+**Table S15.** Summary of the GLMM output from model 3a_i for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congeneric nests with no detectable parasites, n = 161 nests.
 
 ```{r Model_3a_i, echo=FALSE}
 
 # make df for table
 table_3ai <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Osmia nests with detectable parasites",
-  "fixed",   "Neighbouring Osmia nests with no detectable parasites, including pseudo nests",
+  "fixed",   "Neighbouring congeneric nests nests with detectable parasites",
+  "fixed",   "Neighbouring congeneric nests nests with no detectable parasites, including pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -617,15 +651,15 @@ include_graphics("Figures/hist_3ai.png")
 
 **Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_i.
 
-**Table S16.** Summary of the GLMM output from model 3a_ii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites.
+**Table S16.** Summary of the GLMM output from model 3a_ii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites, n = 161 nests.
 
 ```{r Model_3a_ii, echo=FALSE}
 
 # make df for table
 table_3aii <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Osmia nests with detectable parasites",
-  "fixed",   "Neighbouring Osmia nests with no detectable parasites, excluding pseudo nests",
+  "fixed",   "Neighbouring congeneric nests nests with detectable parasites",
+  "fixed",   "Neighbouring congeneric nests nests with no detectable parasites, excluding pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -658,15 +692,15 @@ include_graphics("Figures/hist_3aii.png")
 
 **Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_ii.
 
-**Table S17.** Summary of the GLMM output from model 3a_iii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites. Due to the small sample size, we could not execute the model excluding pseudo nests, thus there is no table for output from model 3a_iv.
+**Table S17.** Summary of the GLMM output from model 3a_iii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites, n = 137 nests.
 
 ```{r Model_3a_iii, echo=FALSE}
 
 # make df for table
 table_3aiii <- tribble(
   ~Effect,   ~Variable,
-  "fixed",   "Neighbouring Megachile nests with detectable parasites",
-  "fixed",   "Neighbouring Megachile nests with no detectable parasites, including pseudo nests",
+  "fixed",   "Neighbouring congeneric nests with detectable parasites",
+  "fixed",   "Neighbouring congeneric nests nests with no detectable parasites, including pseudo nests",
   "fixed",   "Number of days with appropriate weather for bee activity",
   "fixed",   "Day of year I",
   "fixed",   "Day of year II",
@@ -699,7 +733,7 @@ include_graphics("Figures/hist_3aiii.png")
 
 **Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_iii.
 
-**Table S18.** Summary of the GLMM output from model 3b_i for prediction 3b, testing a change in nest investment of *Osmia* in response to brood parasites.
+**Table S18.** Summary of the GLMM output from model 3b_i for prediction 3b, testing a change in nest investment of *Osmia* in response to brood parasites, n = 74 nests.
 
 ```{r Model_3b_i, echo=FALSE}
 
@@ -717,7 +751,7 @@ mod_3bi_table <- font(mod_3bi_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3bi_table <- mod_3bi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .65, .65, .65, 1.1))
+mod_3bi_table <- mod_3bi_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .6, .6, .6, 1.1))
 # # bold rows with significant p-value
 # mod_3bi_table <- mod_3bi_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -725,7 +759,7 @@ mod_3bi_table
 
 ```
 
-**Table S19.** Summary of the GLMM output from model 3b_ii for prediction 3b, testing a change in nest investment of *Megachile* in response to brood parasites.
+**Table S19.** Summary of the GLMM output from model 3b_ii for prediction 3b, testing a change in nest investment of *Megachile* in response to brood parasites, n = 40 nests.
 
 ```{r Model_3b_ii, echo=FALSE}
 
@@ -743,7 +777,7 @@ mod_3bii_table <- font(mod_3bii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3bii_table <- mod_3bii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .65, .65, .65, 1.1))
+mod_3bii_table <- mod_3bii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "DF", "T Value", "P-Value"), width = c(.7, 2.4, .8, .6, .6, .6, 1.1))
 # # bold rows with significant p-value
 # mod_3bii_table <- mod_3bii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -751,7 +785,7 @@ mod_3bii_table
 
 ```
 
-**Table S20.** Summary of the GLMM output from model 3c_i for prediction 3c, testing if brood cell parasitization predicts nest termination in *Osmia*.
+**Table S20.** Summary of the GLMM output from model 3c_i for prediction 3c, testing if brood cell parasitization predicts nest termination in *Osmia*, n = 245 cells.
 
 ```{r Model_3c_i, echo=FALSE}
 
@@ -769,7 +803,7 @@ mod_3ci_table <- font(mod_3ci_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3ci_table <- mod_3ci_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+mod_3ci_table <- mod_3ci_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_3ci_table <- mod_3ci_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -777,7 +811,7 @@ mod_3ci_table
 
 ```
 
-**Table S21.** Summary of the GLMM output from model 3c_ii for prediction 3c, testing if brood cell parasitization predicts nest termination in *Megachile*.
+**Table S21.** Summary of the GLMM output from model 3c_ii for prediction 3c, testing if brood cell parasitization predicts nest termination in *Megachile*, n = 136 cells.
 
 ```{r Model_3c_ii, echo=FALSE}
 
@@ -795,7 +829,7 @@ mod_3cii_table <- font(mod_3cii_table, fontname = "Times New Roman", part = "all
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3cii_table <- mod_3cii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+mod_3cii_table <- mod_3cii_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_3cii_table <- mod_3cii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
@@ -803,7 +837,7 @@ mod_3cii_table
 
 ```
 
-**Table S22.** Summary of the GLMM output from model 3d_i for prediction 3d, testing abandoning inner walls as a response to brood parasites in *Osmia*.
+**Table S22.** Summary of the GLMM output from model 3d_i for prediction 3d, testing abandoning inner walls as a response to brood parasites in *Osmia*, n = 168 nests with 28 of these nests being abandoned inner walls.
 
 ```{r Model_3d_i, echo=FALSE}
 
@@ -821,7 +855,7 @@ mod_3di_table <- font(mod_3di_table, fontname = "Times New Roman", part = "all")
   fontsize(size = 12, part = "all") %>% 
   bold(part = "header", bold = TRUE)
 # make table take up full width of word doc
-mod_3di_table <- mod_3di_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.7, .8, .8, .8, 1.2))
+mod_3di_table <- mod_3di_table %>% width(j = c("Effect", "Variable", "Estimate", "Std. Error", "Z Value", "P-Value"), width = c(.7, 2.5, .8, .8, .8, 1.2))
 # # bold rows with significant p-value
 # mod_3di_table <- mod_3di_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 

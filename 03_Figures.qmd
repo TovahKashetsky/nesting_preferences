@@ -340,7 +340,6 @@ sum(trapnesting_meg_null$New_nests_meg) # 137
 
 ```
 
-
 ## Parasite Attraction
 
 ```{r P2_Parasite_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
@@ -477,8 +476,8 @@ ggsave("Figures/Fig_p2.png", Fig_p2, width = 8, height = 4, dpi = 300)
 
 
 # sample size
-table(P2_os$Nest_parasitized) # 75 no, 54 yes
-table(P2_meg$Nest_parasitized) # 92 no, 13 yes
+table(P2_os$Nest_parasitized) # 27 no, 54 yes
+table(P2_meg$Nest_parasitized) # 43 no, 13 yes
 
 nesting_cells_os %>% 
   filter(Cell_occupant == 'parasite') %>% 
@@ -494,7 +493,7 @@ nesting_cells_meg %>%
 # melittobia: 2 / (92 + 13) = 1.9%
 ```
 
-## Parasite Avoidance 
+## Parasite Avoidance
 
 ```{r P3a_Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -570,8 +569,6 @@ ggsave("Figures/Fig_p3a.png", Fig_p3a, width = 8, height = 4, dpi = 300)
 
 ```
 
-
-
 ```{r P3b_Investment, echo=FALSE, warning=FALSE, message=FALSE}
 
 ## Osmia ##
@@ -610,7 +607,7 @@ P3b_meg <- nesting_investment_meg %>%
   filter(!is.na(Nest_parasitized)) %>%
   ggplot(aes(DP_meg_prior, Prop_filled, fill = Nest_parasitized, colour = Nest_parasitized)) +
   geom_smooth(method = "glm", method.args = list(family = binomial())) +
-  geom_jitter(alpha = 0.7, width = 0.05, height = 0.01, shape = 16) +
+  geom_jitter(alpha = 0.7, width = 0.1, height = 0.1, shape = 16) +
   scale_colour_manual(
     values = c("not parasitized" = "#B6686B", "parasitized" = "#422426"),
     breaks = c("not parasitized", "parasitized"),
@@ -626,6 +623,18 @@ P3b_meg <- nesting_investment_meg %>%
   labs(y = NULL, x = NULL) +
   ylim(0, 1.05) +
   scale_x_continuous(breaks = c(0, 1), labels = c("0", "1"))
+
+
+nesting_investment_meg %>%
+  summarise(
+    n_total = n(),
+    n_x_na = sum(is.na(DP_meg_prior)),
+    n_y_na = sum(is.na(Prop_filled)),
+    n_colour_na = sum(is.na(Nest_parasitized))
+  )
+
+
+
 
 
 # Combine 
@@ -757,6 +766,3 @@ ggsave("Figures/Fig_p3c.png", Fig_p3c, width = 9, height = 4, dpi = 300)
 
 
 ```
-
-
-
