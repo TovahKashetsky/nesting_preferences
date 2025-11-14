@@ -63,14 +63,6 @@ nesting_cells_meg <- nesting_cells_meg %>% filter(Site != 'NN')
 
 
 
-# ## what if I remove unkowns from nesting cell data
-# table(nesting_cells_os$Cell_occupant)
-# nesting_cells_os <- nesting_cells_os %>% filter(Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
-# 
-# table(nesting_cells_meg$Cell_occupant)
-# nesting_cells_meg <- nesting_cells_meg %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'parasite')
-# 
-
 ```
 
 ```{r Simulations, include=FALSE}
@@ -491,6 +483,8 @@ nesting_cells_meg %>%
 # coelioxys: 5 / (92 + 13) = 4.8%
 # meloidae: 3 / (92 + 13) = 2.9%
 # melittobia: 2 / (92 + 13) = 1.9%
+
+
 ```
 
 ## Parasite Avoidance
@@ -673,7 +667,7 @@ Fig_p3b <- cowplot::plot_grid(P3b_left_label, combined_p3b, ncol = 2, rel_widths
 Fig_p3b <- cowplot::plot_grid(Fig_p3b, P3b_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave("Figures/Fig_p3b.png", Fig_p3b, width = 11, height = 4, dpi = 300) 
+ggsave("Figures/Fig_p3b.png", Fig_p3b, width = 10, height = 4, dpi = 300) 
 
 
 ```
@@ -761,7 +755,7 @@ Fig_p3c <- cowplot::plot_grid(P3c_left_label, combined_p3c, ncol = 2, rel_widths
 Fig_p3c <- cowplot::plot_grid(Fig_p3c, P3c_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave("Figures/Fig_p3c.png", Fig_p3c, width = 9, height = 4, dpi = 300) 
+ggsave("Figures/Fig_p3c.png", Fig_p3c, width = 10, height = 4, dpi = 300) 
 
 
 

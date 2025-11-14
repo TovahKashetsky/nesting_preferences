@@ -217,11 +217,13 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ```
 
+
 ## Congeneric Attraction - Osmia
 
 Model 1_i - including pseudo
 
 Model 1_ii - excluding pseudo
+
 
 ```{r Models_1_Congeneric_Attraction_Osmia, include=TRUE}
 
@@ -259,8 +261,8 @@ obvs_coef_os_ps # falls outside of range
 df_coefs_os_ps <- data.frame(sim_coefs_os_ps = sim_coefs_os_ps)
 
 hist_1i <- ggplot(df_coefs_os_ps, aes(x = sim_coefs_os_ps)) +
-  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-  geom_vline(xintercept = obvs_coef_os_ps, color = 'red3', linetype = 'dashed', size = 1) + 
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(xintercept = obvs_coef_os_ps, color = 'red2', linetype = 'dashed', size = 1) + 
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Osmia are attracted to congenerics 
 hist_1i
@@ -309,8 +311,8 @@ df_coefs_os_no_ps <- data.frame(sim_coefs_os_no_ps = sim_coefs_os_no_ps)
 
 # plot
 hist_1ii <- ggplot(df_coefs_os_no_ps, aes(x = sim_coefs_os_no_ps)) +
-  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-  geom_vline(xintercept = obvs_coef_os_no_ps, color = 'red3', linetype = 'dashed', size = 1) +
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(xintercept = obvs_coef_os_no_ps, color = 'red2', linetype = 'dashed', size = 1) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Osmia are attracted to congenerics
 hist_1ii
@@ -328,11 +330,13 @@ sum(trapnesting_os_null$New_nests_os)
 
 ```
 
+
 ## Congeneric Attraction - Megachile
 
 Model 1_iii - including pseudo
 
 Model 1_iv - excluding pseudo
+
 
 ```{r Models_1_Congeneric_Attraction_Megachile, include=TRUE}
 
@@ -369,8 +373,8 @@ obvs_coef_meg_ps # not within this range
 df_coefs_meg_ps <- data.frame(sim_coefs_meg_ps = sim_coefs_meg_ps)
 
 hist_1iii <- ggplot(df_coefs_meg_ps, aes(x = sim_coefs_meg_ps)) +
-  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-  geom_vline(xintercept = obvs_coef_meg_ps, color = 'red3', linetype = 'dashed', size = 1) +
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(xintercept = obvs_coef_meg_ps, color = 'red2', linetype = 'dashed', size = 1) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Megachile are attracted to congenerics 
 hist_1iii
@@ -418,8 +422,8 @@ obvs_coef_meg_no_ps # falls outside this range
 df_coefs_meg_no_ps <- data.frame(sim_coefs_meg_no_ps = sim_coefs_meg_no_ps)
 
 hist_1iv <- ggplot(df_coefs_meg_no_ps, aes(x = sim_coefs_meg_no_ps)) +
-  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-  geom_vline(xintercept = obvs_coef_meg_no_ps, color = 'red3', linetype = 'dashed', size = 1) +
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(xintercept = obvs_coef_meg_no_ps, color = 'red2', linetype = 'dashed', size = 1) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Megachile are attracted to congenerics 
 hist_1iv
@@ -437,6 +441,7 @@ sum(trapnesting_meg_null$New_nests_meg)
 
 ```
 
+
 ## Parasite Preferences - Osmia (Sapyga)
 
 Model 2_i - including pseudo
@@ -444,6 +449,7 @@ Model 2_i - including pseudo
 Model 2_ii - excluding pseudo
 
 Model 2_iii - active nests
+
 
 ```{r Models_2_Parasites_Attraction_Osmia, include=TRUE}
 
@@ -525,6 +531,7 @@ table(nesting_cells_os$Cell_parasitized) # 174 + 112 = 286
 
 ```
 
+
 ## Parasite Preferences - Megachile (Meloid, Coelioxys, Chalcid)
 
 Model 2_iv - including pseudo
@@ -532,6 +539,7 @@ Model 2_iv - including pseudo
 Model 2_v - excluding pseudo
 
 Model 2_vi - active nests
+
 
 ```{r Models_2_Parasites_Attraction_Megachile, include=TRUE}
 
@@ -610,11 +618,13 @@ table(nesting_cells_meg$Cell_parasitized) # 123 + 19 = 142
 
 ```
 
+
 ## Parasite Avoidance - Osmia
 
 Model 3a_i - including pseudo
 
 Model 3a_ii - excluding pseudo
+
 
 ```{r Models_3_Parasite_Avoidance_Osmia, include=TRUE}
 
@@ -662,15 +672,18 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   df_coefs_3ai_DP <- data.frame(sim_coefs_3ai_DP = sim_coefs_3ai_DP)
   
   hist_3ai_DP <- ggplot(df_coefs_3ai_DP, aes(x = sim_coefs_3ai_DP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3ai_DP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3ai_DP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # fail to reject the null - no evidence for Osmia avoiding nests with parasites
   hist_3ai_DP
+
+  # Reporting
   
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3ai_DP < df_coefs_3ai_DP) # 15 are larger (varies everytime we rerun simulations)
+  # save
+  ggsave("Figures/hist_3ai_DP.png", plot = hist_3ai_DP, width = 4.5, height = 3.5)
   
   
 ## NDP_os_prior expected vs observed
@@ -686,16 +699,19 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   df_coefs_3ai_NDP <- data.frame(sim_coefs_3ai_NDP = sim_coefs_3ai_NDP)
   
   hist_3ai_NDP <- ggplot(df_coefs_3ai_NDP, aes(x = sim_coefs_3ai_NDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3ai_NDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3ai_NDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   #reject the null - Osmia attracted to nests without parasites
   hist_3ai_NDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3ai_NDP < df_coefs_3ai_NDP) # 0 are larger
-
+  # save
+  ggsave("Figures/hist_3ai_NDP.png", plot = hist_3ai_NDP, width = 4.5, height = 3.5)
+  
   
 ## DP_os_prior * NDP_os_prior expected vs observed
   
@@ -710,19 +726,30 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   df_coefs_3ai_DPxNDP <- data.frame(sim_coefs_3ai_DPxNDP = sim_coefs_3ai_DPxNDP)
   
   hist_3ai_DPxNDP <- ggplot(df_coefs_3ai_DPxNDP, aes(x = sim_coefs_3ai_DPxNDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3ai_DPxNDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3ai_DPxNDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # fail to reject the null - no evidence for Osmia avoiding nests with parasites
   hist_3ai_DPxNDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 88 are larger
- 
+  # save
+  ggsave("Figures/hist_3ai_DPxNDP.png", plot = hist_3ai_DPxNDP, width = 4.5, height = 3.5)
+  
 # save all three
 hist_3ai <- hist_3ai_DP + hist_3ai_NDP + hist_3ai_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3ai.png", plot = hist_3ai, width = 8, height = 3)
+ggsave("Figures/hist_3ai.png", plot = hist_3ai, width = 8, height = 4)
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -769,16 +796,19 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   df_coefs_3aii_DP <- data.frame(sim_coefs_3aii_DP = sim_coefs_3aii_DP)
   
   hist_3aii_DP <- ggplot(df_coefs_3aii_DP, aes(x = sim_coefs_3aii_DP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3aii_DP, color = 'red3', linetype = 'dashed', linewidth = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aii_DP, color = 'red2', linetype = 'dashed', linewidth = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # not too far out 
   hist_3aii_DP
+
+  # Reporting
   
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3aii_DP < df_coefs_3aii_DP) # 1 is larger (varies with each new set of simulations)
-
+  # save
+  ggsave("Figures/hist_3aii_DP.png", plot = hist_3aii_DP, width = 4.5, height = 3.5)
+  
   
 ## NDP_os_prior expected vs observed
   
@@ -793,16 +823,19 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   df_coefs_3aii_NDP <- data.frame(sim_coefs_3aii_NDP = sim_coefs_3aii_NDP)
   
   hist_3aii_NDP <- ggplot(df_coefs_3aii_NDP, aes(x = sim_coefs_3aii_NDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3aii_NDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aii_NDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # reject the null - Osmia attracted to nests without parasites
   hist_3aii_NDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3aii_NDP < df_coefs_3aii_NDP) # 0 are larger
-
+  # save
+  ggsave("Figures/hist_3aii_NDP.png", plot = hist_3aii_NDP, width = 4.5, height = 3.5)
+  
   
 ## DP_os_prior * NDP_os_prior expected vs observed
   
@@ -817,20 +850,19 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   df_coefs_3aii_DPxNDP <- data.frame(sim_coefs_3aii_DPxNDP = sim_coefs_3aii_DPxNDP)
   
   hist_3aii_DPxNDP <- ggplot(df_coefs_3aii_DPxNDP, aes(x = sim_coefs_3aii_DPxNDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3aii_DPxNDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aii_DPxNDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # fail to reject the null - no evidence for Osmia avoiding nests with parasites
   hist_3aii_DPxNDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 86 are larger 
-
-# save all three
-hist_3aii <- hist_3aii_DP + hist_3aii_NDP + hist_3aii_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3aii.png", plot = hist_3aii, width = 8, height = 3)
-
+  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 88 are larger 
+  # save
+  ggsave("Figures/hist_3aii_DPxNDP.png", plot = hist_3aii_DPxNDP, width = 4.5, height = 3.5)
+ 
 
 # sample size
 sum(trapnesting_os_null$New_nests_os) # 161
@@ -838,11 +870,13 @@ sum(trapnesting_os_null$New_nests_os) # 161
 
 ```
 
+
 ## Parasite Avoidance - Megachile
 
 Model 3a_iii - including pseudo
 
 Model 3a_iv - excluding pseudo
+
 
 ```{r Models_3_Parasite_Avoidance_Megachile, include=TRUE}
 
@@ -890,16 +924,19 @@ plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('DP_meg_prior', 'NDP
   df_coefs_3aiii_DP <- data.frame(sim_coefs_3aiii_DP = sim_coefs_3aiii_DP)
   
   hist_3aiii_DP <- ggplot(df_coefs_3aiii_DP, aes(x = sim_coefs_3aiii_DP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3aiii_DP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aiii_DP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # fail to reject the null - no evidence for Megachile avoiding nests with parasites
   hist_3aiii_DP
+
+  # Reporting
   
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3aiii_DP < df_coefs_3aiii_DP) # 49 are larger (varies with simulations)
-
+  # save
+  ggsave("Figures/hist_3aiii_DP.png", plot = hist_3aiii_DP, width = 4.5, height = 3.5)
+  
   
 ## NDP_meg_prior expected vs observed
   
@@ -914,16 +951,19 @@ plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('DP_meg_prior', 'NDP
   df_coefs_3aiii_NDP <- data.frame(sim_coefs_3aiii_NDP = sim_coefs_3aiii_NDP)
   
   hist_3aiii_NDP <- ggplot(df_coefs_3aiii_NDP, aes(x = sim_coefs_3aiii_NDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-    geom_vline(xintercept = obvs_coef_3aiii_NDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aiii_NDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # reject the null - Megachile attracted to nests without parasites
   hist_3aiii_NDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3aiii_NDP < df_coefs_3aiii_NDP) # 2 are larger
-
+  # save
+  ggsave("Figures/hist_3aiii_NDP.png", plot = hist_3aiii_NDP, width = 4.5, height = 3.5)
+  
   
 ## DP_meg_prior * NDP_meg_prior expected vs observed
   
@@ -938,19 +978,18 @@ plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('DP_meg_prior', 'NDP
   df_coefs_3aiii_DPxNDP <- data.frame(sim_coefs_3aiii_DPxNDP = sim_coefs_3aiii_DPxNDP)
   
   hist_3aiii_DPxNDP <- ggplot(df_coefs_3aiii_DPxNDP, aes(x = sim_coefs_3aiii_DPxNDP)) +
-    geom_histogram(binwidth = 0.1, fill = 'grey50') +
-    geom_vline(xintercept = obvs_coef_3aiii_DPxNDP, color = 'red3', linetype = 'dashed', size = 1) +
-    labs(y = 'Count', x = 'Coefficient') + 
-    theme(plot.margin = margin(1, 1, 1, 1))
+    geom_histogram(binwidth = 0.1) +
+    geom_vline(xintercept = obvs_coef_3aiii_DPxNDP, color = 'red2', linetype = 'dashed', size = 1) +
+    labs(y = 'Count', x = 'Coefficient')
   # reject the null - Megachile avoid nests with parasites
   hist_3aiii_DPxNDP
   
+  # Reporting
+  
   # what proportion of the simulated coefs fall above mine?
   table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 100 are larger
- 
-# save all three
-hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3aiii.png", plot = hist_3aiii, width = 8, height = 3)
+  # save
+  ggsave("Figures/hist_3aiii_DPxNDP.png", plot = hist_3aiii_DPxNDP, width = 4.5, height = 3.5)
 
 
 ### MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo ###
@@ -989,10 +1028,11 @@ ggsave("Figures/hist_3aiii.png", plot = hist_3aiii, width = 8, height = 3)
 # df_coefs_meg_no_ps_avoid <- data.frame(sim_coefs_meg_no_ps_avoid = sim_coefs_meg_no_ps_avoid)
 #
 # ggplot(df_coefs_meg_no_ps_avoid, aes(x = sim_coefs_meg_no_ps_avoid)) +
-# geom_histogram(binwidth = 0.1, fill = 'grey50')  +
-# geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = 'red3', linetype = 'dashed', size = 1)
+# geom_histogram(binwidth = 0.1) +
+# geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = 'red2', linetype = 'dashed', size = 1)
 
 ```
+
 
 ## Parasite Defences
 
@@ -1007,6 +1047,7 @@ Model 3c_ii - nest termination, Megachile
 Model 3d_i - abandoned inner wall, Osmia
 
 Model 3d_ii - abandoned inner wall, Megachile
+
 
 ```{r Models_3b_Nest_Investment, include=TRUE}
 
@@ -1141,3 +1182,4 @@ nesting_meg %>%
 
 
 ```
+

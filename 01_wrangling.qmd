@@ -1082,7 +1082,7 @@ preferences <- preferences %>% filter(Occupant == 'osmia' | Occupant =='megachil
 
 # create column to say if cell is parasitized or not, or NA for unknowns
 table(emergence$Cell_occupant)
-emergence <- emergence %>% 
+emergence <- emergence %>%
   mutate(Cell_parasitized = if_else(Cell_occupant == 'parasite', 1,
                                     if_else(Cell_occupant == 'osmia' | Cell_occupant == 'megachile', 0, NA)))
 
@@ -1101,7 +1101,6 @@ emergence %>%
 ## Make column to say nest is parasitized or not for when a parasite is in a cell, from that date onwards
 
 # make column to say for each date, if a cell has parasites, then count cumulative parasites in a new column, and keep the value even when the cells between bees and parasites are NAs (e.g., mold or empty)
-
 
 emergence <- emergence %>%
   arrange(Nest_ID, Date) %>%

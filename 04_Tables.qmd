@@ -34,6 +34,12 @@ mod_3cii_last_cell_meg <- readRDS('Models/mod_3cii_last_cell_meg.rds')
 mod_3di_inner_wall_os <- readRDS('Models/mod_3di_inner_wall_os.rds')
 # mod_3dii_inner_wall_meg <- readRDS('Models/mod_3dii_inner_wall_meg.rds')
 
+# for extra figure
+nesting_cells_os <- read_csv('data/nesting_cells_cleaned_osmia.csv')
+nesting_cells_os <- nesting_cells_os %>% filter(Year != 'year_2024')
+nesting_cells_os <- nesting_cells_os %>% filter(Site != 'CP')
+
+
 
 ```
 
@@ -326,7 +332,7 @@ include_graphics("Figures/hist_1i.png")
 
 ```
 
-**Figure S2.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_i.
+**Figure S2.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the coefficient from the GLMM using observed data (red line) for the number of neighbouring congeneric nests (including pseudo nests) from model 1_i.
 
 **Table S6.** Summary of the GLMM for prediction 1, model 1_ii testing for an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics, n = 161 nests.
 
@@ -367,7 +373,7 @@ include_graphics("Figures/hist_1ii.png")
 
 ```
 
-**Figure S3.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_ii.
+**Figure S3.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the coefficient from the GLMM using observed data (red line) for the number of neighbouring congeneric nests (excluding pseudo nests) from model 1_ii.
 
 **Table S7.** Summary of the GLMM for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics, n = 137 nests.
 
@@ -408,7 +414,7 @@ include_graphics("Figures/hist_1iii.png")
 
 ```
 
-**Figure S4.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iii.
+**Figure S4.** Coefficients from the *Megachile* GLMMs using simulated data (grey bars) and the coefficient from the GLMM using observed data (red line) for the number of neighbouring congeneric nests (including pseudo nests) from model 1_iii.
 
 **Table S8.** Summary of the GLMM for prediction 1, model 1_iv testing for an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics, n = 137 nests.
 
@@ -449,7 +455,7 @@ include_graphics("Figures/hist_1iv.png")
 
 ```
 
-**Figure S5.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 1, model 1_iv.
+**Figure S5.** Coefficients from the *Megachile* GLMMs using simulated data (grey bars) and the coefficient from the GLMM using observed data (red line) for the number of neighbouring congeneric nests (excluding pseudo nests) from model 1_iv.
 
 **Table S9.** Summary of the GLMM output from model 2_i testing for an attraction to *Osmia* nests of brood parasites (*Sapyga*, *Melittobia*), including pseudo nests as *Osmia,* n = 286 cells. Asterisks indicate significance for the following tables.
 
@@ -527,6 +533,28 @@ mod_2iii_table <- mod_2iii_table %>% width(j = c("Effect", "Variable", "Estimate
 # mod_2iii_table <- mod_2iii_table %>% bold(i = ~ as.numeric(gsub("[^0-9\\.]", "", `P-Value`)) < 0.05, bold = TRUE, part = "body")
 
 mod_2iii_table
+
+```
+
+```{r Model_2_ii_figure, echo=FALSE}
+
+
+## Graph active Osmia mothers and parasites
+
+
+# number of parasitized nests
+act_moms_os <- nesting_cells_os %>% 
+  select(Treatment, Trapnest, Nest_ID, Nest_parasitized, Cell_parasitized, Osmia_active_mothers) 
+
+# mutate the cell_parasitized column to words 
+act_moms_os <- act_moms_os %>% mutate(Cell_parasitized_word = ifelse(Cell_parasitized == 1, 'Parasitized',
+                                                      ifelse(Cell_parasitized == 0, 'Not parasitized', NA)))
+
+act_moms_os %>% 
+  ggplot(aes(Osmia_active_mothers, fill = Cell_parasitized_word)) +
+  geom_histogram(position = 'dodge', binwidth = 0.5)
+
+
 
 ```
 
@@ -649,7 +677,7 @@ include_graphics("Figures/hist_3ai.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_i.
+**Figure S6.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_i, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
 
 **Table S16.** Summary of the GLMM output from model 3a_ii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites, n = 161 nests.
 
@@ -690,7 +718,7 @@ include_graphics("Figures/hist_3aii.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_ii.
+**Figure S7.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_ii, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (excluding pseudo nests), and C) the interaction between these two terms.
 
 **Table S17.** Summary of the GLMM output from model 3a_iii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites, n = 137 nests.
 
@@ -731,7 +759,24 @@ include_graphics("Figures/hist_3aiii.png")
 
 ```
 
-**Figure S6.** Histogram of coefficients from the 100 models using simulated data (grey bars) and the coefficient from the model using observed data (red line) for prediction 3, model 3_iii.
+**Figure S8.** Coefficients from the *Megachile* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_iii, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
+
+```{r Model_3a_iii_figure, echo = FASLE}
+
+
+fig <- trapnesting_meg_null %>% 
+  ggplot(aes(y = New_nests_meg, x = NDP_meg_prior, color = DP_meg_prior)) +
+  geom_jitter(alpha = 0.5, shape = 16, width = 0.5) +
+  geom_smooth(method = 'lm') +
+  scale_color_gradient(low = "blue", high = "red")
+
+
+fig
+
+
+
+
+```
 
 **Table S18.** Summary of the GLMM output from model 3b_i for prediction 3b, testing a change in nest investment of *Osmia* in response to brood parasites, n = 74 nests.
 
