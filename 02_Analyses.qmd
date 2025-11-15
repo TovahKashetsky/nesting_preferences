@@ -271,7 +271,7 @@ hist_1i
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_ps < df_coefs_os_ps) # none are larger
 # save
-ggsave("Figures/hist_1i.png", plot = hist_1i, width = 4.5, height = 3.5)
+ggsave('Figures/hist_1i.png', plot = hist_1i, width = 4.5, height = 3.5)
 
 
 
@@ -321,7 +321,7 @@ hist_1ii
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_no_ps < df_coefs_os_no_ps) # none are larger
 # save
-ggsave("Figures/hist_1ii.png", plot = hist_1ii, width = 4.5, height = 3.5)
+ggsave('Figures/hist_1ii.png', plot = hist_1ii, width = 4.5, height = 3.5)
 
 # sample size
 sum(trapnesting_os_null$New_nests_os)
@@ -381,7 +381,7 @@ hist_1iii
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_ps < df_coefs_meg_ps) # none are larger
 # save
-ggsave("Figures/hist_1iii.png", plot = hist_1iii, width = 4.5, height = 3.5)
+ggsave('Figures/hist_1iii.png', plot = hist_1iii, width = 4.5, height = 3.5)
 
 
 
@@ -430,7 +430,7 @@ hist_1iv
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_no_ps < df_coefs_meg_no_ps) # none are larger
 # save
-ggsave("Figures/hist_1iv.png", plot = hist_1iv, width = 4.5, height = 3.5)
+ggsave('Figures/hist_1iv.png', plot = hist_1iv, width = 4.5, height = 3.5)
 
 # sample size
 sum(trapnesting_meg_null$New_nests_meg)
@@ -721,8 +721,8 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 88 are larger
  
 # save all three
-hist_3ai <- hist_3ai_DP + hist_3ai_NDP + hist_3ai_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3ai.png", plot = hist_3ai, width = 8, height = 3)
+hist_3ai <- hist_3ai_DP + hist_3ai_NDP + hist_3ai_DPxNDP + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_3ai.png', plot = hist_3ai, width = 8, height = 3)
   
   
   
@@ -828,8 +828,8 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 86 are larger 
 
 # save all three
-hist_3aii <- hist_3aii_DP + hist_3aii_NDP + hist_3aii_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3aii.png", plot = hist_3aii, width = 8, height = 3)
+hist_3aii <- hist_3aii_DP + hist_3aii_NDP + hist_3aii_DPxNDP + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_3aii.png', plot = hist_3aii, width = 8, height = 3)
 
 
 # sample size
@@ -873,8 +873,8 @@ sim_coefs_3aiii_DPxNDP <- c(unlist(lapply(sim_list_3aiii_meg_ps_avoid, function(
 mod_3aiii_choice_consp_par_meg_ps <- glmer(New_nests_meg ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 summary(mod_3aiii_choice_consp_par_meg_ps)
 
-# plot
-plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('DP_meg_prior', 'NDP_ps_meg_prior'))) 
+# plot 
+plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
 
 
 ## DP_meg_prior expected vs observed
@@ -949,8 +949,8 @@ plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('DP_meg_prior', 'NDP
   table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 100 are larger
  
 # save all three
-hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = "A")
-ggsave("Figures/hist_3aiii.png", plot = hist_3aiii, width = 8, height = 3)
+hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_3aiii.png', plot = hist_3aiii, width = 8, height = 3)
 
 
 ### MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo ###
@@ -991,6 +991,7 @@ ggsave("Figures/hist_3aiii.png", plot = hist_3aiii, width = 8, height = 3)
 # ggplot(df_coefs_meg_no_ps_avoid, aes(x = sim_coefs_meg_no_ps_avoid)) +
 # geom_histogram(binwidth = 0.1, fill = 'grey50')  +
 # geom_vline(xintercept = obvs_coef_meg_no_ps_avoid, color = 'red3', linetype = 'dashed', size = 1)
+
 
 ```
 
