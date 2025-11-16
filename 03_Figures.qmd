@@ -256,16 +256,18 @@ Fig_p1_meg <- P1_meg_sum %>%
 
 ## Combine figures 
 
-
+# combine and add letters to each panel
 combined_p1 <-  Fig_p1_os | Fig_p1_meg + theme(legend.box = 'vertical',
-      legend.position = 'right')
+      legend.position = 'right') 
+combined_p1 <- combined_p1 +
+  plot_annotation(tag_levels = "A")
 
 # make lengends stack ontop of each other
 combined_p1 <- combined_p1 + plot_layout(guides = 'collect') &
   theme(legend.box = 'vertical') 
 
-Fig_p1 <- combined_p1 + plot_annotation(tag_levels = NULL) &
-  theme(plot.margin = margin(5, 5, 5, 5))
+Fig_p1 <- combined_p1 +
+  theme(plot.margin = margin(5, 5, 5, 5)) 
 
 P1_left_label <- ggplot() +
   annotate('text',
@@ -426,10 +428,12 @@ Fig_p2_meg <- P2_meg_sum %>%
 ## Combine plots
 
 
-combined_p2 <-  Fig_p2_os | Fig_p2_meg
+combined_p2 <-  Fig_p2_os | Fig_p2_meg 
+combined_p2 <- combined_p2 +
+  plot_annotation(tag_levels = "A")
 
 Fig_p2 <- combined_p2 + plot_annotation(tag_levels = NULL) &
-  theme(plot.margin = margin(5, 5, 5, 5))
+  theme(plot.margin = margin(5, 5, 5, 5)) 
 
 P2_left_label <- ggplot() +
   annotate('text',
@@ -443,7 +447,6 @@ P2_left_label <- ggplot() +
     plot.background   = element_rect(fill = 'white', colour = NA),
     plot.margin       = margin(0, 0, 0, 0)
   )
-
 
 P2_bottom_label <- ggplot() +
     annotate('text',
@@ -524,7 +527,8 @@ P3a_meg <- trapnesting_meg_null %>%
 # Combine 
         
 combined_p3a <- P3a_os + P3a_meg + 
-  plot_layout(ncol = 2, widths = c(4, 3), guides = 'collect') 
+  plot_layout(ncol = 2, widths = c(4, 3), guides = 'collect') +
+  plot_annotation(tag_levels = "A")
 combined_p3a 
 
 # make labels, needs white background so it's not png
@@ -618,7 +622,6 @@ P3b_meg <- nesting_investment_meg %>%
   ylim(0, 1.05) +
   scale_x_continuous(breaks = c(0, 1), labels = c('0', '1'))
 
-
 nesting_investment_meg %>%
   summarise(
     n_total = n(),
@@ -628,11 +631,11 @@ nesting_investment_meg %>%
   )
 
 
-
 # Combine 
         
 combined_p3b <- P3b_os + P3b_meg + plot_layout(ncol = 2, widths = c(4, 3), guides = 'collect') 
-combined_p3b 
+combined_p3b <- combined_p3b +
+  plot_annotation(tag_levels = "A")
 
 P3b_left_label <- ggplot() +
   annotate('text',
@@ -715,6 +718,9 @@ Fig_p3c_meg <- nesting_cells_meg_fig %>%
 
 combined_p3c <-  Fig_p3c_os | Fig_p3c_meg
 
+combined_p3c <- combined_p3c +
+  plot_annotation(tag_levels = "A")
+
 # make lengends stack ontop of each other
 combined_p3c <- combined_p3c + plot_layout(guides = 'collect') &
   theme(legend.box = 'vertical') 
@@ -753,8 +759,7 @@ Fig_p3c <- cowplot::plot_grid(P3c_left_label, combined_p3c, ncol = 2, rel_widths
 Fig_p3c <- cowplot::plot_grid(Fig_p3c, P3c_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave('Figures/Fig_p3c.png', Fig_p3c, width = 10, height = 4, dpi = 300) 
-
+ggsave('Figures/Fig_p3c.png', Fig_p3c, width = 10, height = 5, dpi = 300) 
 
 
 ```
@@ -808,20 +813,6 @@ mod_3aiii_sim_4 <- glmer(Null_new_nests27 ~ scale(DP_meg_prior) * scale(NDP_ps_m
 # 42
 mod_3aiii_sim_5 <- glmer(Null_new_nests5 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 
-# plot expected 1
-plot(ggpredict(mod_3aiii_sim_1, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-# plot expected 2
-plot(ggpredict(mod_3aiii_sim_2, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-# plot expected 3
-plot(ggpredict(mod_3aiii_sim_3, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-# plot expected 4
-plot(ggpredict(mod_3aiii_sim_4, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-# plot expected 5
-plot(ggpredict(mod_3aiii_sim_5, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-
-# plot observed
-plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))) 
-
 
 # make with ggplot to save
 Df_mod_3aiii_sim_1 <- ggpredict(mod_3aiii_sim_1, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
@@ -831,20 +822,20 @@ Sup_fig_3aiii_sim_1 <- ggplot(Df_mod_3aiii_sim_1, aes(x = x, y = predicted, colo
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = 'Number of neighbouring nests\nwith no detectable parasites',
-    y = 'Predicted probability of new nests',
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    x = NULL,
+    y = NULL,
+    color = 'Simulated number of neighbouring\nnests with detectable parasites',
+    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) +
   scale_fill_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) 
 
 Df_mod_3aiii_sim_2 <- ggpredict(mod_3aiii_sim_2, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
@@ -854,20 +845,20 @@ Sup_fig_3aiii_sim_2 <- ggplot(Df_mod_3aiii_sim_2, aes(x = x, y = predicted, colo
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = 'Number of neighbouring nests\nwith no detectable parasites',
-    y = 'Predicted probability of new nests',
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    x = NULL,
+    y = NULL,
+    color = 'Simulated number of neighbouring\nnests with detectable parasites',
+    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) +
   scale_fill_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) 
 
 # simulation 3
@@ -878,20 +869,20 @@ Sup_fig_3aiii_sim_3 <- ggplot(Df_mod_3aiii_sim_3, aes(x = x, y = predicted, colo
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = 'Number of neighbouring nests\nwith no detectable parasites',
-    y = 'Predicted probability of new nests',
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    x = NULL,
+    y = NULL,
+    color = 'Simulated number of neighbouring\nnests with detectable parasites',
+    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) +
   scale_fill_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) 
 
 # simulation 4
@@ -902,20 +893,20 @@ Sup_fig_3aiii_sim_4 <- ggplot(Df_mod_3aiii_sim_4, aes(x = x, y = predicted, colo
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = 'Number of neighbouring nests\nwith no detectable parasites',
-    y = 'Predicted probability of new nests',
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    x = NULL,
+    y = NULL,
+    color = 'Simulated number of neighbouring\nnests with detectable parasites',
+    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) +
   scale_fill_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) 
 
 # simulation 5
@@ -929,21 +920,22 @@ Sup_fig_3aiii_sim_5 <- ggplot(Df_mod_3aiii_sim_5, aes(x = x, y = predicted, colo
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = 'Number of neighbouring nests\nwith no detectable parasites',
-    y = 'Predicted probability of new nests',
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    x = NULL,
+    y = NULL,
+    color = 'Simulated number of neighbouring\nnests with detectable parasites',
+    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) +
   scale_fill_manual(values = c(
-  "#ffcc66",
-  "#cf8f30",
-  "#533913"
+  'goldenrod1',
+  'goldenrod3',
+  '#705410'
   )) 
+
 
 # observed 
 
@@ -956,46 +948,37 @@ Sup_fig_3aiii_obs <- ggplot(Df_mod_3aiii_obs, aes(x = x, y = predicted, color = 
   labs(
     x = NULL,
     y = NULL,
-    color = 'Number of neighbouring nests\nwith detectable parasites',
-    fill = 'Number of neighbouring nests\nwith detectable parasites'
+    color = 'Observed number of neighbouring\nnests with detectable parasites',
+    fill = 'Observed number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
-  "#ebadbd",
-  "#D24B50",
-  "#3A1F20"
+  '#ebadb0',
+  '#cd5155',
+  '#813134'
   )) +
   scale_fill_manual(values = c(
-  "#ebadbd",
-  "#D24B50",
-  "#3A1F20"
+  '#ebadb0',
+  '#cd5155',
+  '#813134'
   ))
-
-
 
 
 
 ## Combine plots
 
-combined_p3a_sup <- wrap_plots(Sup_fig_3aiii_obs, Sup_fig_3aiii_sim_1, Sup_fig_3aiii_sim_2, Sup_fig_3aiii_sim_3, Sup_fig_3aiii_sim_4, Sup_fig_3aiii_sim_5, ncol = 3)
+# put into three columns
+combined_p3a_sup <- wrap_plots(Sup_fig_3aiii_obs, Sup_fig_3aiii_sim_1, Sup_fig_3aiii_sim_2, Sup_fig_3aiii_sim_3, Sup_fig_3aiii_sim_4, Sup_fig_3aiii_sim_5, ncol = 2) +
+  plot_annotation(tag_levels = "A")
 
-
-
-
-combined_p3a_sup
-
-
-
-# make lengends stack ontop of each other
-combined_p3c <- combined_p3c + plot_layout(guides = 'collect') &
+# add legends stacked on the side
+combined_p3a_sup <- combined_p3a_sup + plot_layout(guides = 'collect') &
   theme(legend.box = 'vertical') 
 
-Fig_p3c <- combined_p3c + plot_annotation(tag_levels = NULL) &
-  theme(plot.margin = margin(5, 5, 5, 5))
-
-P3c_left_label <- ggplot() +
+# make labels
+P3a_sup_left_label <- ggplot() +
   annotate('text',
            x = 0.5, y = 0.5,
-           label = 'Proportion of cells',
+           label = 'Predicted probability of new nests',
            angle = 90,
            size = 5) +
   theme_void() +
@@ -1005,9 +988,31 @@ P3c_left_label <- ggplot() +
     plot.margin       = margin(0, 0, 0, 0)
   )
 
+P3a_sup_bottom_label <- ggdraw() + # diff than other labels so I can move it to the left
+  draw_label(
+    "Number of neighbouring nests with no detectable parasites",
+    x = 0.4,  
+    y = 0.8,
+    hjust = 0.5,
+    vjust = 0) +
+  theme(
+    panel.background  = element_rect(fill = 'white', colour = NA),
+    plot.background   = element_rect(fill = 'white', colour = NA),
+    plot.margin       = margin(0, 0, 0, 0)
+  )
+  
+# add left and bottom labels
+Sup_fig_3aiii <- cowplot::plot_grid(P3a_sup_left_label, combined_p3a_sup, ncol = 2, rel_widths = c(0.05, 0.95)) 
+Sup_fig_3aiii <- cowplot::plot_grid(Sup_fig_3aiii, P3a_sup_bottom_label, ncol = 1, rel_heights = c(1, 0.09)) 
+
+# save
+ggsave('Figures/Sup_fig_3aiii.png', Sup_fig_3aiii, width = 10, height = 12, dpi = 900) 
 
 
-
+# green colours
+#  '#a7c957',
+#  '#6a994e',
+#  '#386641'
 
 
 
