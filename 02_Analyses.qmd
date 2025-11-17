@@ -936,7 +936,7 @@ plot(ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('NDP_ps_meg_prior [a
   
   # convert to dataframe
   df_coefs_3aiii_DPxNDP <- data.frame(sim_coefs_3aiii_DPxNDP = sim_coefs_3aiii_DPxNDP)
-  
+   
   hist_3aiii_DPxNDP <- ggplot(df_coefs_3aiii_DPxNDP, aes(x = sim_coefs_3aiii_DPxNDP)) +
     geom_histogram(binwidth = 0.1, fill = 'grey50') +
     geom_vline(xintercept = obvs_coef_3aiii_DPxNDP, color = 'red3', linetype = 'dashed', size = 1) +

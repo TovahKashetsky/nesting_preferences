@@ -13,7 +13,7 @@ editor: visual
 ## Loading packages
 library(ggplot2)
 library(ggeffects)
-library(kableExtra)
+library(kableExtra) 
 library(lme4)
 library(tidyverse)
 library(patchwork)
@@ -620,15 +620,8 @@ P3b_meg <- nesting_investment_meg %>%
   ) +
   labs(y = NULL, x = NULL) +
   ylim(0, 1.05) +
-  scale_x_continuous(breaks = c(0, 1), labels = c('0', '1'))
+  scale_x_continuous(breaks = c(0, 1), labels = c('0', '1')) 
 
-nesting_investment_meg %>%
-  summarise(
-    n_total = n(),
-    n_x_na = sum(is.na(DP_meg_prior)),
-    n_y_na = sum(is.na(Prop_filled)),
-    n_colour_na = sum(is.na(Nest_parasitized))
-  )
 
 
 # Combine 
@@ -668,7 +661,7 @@ Fig_p3b <- cowplot::plot_grid(P3b_left_label, combined_p3b, ncol = 2, rel_widths
 Fig_p3b <- cowplot::plot_grid(Fig_p3b, P3b_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
 # save
-ggsave('Figures/Fig_p3b.png', Fig_p3b, width = 10, height = 4, dpi = 300) 
+ggsave('Figures/Fig_p3b.png', Fig_p3b, width = 11, height = 5, dpi = 300) 
 
 
 ```
@@ -679,7 +672,7 @@ Nest Termination
 
 ## Osmia ##
 
-nesting_cells_os_fig <- nesting_cells_os %>% select(Nest_ID, Cell_ID, Cell_position, Cell_parasitized)
+nesting_cells_os_fig <- nesting_cells_os %>% select(Nest_ID, Cell_ID, Cell_position, Cell_parasitized) 
 
 nesting_cells_os_fig <- nesting_cells_os_fig %>% 
   mutate(Cell_parasitized_word = ifelse(Cell_parasitized == 1, 'Parasitized', 'Not parasitized'))
@@ -782,7 +775,7 @@ Sup_fig_2aiii <- act_moms_os %>%
   geom_histogram(position = 'dodge', binwidth = 0.5) +
   scale_fill_manual(
     values = c('Not parasitized' = '#59989e', 'Parasitized' = '#21393b'),
-    name = bquote(italic(Osmia) ~ 'cells')) +
+    name = bquote(italic(Osmia) ~ 'cell status')) +
 labs(
   y = 'Number of cells',
   x = bquote('Active ' * italic(Osmia) * ' mothers')
@@ -836,7 +829,12 @@ Sup_fig_3aiii_sim_1 <- ggplot(Df_mod_3aiii_sim_1, aes(x = x, y = predicted, colo
   'goldenrod1',
   'goldenrod3',
   '#705410'
-  )) 
+  )) +
+  theme(
+    legend.position = "top",
+    legend.justification = "center",
+    legend.box.just = "center"
+  )
 
 Df_mod_3aiii_sim_2 <- ggpredict(mod_3aiii_sim_2, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
 
@@ -847,8 +845,6 @@ Sup_fig_3aiii_sim_2 <- ggplot(Df_mod_3aiii_sim_2, aes(x = x, y = predicted, colo
   labs(
     x = NULL,
     y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
   'goldenrod1',
@@ -871,8 +867,6 @@ Sup_fig_3aiii_sim_3 <- ggplot(Df_mod_3aiii_sim_3, aes(x = x, y = predicted, colo
   labs(
     x = NULL,
     y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
   'goldenrod1',
@@ -895,8 +889,6 @@ Sup_fig_3aiii_sim_4 <- ggplot(Df_mod_3aiii_sim_4, aes(x = x, y = predicted, colo
   labs(
     x = NULL,
     y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
   'goldenrod1',
@@ -922,8 +914,6 @@ Sup_fig_3aiii_sim_5 <- ggplot(Df_mod_3aiii_sim_5, aes(x = x, y = predicted, colo
   labs(
     x = NULL,
     y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
   ) +
   scale_color_manual(values = c(
   'goldenrod1',
@@ -960,19 +950,63 @@ Sup_fig_3aiii_obs <- ggplot(Df_mod_3aiii_obs, aes(x = x, y = predicted, color = 
   '#ebadb0',
   '#cd5155',
   '#813134'
-  ))
+  )) +
+  theme(
+    legend.position = "top",
+    legend.justification = "center",
+    legend.box.just = "center"
+  )
 
 
 
 ## Combine plots
 
-# put into three columns
-combined_p3a_sup <- wrap_plots(Sup_fig_3aiii_obs, Sup_fig_3aiii_sim_1, Sup_fig_3aiii_sim_2, Sup_fig_3aiii_sim_3, Sup_fig_3aiii_sim_4, Sup_fig_3aiii_sim_5, ncol = 2) +
-  plot_annotation(tag_levels = "A")
+# make specials legends for A and B panels
+Sup_fig_3aiii_obs <- Sup_fig_3aiii_obs +
+  guides(
+    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
+    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = "center",
+    legend.box.just = "center",
+    legend.box = "vertical",
+    legend.title = element_text(hjust = 0.5),
+    legend.spacing.y = unit(2, "pt"),
+    legend.margin = margin(b = -5)
+  )
 
-# add legends stacked on the side
-combined_p3a_sup <- combined_p3a_sup + plot_layout(guides = 'collect') &
-  theme(legend.box = 'vertical') 
+Sup_fig_3aiii_sim_1 <- Sup_fig_3aiii_sim_1 +
+  guides(
+    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
+    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = "center",
+    legend.box.just = "center",
+    legend.box = "vertical",
+    legend.title = element_text(hjust = 0.5),
+    legend.spacing.y = unit(2, "pt"),
+    legend.margin = margin(b = -5)
+  )
+
+# remove legends from other panels
+Sup_fig_3aiii_sim_2 <- Sup_fig_3aiii_sim_2 + theme(legend.position = "none")
+Sup_fig_3aiii_sim_3 <- Sup_fig_3aiii_sim_3 + theme(legend.position = "none")
+Sup_fig_3aiii_sim_4 <- Sup_fig_3aiii_sim_4 + theme(legend.position = "none")
+Sup_fig_3aiii_sim_5 <- Sup_fig_3aiii_sim_5 + theme(legend.position = "none")
+
+# combine all
+# Combined_p3a_sup <- (Sup_fig_3aiii_obs + Sup_fig_3aiii_sim_1) /
+#                (Sup_fig_3aiii_sim_2 + Sup_fig_3aiii_sim_3) /
+#                (Sup_fig_3aiii_sim_4 + Sup_fig_3aiii_sim_5) +
+#   plot_annotation(tag_levels = "A")
+
+Combined_p3a_sup <- (Sup_fig_3aiii_obs + Sup_fig_3aiii_sim_1) /
+                    (Sup_fig_3aiii_sim_2 + Sup_fig_3aiii_sim_3) /
+                    (Sup_fig_3aiii_sim_4 + Sup_fig_3aiii_sim_5) 
 
 # make labels
 P3a_sup_left_label <- ggplot() +
@@ -991,7 +1025,7 @@ P3a_sup_left_label <- ggplot() +
 P3a_sup_bottom_label <- ggdraw() + # diff than other labels so I can move it to the left
   draw_label(
     "Number of neighbouring nests with no detectable parasites",
-    x = 0.4,  
+    x = 0.5,  
     y = 0.8,
     hjust = 0.5,
     vjust = 0) +
@@ -1002,17 +1036,17 @@ P3a_sup_bottom_label <- ggdraw() + # diff than other labels so I can move it to 
   )
   
 # add left and bottom labels
-Sup_fig_3aiii <- cowplot::plot_grid(P3a_sup_left_label, combined_p3a_sup, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Sup_fig_3aiii <- cowplot::plot_grid(Sup_fig_3aiii, P3a_sup_bottom_label, ncol = 1, rel_heights = c(1, 0.09)) 
+Sup_fig_3aiii <- cowplot::plot_grid(P3a_sup_left_label, Combined_p3a_sup, ncol = 2, rel_widths = c(0.05, 0.95)) 
+Sup_fig_3aiii <- cowplot::plot_grid(Sup_fig_3aiii, P3a_sup_bottom_label, ncol = 1, rel_heights = c(1, 0.03)) 
+
+
+Sup_fig_3aiii
 
 # save
 ggsave('Figures/Sup_fig_3aiii.png', Sup_fig_3aiii, width = 10, height = 12, dpi = 900) 
 
 
-# green colours
-#  '#a7c957',
-#  '#6a994e',
-#  '#386641'
+
 
 
 

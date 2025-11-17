@@ -349,7 +349,7 @@ mod_3di_inner_wall_os_table <- tidy_function_glmer(mod_3di_inner_wall_os) %>%
 
 ```
 
-**Table S5.** Summary of the GLMM for prediction 1, model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics, n = 161 nests.
+**Table S5.** GLMM input for prediction 1, model 1_i testing for an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics, n = 161 nests.
 
 ```{r Model_1_i, echo=FALSE, message=FALSE}
 
@@ -431,7 +431,7 @@ include_graphics('Figures/hist_1ii.png')
 
 **Figure S3.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the coefficient from the GLMM using observed data (red line) for the number of neighbouring congeneric nests (excluding pseudo nests) from model 1_ii.
 
-**Table S7.** Summary of the GLMM for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics, n = 137 nests.
+**Table S7.** GLMM input for prediction 1, model 1_iii testing for an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics, n = 137 nests.
 
 ```{r Model_1_iii, echo=FALSE}
 
@@ -717,7 +717,7 @@ include_graphics('Figures/hist_3ai.png')
 
 ```
 
-**Figure S6.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_i, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
+**Figure S6.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_i, for (A) or neighbouring congeneric nests with detectable parasites, (B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
 
 **Table S16.** Summary of the GLMM output from model 3a_ii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congeneric nests with no detectable parasites, n = 161 nests.
 
@@ -758,7 +758,7 @@ include_graphics('Figures/hist_3aii.png')
 
 ```
 
-**Figure S7.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_ii, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (excluding pseudo nests), and C) the interaction between these two terms.
+**Figure S7.** Coefficients from the *Osmia* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_ii, for (A) or neighbouring congeneric nests with detectable parasites, (B) or neighbouring congeneric nests with no detectable parasites (excluding pseudo nests), and C) the interaction between these two terms.
 
 **Table S17.** Summary of the GLMM output from model 3a_iii for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congeneric nests with no detectable parasites, n = 137 nests.
 
@@ -793,13 +793,13 @@ table_3aiii <- font(table_3aiii, fontname = 'Times New Roman', part = 'all') %>%
 table_3aiii <- autofit(table_3aiii) 
 table_3aiii <- set_table_properties(table_3aiii, width = 1, layout = 'autofit')
 
-table_3aiii
+table_3aiii 
 
 include_graphics('Figures/hist_3aiii.png')
 
 ```
 
-**Figure S8.** Coefficients from the *Megachile* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_iii, for A) or neighbouring congeneric nests with detectable parasites, B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
+**Figure S8.** Coefficients from the *Megachile* GLMMs using simulated data (grey bars) and the GLMM using observed data (red line) from model 3a_iii, for (A) or neighbouring congeneric nests with detectable parasites, (B) or neighbouring congeneric nests with no detectable parasites (including pseudo nests), and C) the interaction between these two terms.
 
 ```{r Model_3a_iii_figure, echo=FALSE}
 
@@ -807,7 +807,7 @@ include_graphics('Figures/Sup_fig_3aiii.png')
 
 ```
 
-**Figure S9.** Interaction plots for the interaction between neighbouring congeneric nests with detectable parasites and nests with no detectable parasites (including pseudo nests) from the *Megachile* GLMM with A) observed data and B-F) five random columns of simulated data from model 3a_iii.
+**Figure S9.** Interaction plots for the interaction from model 3a_iii between neighbouring congeneric nests with detectable parasites and nests with no detectable parasites (including pseudo nests) from the *Megachile* GLMM with (A) observed data and (B-F) five GLMMs conducted with random columns of the simulated data. Note the different y axes.
 
 **Table S18.** Summary of the GLMM output from model 3b_i for prediction 3b, testing a change in nest investment of *Osmia* in response to brood parasites, n = 74 nests.
 

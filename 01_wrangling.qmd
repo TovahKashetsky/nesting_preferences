@@ -307,7 +307,7 @@ long_data_2024$Status <- replace(long_data_2024$Status, long_data_2024$Status=='
 long_data_2024 <- long_data_2024 %>% mutate(Occupant.v2 = if_else(Status == 'non_existent', 'NA', if_else(Status == 'empty', 'none', Occupant)))
 long_data_2024 <- long_data_2024 %>% mutate(Occupant.v3 = if_else(Status == 'no_visit', 'NA', Occupant.v2))
 # add occupant for pseudo nests, all Megachile 
-long_data_2024 <- long_data_2024 %>% 
+long_data_2024 <- long_data_2024 %>%  
   mutate(Occupant.v3 = if_else(Status == 'pseudo', 'megachile', Occupant.v3))
 # Take columns that I want
 long_data_2024 <- long_data_2024 %>% select(Site:Straw_ID, Straw_length_mm, Filled_length_mm, Nest_ID, Cavity_ID, Occupant.v3, Date, Status)
