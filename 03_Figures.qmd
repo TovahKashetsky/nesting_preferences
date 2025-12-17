@@ -20,6 +20,7 @@ library(patchwork)
 library(gridExtra)
 library(grid)
 library(cowplot)
+library(scales)
 
 
 ## Loading data
@@ -35,6 +36,8 @@ nesting_cells_meg <- read_csv('data/nesting_cells_cleaned_megachile.csv')
   # nest-level data for investment measures
 nesting_investment_os <- read_csv('data/investment_cleaned_osmia.csv')
 nesting_investment_meg <- read_csv('data/investment_cleaned_megachile.csv')
+  # model for Fig S9
+mod_3aiii_choice_consp_par_meg_ps <- readRDS('Models/mod_3aiii_choice_consp_par_meg_ps.rds')
 
 
 # number of nests
@@ -198,7 +201,7 @@ Fig_p1_os <- P1_os_sum %>%
   scale_fill_manual(
     values = c('Prop_new_of_avail_null' = '#F0C282',
       'Prop_new_of_avail_obs'  = '#59989e'),
-    name = bquote(italic(Osmia) ~ 'Data'),
+    name = bquote(italic(Osmia)),
     breaks = c('Prop_new_of_avail_null', 'Prop_new_of_avail_obs'),
     labels = c('Simulated', 'Observed')
   ) +
@@ -247,7 +250,7 @@ Fig_p1_meg <- P1_meg_sum %>%
   scale_fill_manual(
     values = c('Prop_new_of_avail_null' = '#F0C282',
       'Prop_new_of_avail_obs'  = '#B6686B'),
-    name = bquote(italic(Megachile) ~ 'Data'),
+    name = bquote(italic(Megachile)),
     breaks = c('Prop_new_of_avail_null', 'Prop_new_of_avail_obs'),
     labels = c('Simulated', 'Observed')
   ) +
@@ -353,34 +356,30 @@ P2_os <- nesting_cells_os %>%
 P2_os_sum <- P2_os %>%
   count(Treatment, Trapnest, Nest_parasitized)
 
-# create mean and error bars
-P2_os_sum <- P2_os_sum %>%
-  group_by(Treatment, Nest_parasitized) %>%
-  summarise(
-    Mean = mean(n),
-    SD = sd(n),
-    SE = SD / sqrt(n()),
-    CI_low = Mean - 1.96 * SE,
-    CI_high = Mean + 1.96 * SE,
-    .groups = 'drop'
-  )
+
+### try making proportions 
+P2_os_sum_v2 <- P2_os_sum %>% 
+  group_by(Treatment, Nest_parasitized) %>% 
+  summarise(Sum_nests = sum(n))
+# pivot wider
+P2_os_sum_v2 <- pivot_wider(P2_os_sum_v2, names_from = Nest_parasitized, values_from = Sum_nests)
+
+P2_os_sum_v2 <- P2_os_sum_v2 %>%
+  mutate(Prop_par = parasitized / (parasitized + `not parasitized`))
+
 
 # plot
-Fig_p2_os <- P2_os_sum %>% 
-  filter(Nest_parasitized == 'parasitized') %>% 
-  ggplot(aes(y = Mean, x = Treatment)) + 
+Fig_p2_os <- P2_os_sum_v2 %>% 
+  ggplot(aes(y = Prop_par, x = Treatment)) + 
   geom_bar(position = 'dodge', stat = 'identity', fill = '#59989e') +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    width = 0.3,
-    position = position_dodge(width = 0.8)) +
-  labs(y = NULL, x = NULL) + 
+  labs(y = NULL, x = NULL) +
   scale_y_continuous(
-    breaks = 0:4,
-    limits = c(0, 4),
-    labels = 0:4
-  ) 
-  
+    breaks = c(0.00, 0.25, 0.50, 0.75, 1.00),
+    limits = c(0, 1),
+    labels = label_number(accuracy = 0.01)
+  )
+Fig_p2_os
+
 
 ## Megachile ##
 
@@ -396,33 +395,27 @@ P2_meg <- nesting_cells_meg %>%
 P2_meg_sum <- P2_meg %>%
   count(Treatment, Trapnest, Nest_parasitized)
 
-# create mean and error bars
-P2_meg_sum <- P2_meg_sum %>%
-  group_by(Treatment, Nest_parasitized) %>%
-  summarise(
-    Mean = mean(n),
-    SD = sd(n),
-    SE = SD / sqrt(n()),
-    CI_low = Mean - 1.96 * SE,
-    CI_high = Mean + 1.96 * SE,
-    .groups = 'drop'
-  )
+### try making proportions 
+P2_meg_sum_v2 <- P2_meg_sum %>% 
+  group_by(Treatment, Nest_parasitized) %>% 
+  summarise(Sum_nests = sum(n))
+# pivot wider
+P2_meg_sum_v2 <- pivot_wider(P2_meg_sum_v2, names_from = Nest_parasitized, values_from = Sum_nests)
+
+P2_meg_sum_v2 <- P2_meg_sum_v2 %>%
+  mutate(Prop_par = parasitized / (parasitized + `not parasitized`))
+
 
 # plot
-Fig_p2_meg <- P2_meg_sum %>% 
-  filter(Nest_parasitized == 'parasitized') %>% 
-  ggplot(aes(y = Mean, x = Treatment)) + 
-  geom_bar(position='dodge', stat='identity', fill = '#B6686B') +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    width = 0.3,
-    position = position_dodge(width = 0.8)) +
+Fig_p2_meg <- P2_meg_sum_v2 %>% 
+  ggplot(aes(y = Prop_par, x = Treatment)) + 
+  geom_bar(position = 'dodge', stat = 'identity', fill = '#B6686B') +
   labs(y = NULL, x = NULL) +
   scale_y_continuous(
-    breaks = 0:2,
-    limits = c(0, 2),
-    labels = 0:2
-  ) 
+    breaks = c(0, 0.25, 0.5),
+    limits = c(0, 0.5)
+  )
+Fig_p2_meg
 
 
 ## Combine plots
@@ -438,7 +431,7 @@ Fig_p2 <- combined_p2 + plot_annotation(tag_levels = NULL) &
 P2_left_label <- ggplot() +
   annotate('text',
            x = 0.5, y = 0.5,
-           label = 'Average number of parasitized nests',
+           label = 'Proportion of parasitized nests',
            angle = 90,
            size = 5) +
   theme_void() +
@@ -570,58 +563,100 @@ ggsave('Figures/Fig_p3a.png', Fig_p3a, width = 8, height = 4, dpi = 300)
 ```{r P3b_Investment, echo=FALSE, warning=FALSE, message=FALSE}
 
 ## Osmia ##
-
 # make proportion data for figure
 nesting_investment_os <- nesting_investment_os %>% mutate(Prop_filled = Filled_length / Straw_length)
 
 # plot
 P3b_os <- nesting_investment_os %>%
   filter(!is.na(Nest_parasitized)) %>%
-  ggplot(aes(DP_os_prior, Prop_filled, fill = Nest_parasitized)) +
-  geom_smooth(method = 'glm',
+  ggplot(aes(DP_os_prior, Prop_filled)) +
+  geom_smooth(
+    method = "glm",
     method.args = list(family = binomial()),
-    aes(colour = Nest_parasitized)) +
-  geom_jitter(aes(colour = Nest_parasitized), 
-    alpha = 0.7, width = 0.05, height = 0.01, shape = 16) +
-  scale_colour_manual(values = c('#59989e', '#21393b'),
-    labels = c('Not parasitized', 'Parasitized'),
-    name = bquote(italic(Osmia) ~ 'nests')) +
-  scale_fill_manual(values = c('#59989e', '#21393b'), 
-                    labels = c('Not parasitized', 'Parasitized'), 
-                    name = bquote(italic(Osmia) ~ 'nests')) +
-  labs(y = NULL, x = NULL) + 
-  ylim(0, 1.05)
+    aes(colour = Nest_parasitized,
+        fill = Nest_parasitized),
+    linetype = "longdash"
+  ) +
+  geom_jitter(
+    aes(colour = Nest_parasitized,
+        shape = Nest_parasitized),
+    alpha = 0.7, width = 0.05, height = 0.01, size = 2
+  ) +
+  scale_colour_manual(
+    values = c("not parasitized" = "#59989e",
+             "parasitized"     = "#21393b"),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Osmia))
+  ) +
+  scale_fill_manual(
+    values = c("not parasitized" = "#59989e",
+             "parasitized"     = "#21393b"),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Osmia))
+  ) +
+  scale_shape_manual(
+    values = c("not parasitized" = 16,
+             "parasitized"     = 17),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Osmia))
+  ) +
+  labs(y = NULL, x = NULL) +
+  coord_cartesian(ylim = c(0, 1.05))
 
 
 ## Megachile ##
 
 # put 'not parasitized' last so it is drawn on top and make proportion data for figure
 nesting_investment_meg <- nesting_investment_meg %>%
-  mutate(Nest_parasitized = factor(Nest_parasitized, levels = c('parasitized', 'not parasitized')),
-         Prop_filled = Filled_length / Straw_length)
+  mutate(
+    Nest_parasitized = factor(Nest_parasitized, 
+                              levels = c("parasitized", "not parasitized")),
+    Prop_filled = Filled_length / Straw_length
+  )
 
-# plot 
+# plot
 P3b_meg <- nesting_investment_meg %>%
   filter(!is.na(Nest_parasitized)) %>%
-  ggplot(aes(DP_meg_prior, Prop_filled, fill = Nest_parasitized, colour = Nest_parasitized)) +
-  geom_smooth(method = 'glm', method.args = list(family = binomial())) +
-  geom_jitter(alpha = 0.7, width = 0.1, height = 0.1, shape = 16) +
+  ggplot(aes(DP_meg_prior, Prop_filled)) +
+  geom_smooth(
+    method = "glm", 
+              method.args = list(family = binomial()), 
+    aes(colour = Nest_parasitized, 
+        fill = Nest_parasitized), 
+    linetype = "longdash") +
+  geom_jitter(aes(colour = Nest_parasitized, 
+                  shape = Nest_parasitized), 
+              alpha = 0.7, width = 0.1, height = 0.1, size = 2) +
   scale_colour_manual(
-    values = c('not parasitized' = '#B6686B', 'parasitized' = '#422426'),
-    breaks = c('not parasitized', 'parasitized'),
-    labels = c('Not parasitized', 'Parasitized'),
-    name = bquote(italic(Megachile) ~ 'nests')
+    values = c(
+      "not parasitized" = "#B6686B",
+      "parasitized" = "#422426"
+    ),
+    breaks = c("not parasitized", "parasitized"),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Megachile))
   ) +
   scale_fill_manual(
-    values = c('not parasitized' = '#B6686B', 'parasitized' = '#422426'),
-    breaks = c('not parasitized', 'parasitized'),
-    labels = c('Not parasitized', 'Parasitized'),
-    name = bquote(italic(Megachile) ~ 'nests')
+    values = c(
+      "not parasitized" = "#B6686B",
+      "parasitized" = "#422426"
+    ),
+    breaks = c("not parasitized", "parasitized"),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Megachile))
+  ) +
+  scale_shape_manual(
+    values = c(
+      "not parasitized" = 16,
+      "parasitized" = 17
+    ),
+    breaks = c("not parasitized", "parasitized"),
+    labels = c("Not parasitized", "Parasitized"),
+    name = bquote(italic(Megachile))
   ) +
   labs(y = NULL, x = NULL) +
-  ylim(0, 1.05) +
-  scale_x_continuous(breaks = c(0, 1), labels = c('0', '1')) 
-
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = c(0, 1), labels = c("0", "1"))
 
 
 # Combine 
@@ -660,6 +695,8 @@ P3b_bottom_label <- ggplot() +
 Fig_p3b <- cowplot::plot_grid(P3b_left_label, combined_p3b, ncol = 2, rel_widths = c(0.05, 0.95)) 
 Fig_p3b <- cowplot::plot_grid(Fig_p3b, P3b_bottom_label, ncol = 1, rel_heights = c(1, 0.09))
 
+Fig_p3b
+
 # save
 ggsave('Figures/Fig_p3b.png', Fig_p3b, width = 11, height = 5, dpi = 300) 
 
@@ -683,7 +720,7 @@ Fig_p3c_os <- nesting_cells_os_fig %>%
   geom_bar(position = 'fill') +
   scale_fill_manual(
     values = c('Not parasitized' = '#59989e', 'Parasitized' = '#21393b'),
-    name = bquote(italic(Osmia) ~ 'nests')
+    name = bquote(italic(Osmia))
   ) +
   labs(y = NULL, x = NULL)
 
@@ -701,7 +738,7 @@ Fig_p3c_meg <- nesting_cells_meg_fig %>%
   geom_bar(position = 'fill') +
   scale_fill_manual(
     values = c('Not parasitized' = '#B6686B', 'Parasitized' = '#422426'),
-    name = bquote(italic(Megachile) ~ 'nests')
+    name = bquote(italic(Megachile))
   ) +
   labs(y = NULL, x = NULL)
  
@@ -755,6 +792,9 @@ Fig_p3c <- cowplot::plot_grid(Fig_p3c, P3c_bottom_label, ncol = 1, rel_heights =
 ggsave('Figures/Fig_p3c.png', Fig_p3c, width = 10, height = 5, dpi = 300) 
 
 
+## difficult to graph Prediction 3d intuitively and informatively, and not significant anyways
+
+
 ```
 
 ```{r Supplementary_figures}
@@ -789,14 +829,14 @@ ggsave('Figures/Sup_fig_2aiii.png', Sup_fig_2aiii, width = 6, height = 4, dpi = 
 ## Graph Megachile interaction with DP and NDP with plots from the models 
 
 # tried running a model on the average of null new nests to plot it, but the average wasn't integers and it broke R :/
-# so then i round to the nearest integer, but it's very small, and rounds down to 0 so causes me to lose like 20% of the nests 
+# so then i round to the nearest integer, but it's very small, and rounds down to 0 so causes me to lose like 25% of the nests 
 # instead, I'll graph 5 random null columns
 sample(1:100, 5, replace = TRUE)
 # 10 82 25 27 42
 
 # make models
-# 10
-mod_3aiii_sim_1 <- glmer(Null_new_nests10 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+# 11
+mod_3aiii_sim_1 <- glmer(Null_new_nests11 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 # 82
 mod_3aiii_sim_2 <- glmer(Null_new_nests82 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 # 25
@@ -834,7 +874,8 @@ Sup_fig_3aiii_sim_1 <- ggplot(Df_mod_3aiii_sim_1, aes(x = x, y = predicted, colo
     legend.position = "top",
     legend.justification = "center",
     legend.box.just = "center"
-  )
+  )  +
+  scale_y_sqrt()
 
 Df_mod_3aiii_sim_2 <- ggpredict(mod_3aiii_sim_2, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
 
@@ -855,7 +896,8 @@ Sup_fig_3aiii_sim_2 <- ggplot(Df_mod_3aiii_sim_2, aes(x = x, y = predicted, colo
   'goldenrod1',
   'goldenrod3',
   '#705410'
-  )) 
+  )) +
+  scale_y_sqrt()
 
 # simulation 3
 Df_mod_3aiii_sim_3 <- ggpredict(mod_3aiii_sim_3, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
@@ -877,7 +919,8 @@ Sup_fig_3aiii_sim_3 <- ggplot(Df_mod_3aiii_sim_3, aes(x = x, y = predicted, colo
   'goldenrod1',
   'goldenrod3',
   '#705410'
-  )) 
+  )) +
+  scale_y_sqrt()
 
 # simulation 4
 Df_mod_3aiii_sim_4 <- ggpredict(mod_3aiii_sim_4, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
@@ -899,7 +942,8 @@ Sup_fig_3aiii_sim_4 <- ggplot(Df_mod_3aiii_sim_4, aes(x = x, y = predicted, colo
   'goldenrod1',
   'goldenrod3',
   '#705410'
-  )) 
+  )) +
+  scale_y_sqrt()
 
 # simulation 5
 Df_mod_3aiii_sim_5 <- ggpredict(
@@ -924,7 +968,8 @@ Sup_fig_3aiii_sim_5 <- ggplot(Df_mod_3aiii_sim_5, aes(x = x, y = predicted, colo
   'goldenrod1',
   'goldenrod3',
   '#705410'
-  )) 
+  )) +
+  scale_y_sqrt()
 
 
 # observed 
@@ -955,7 +1000,8 @@ Sup_fig_3aiii_obs <- ggplot(Df_mod_3aiii_obs, aes(x = x, y = predicted, color = 
     legend.position = "top",
     legend.justification = "center",
     legend.box.just = "center"
-  )
+  ) +
+  scale_y_sqrt()
 
 
 
@@ -1012,7 +1058,7 @@ Combined_p3a_sup <- (Sup_fig_3aiii_obs + Sup_fig_3aiii_sim_1) /
 P3a_sup_left_label <- ggplot() +
   annotate('text',
            x = 0.5, y = 0.5,
-           label = 'Predicted probability of new nests',
+           label = 'Predicted number of new nests',
            angle = 90,
            size = 5) +
   theme_void() +

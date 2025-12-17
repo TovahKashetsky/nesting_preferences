@@ -15418,12 +15418,12 @@
 "15417","NN","L","trapnest_36","High","36_10a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15418","NN","L","trapnest_36","High","36_10a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15419","NN","L","trapnest_36","High","36_10a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15420","NN","L","trapnest_36","High","36_10a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15421","NN","L","trapnest_36","High","36_10a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15422","NN","L","trapnest_36","High","36_10a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15423","NN","L","trapnest_36","High","36_10a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15424","NN","L","trapnest_36","High","36_10a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15425","NN","L","trapnest_36","High","36_10a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15420","NN","L","trapnest_36","High","36_10a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15421","NN","L","trapnest_36","High","36_10a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15422","NN","L","trapnest_36","High","36_10a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15423","NN","L","trapnest_36","High","36_10a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15424","NN","L","trapnest_36","High","36_10a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15425","NN","L","trapnest_36","High","36_10a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15426","NN","L","trapnest_36","High","36_10a",2023-06-15,166,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15427","NN","L","trapnest_36","High","36_10a",2023-06-19,170,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15428","NN","L","trapnest_36","High","36_10a",2023-06-22,173,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15447,12 +15447,12 @@
 "15446","NN","L","trapnest_36","High","36_11a",2023-05-29,149,"year_2023","empty","none",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15447","NN","L","trapnest_36","High","36_11a",2023-05-31,151,"year_2023","inner wall","osmia","not sealed","not parasitized","not parasitized",2,1,3,4,4,7,12.5,3.5,6,0,3.5,12.5,1
 "15448","NN","L","trapnest_36","High","36_11a",2023-06-01,152,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15449","NN","L","trapnest_36","High","36_11a",2023-06-04,155,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15450","NN","L","trapnest_36","High","36_11b",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15451","NN","L","trapnest_36","High","36_11b",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15452","NN","L","trapnest_36","High","36_11c",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15453","NN","L","trapnest_36","High","36_11c",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15454","NN","L","trapnest_36","High","36_11c",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15449","NN","L","trapnest_36","High","36_11a",2023-06-04,155,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15450","NN","L","trapnest_36","High","36_11b",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15451","NN","L","trapnest_36","High","36_11b",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15452","NN","L","trapnest_36","High","36_11c",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15453","NN","L","trapnest_36","High","36_11c",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15454","NN","L","trapnest_36","High","36_11c",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15455","NN","L","trapnest_36","High","36_11c",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15456","NN","L","trapnest_36","High","36_11c",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15457","NN","L","trapnest_36","High","36_11c",2023-06-22,173,"year_2023","empty","none",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15476,12 +15476,12 @@
 "15475","NN","L","trapnest_36","High","36_12a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15476","NN","L","trapnest_36","High","36_12a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15477","NN","L","trapnest_36","High","36_12a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15478","NN","L","trapnest_36","High","36_12a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15479","NN","L","trapnest_36","High","36_12b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15480","NN","L","trapnest_36","High","36_12b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15481","NN","L","trapnest_36","High","36_12b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15482","NN","L","trapnest_36","High","36_12b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15483","NN","L","trapnest_36","High","36_12b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15478","NN","L","trapnest_36","High","36_12a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15479","NN","L","trapnest_36","High","36_12b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15480","NN","L","trapnest_36","High","36_12b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15481","NN","L","trapnest_36","High","36_12b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15482","NN","L","trapnest_36","High","36_12b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15483","NN","L","trapnest_36","High","36_12b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15484","NN","L","trapnest_36","High","36_12b",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15485","NN","L","trapnest_36","High","36_12b",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15486","NN","L","trapnest_36","High","36_12b",2023-06-22,173,"year_2023","empty","none",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15503,12 +15503,12 @@
 "15502","NN","L","trapnest_36","High","36_13a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15503","NN","L","trapnest_36","High","36_13a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15504","NN","L","trapnest_36","High","36_13b",2023-06-01,152,"year_2023","empty","none",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15505","NN","L","trapnest_36","High","36_13b",2023-06-04,155,"year_2023","3 cells + end cap","osmia","sealed","not parasitized","not parasitized",3,1,6,1,1,7,11,6,4,2,4,9,0
-"15506","NN","L","trapnest_36","High","36_13b",2023-06-05,156,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15507","NN","L","trapnest_36","High","36_13b",2023-06-08,159,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15508","NN","L","trapnest_36","High","36_13b",2023-06-10,161,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15509","NN","L","trapnest_36","High","36_13b",2023-06-11,162,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15510","NN","L","trapnest_36","High","36_13b",2023-06-12,163,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15505","NN","L","trapnest_36","High","36_13b",2023-06-04,155,"year_2023","3 cells + end cap","osmia","sealed","not parasitized","not parasitized",3,1,6,1,1,7,11,6,4,3,3,8,0
+"15506","NN","L","trapnest_36","High","36_13b",2023-06-05,156,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15507","NN","L","trapnest_36","High","36_13b",2023-06-08,159,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15508","NN","L","trapnest_36","High","36_13b",2023-06-10,161,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15509","NN","L","trapnest_36","High","36_13b",2023-06-11,162,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15510","NN","L","trapnest_36","High","36_13b",2023-06-12,163,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15511","NN","L","trapnest_36","High","36_13b",2023-06-15,166,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15512","NN","L","trapnest_36","High","36_13b",2023-06-19,170,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15513","NN","L","trapnest_36","High","36_13b",2023-06-22,173,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15532,12 +15532,12 @@
 "15531","NN","L","trapnest_36","High","36_14a",2023-05-29,149,"year_2023","empty","none",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15532","NN","L","trapnest_36","High","36_14a",2023-05-31,151,"year_2023","empty","none",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15533","NN","L","trapnest_36","High","36_14a",2023-06-01,152,"year_2023","empty","none",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15534","NN","L","trapnest_36","High","36_14a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15535","NN","L","trapnest_36","High","36_14a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15536","NN","L","trapnest_36","High","36_14a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15537","NN","L","trapnest_36","High","36_14a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15538","NN","L","trapnest_36","High","36_14a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15539","NN","L","trapnest_36","High","36_14a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15534","NN","L","trapnest_36","High","36_14a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15535","NN","L","trapnest_36","High","36_14a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15536","NN","L","trapnest_36","High","36_14a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15537","NN","L","trapnest_36","High","36_14a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15538","NN","L","trapnest_36","High","36_14a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15539","NN","L","trapnest_36","High","36_14a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15540","NN","L","trapnest_36","High","36_14a",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15541","NN","L","trapnest_36","High","36_14a",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15542","NN","L","trapnest_36","High","36_14a",2023-06-22,173,"year_2023","empty","none",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15561,12 +15561,12 @@
 "15560","NN","L","trapnest_36","High","36_15a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15561","NN","L","trapnest_36","High","36_15a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15562","NN","L","trapnest_36","High","36_15a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15563","NN","L","trapnest_36","High","36_15b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15564","NN","L","trapnest_36","High","36_15b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15565","NN","L","trapnest_36","High","36_15b",2023-06-08,159,"year_2023","2 cells","osmia","not sealed","not parasitized","not parasitized",2,1,6,1,1,7,11,6,4,2,4,9,0
-"15566","NN","L","trapnest_36","High","36_15b",2023-06-10,161,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15567","NN","L","trapnest_36","High","36_15b",2023-06-11,162,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15568","NN","L","trapnest_36","High","36_15b",2023-06-12,163,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15563","NN","L","trapnest_36","High","36_15b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15564","NN","L","trapnest_36","High","36_15b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15565","NN","L","trapnest_36","High","36_15b",2023-06-08,159,"year_2023","2 cells","osmia","not sealed","not parasitized","not parasitized",2,1,6,1,1,7,11,6,4,3,3,8,0
+"15566","NN","L","trapnest_36","High","36_15b",2023-06-10,161,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15567","NN","L","trapnest_36","High","36_15b",2023-06-11,162,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15568","NN","L","trapnest_36","High","36_15b",2023-06-12,163,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15569","NN","L","trapnest_36","High","36_15b",2023-06-15,166,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15570","NN","L","trapnest_36","High","36_15b",2023-06-19,170,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15571","NN","L","trapnest_36","High","36_15b",2023-06-22,173,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15590,12 +15590,12 @@
 "15589","NN","L","trapnest_36","High","36_16a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15590","NN","L","trapnest_36","High","36_16a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15591","NN","L","trapnest_36","High","36_16a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15592","NN","L","trapnest_36","High","36_16b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15593","NN","L","trapnest_36","High","36_16b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15594","NN","L","trapnest_36","High","36_16b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15595","NN","L","trapnest_36","High","36_16b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15596","NN","L","trapnest_36","High","36_16b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15597","NN","L","trapnest_36","High","36_16b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15592","NN","L","trapnest_36","High","36_16b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15593","NN","L","trapnest_36","High","36_16b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15594","NN","L","trapnest_36","High","36_16b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15595","NN","L","trapnest_36","High","36_16b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15596","NN","L","trapnest_36","High","36_16b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15597","NN","L","trapnest_36","High","36_16b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15598","NN","L","trapnest_36","High","36_16b",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15599","NN","L","trapnest_36","High","36_16b",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15600","NN","L","trapnest_36","High","36_16b",2023-06-22,173,"year_2023","empty","none",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15619,12 +15619,12 @@
 "15618","NN","L","trapnest_36","High","36_17a",2023-05-29,149,"year_2023","empty","none",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15619","NN","L","trapnest_36","High","36_17a",2023-05-31,151,"year_2023","empty","none",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15620","NN","L","trapnest_36","High","36_17a",2023-06-01,152,"year_2023","empty","none",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15621","NN","L","trapnest_36","High","36_17a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15622","NN","L","trapnest_36","High","36_17a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15623","NN","L","trapnest_36","High","36_17a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15624","NN","L","trapnest_36","High","36_17a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15625","NN","L","trapnest_36","High","36_17a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15626","NN","L","trapnest_36","High","36_17a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15621","NN","L","trapnest_36","High","36_17a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15622","NN","L","trapnest_36","High","36_17a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15623","NN","L","trapnest_36","High","36_17a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15624","NN","L","trapnest_36","High","36_17a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15625","NN","L","trapnest_36","High","36_17a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15626","NN","L","trapnest_36","High","36_17a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15627","NN","L","trapnest_36","High","36_17a",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15628","NN","L","trapnest_36","High","36_17a",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15629","NN","L","trapnest_36","High","36_17a",2023-06-22,173,"year_2023","empty","none",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15648,12 +15648,12 @@
 "15647","NN","L","trapnest_36","High","36_18a",2023-05-29,149,"year_2023","empty","none",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15648","NN","L","trapnest_36","High","36_18a",2023-05-31,151,"year_2023","empty","none",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15649","NN","L","trapnest_36","High","36_18a",2023-06-01,152,"year_2023","empty","none",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15650","NN","L","trapnest_36","High","36_18a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15651","NN","L","trapnest_36","High","36_18a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15652","NN","L","trapnest_36","High","36_18a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15653","NN","L","trapnest_36","High","36_18a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15654","NN","L","trapnest_36","High","36_18a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15655","NN","L","trapnest_36","High","36_18a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15650","NN","L","trapnest_36","High","36_18a",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15651","NN","L","trapnest_36","High","36_18a",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15652","NN","L","trapnest_36","High","36_18a",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15653","NN","L","trapnest_36","High","36_18a",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15654","NN","L","trapnest_36","High","36_18a",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15655","NN","L","trapnest_36","High","36_18a",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15656","NN","L","trapnest_36","High","36_18a",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15657","NN","L","trapnest_36","High","36_18a",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15658","NN","L","trapnest_36","High","36_18b",2023-07-06,187,"year_2023","empty","none",NA,NA,NA,2,NA,7,0,0,7,11,7,2,0,7,11,NA
@@ -15672,12 +15672,12 @@
 "15671","NN","L","trapnest_36","High","36_1a",2023-05-29,149,"year_2023","1 cell","osmia","not sealed",NA,"not parasitized",1,1,5,2,2,7,11.5,0.5,2,0,1,12,0
 "15672","NN","L","trapnest_36","High","36_1a",2023-05-31,151,"year_2023","5 cells","osmia","not sealed","not parasitized","not parasitized",2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15673","NN","L","trapnest_36","High","36_1a",2023-06-01,152,"year_2023","3 cells + end cap","osmia","sealed","not parasitized","not parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15674","NN","L","trapnest_36","High","36_1a",2023-06-04,155,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15675","NN","L","trapnest_36","High","36_1a",2023-06-05,156,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15676","NN","L","trapnest_36","High","36_1a",2023-06-08,159,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15677","NN","L","trapnest_36","High","36_1a",2023-06-10,161,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15678","NN","L","trapnest_36","High","36_1a",2023-06-11,162,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15679","NN","L","trapnest_36","High","36_1a",2023-06-12,163,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15674","NN","L","trapnest_36","High","36_1a",2023-06-04,155,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15675","NN","L","trapnest_36","High","36_1a",2023-06-05,156,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15676","NN","L","trapnest_36","High","36_1a",2023-06-08,159,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15677","NN","L","trapnest_36","High","36_1a",2023-06-10,161,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15678","NN","L","trapnest_36","High","36_1a",2023-06-11,162,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15679","NN","L","trapnest_36","High","36_1a",2023-06-12,163,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15680","NN","L","trapnest_36","High","36_1a",2023-06-15,166,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15681","NN","L","trapnest_36","High","36_1a",2023-06-19,170,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15682","NN","L","trapnest_36","High","36_1a",2023-06-22,173,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15701,12 +15701,12 @@
 "15700","NN","L","trapnest_36","High","36_2a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15701","NN","L","trapnest_36","High","36_2a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15702","NN","L","trapnest_36","High","36_2a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15703","NN","L","trapnest_36","High","36_2a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15704","NN","L","trapnest_36","High","36_2a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15705","NN","L","trapnest_36","High","36_2a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15706","NN","L","trapnest_36","High","36_2a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15707","NN","L","trapnest_36","High","36_2a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15708","NN","L","trapnest_36","High","36_2a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15703","NN","L","trapnest_36","High","36_2a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15704","NN","L","trapnest_36","High","36_2a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15705","NN","L","trapnest_36","High","36_2a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15706","NN","L","trapnest_36","High","36_2a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15707","NN","L","trapnest_36","High","36_2a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15708","NN","L","trapnest_36","High","36_2a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15709","NN","L","trapnest_36","High","36_2a",2023-06-15,166,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15710","NN","L","trapnest_36","High","36_2a",2023-06-19,170,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15711","NN","L","trapnest_36","High","36_2a",2023-06-22,173,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15730,20 +15730,20 @@
 "15729","NN","L","trapnest_36","High","36_3a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15730","NN","L","trapnest_36","High","36_3b",2023-05-31,151,"year_2023","inner wall","osmia","not sealed","not parasitized","not parasitized",2,1,3,4,4,7,12.5,3.5,6,0,3.5,12.5,0
 "15731","NN","L","trapnest_36","High","36_3b",2023-06-01,152,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15732","NN","L","trapnest_36","High","36_3b",2023-06-04,155,"year_2023","4 cells","osmia","not sealed","not parasitized","not parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15733","NN","L","trapnest_36","High","36_3b",2023-06-05,156,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15734","NN","L","trapnest_36","High","36_3b",2023-06-08,159,"year_2023","2 cells","osmia","not sealed","not parasitized","not parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15735","NN","L","trapnest_36","High","36_3b",2023-06-10,161,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15736","NN","L","trapnest_36","High","36_3b",2023-06-11,162,"year_2023","2 cells","osmia","not sealed","not parasitized","not parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15737","NN","L","trapnest_36","High","36_3b",2023-06-12,163,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15738","NN","L","trapnest_36","High","36_3b",2023-06-15,166,"year_2023","1 cell + end cap","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
-"15739","NN","L","trapnest_36","High","36_3b",2023-06-19,170,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
-"15740","NN","L","trapnest_36","High","36_3b",2023-06-22,173,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
-"15741","NN","L","trapnest_36","High","36_3b",2023-06-23,174,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,6,0,0,6,11,7,2,0,7,11,NA
-"15742","NN","L","trapnest_36","High","36_3b",2023-06-30,181,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,5,0,0,5,11,7,2,0,7,11,NA
-"15743","NN","L","trapnest_36","High","36_3b",2023-07-03,184,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,6,0,0,6,11,7,2,0,7,11,NA
-"15744","NN","L","trapnest_36","High","36_3b",2023-07-04,185,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",1,NA,5,0,0,5,11,7,2,0,7,11,NA
-"15745","NN","L","trapnest_36","High","36_3b",2023-07-06,187,"year_2023","no change","osmia","sealed","not parasitized","not parasitized",2,NA,7,0,0,7,11,7,2,0,7,11,NA
+"15732","NN","L","trapnest_36","High","36_3b",2023-06-04,155,"year_2023","4 cells","osmia","not sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15733","NN","L","trapnest_36","High","36_3b",2023-06-05,156,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15734","NN","L","trapnest_36","High","36_3b",2023-06-08,159,"year_2023","2 cells","osmia","not sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15735","NN","L","trapnest_36","High","36_3b",2023-06-10,161,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15736","NN","L","trapnest_36","High","36_3b",2023-06-11,162,"year_2023","2 cells","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15737","NN","L","trapnest_36","High","36_3b",2023-06-12,163,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15738","NN","L","trapnest_36","High","36_3b",2023-06-15,166,"year_2023","1 cell + end cap","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
+"15739","NN","L","trapnest_36","High","36_3b",2023-06-19,170,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
+"15740","NN","L","trapnest_36","High","36_3b",2023-06-22,173,"year_2023","no change","osmia","sealed","parasitized","parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
+"15741","NN","L","trapnest_36","High","36_3b",2023-06-23,174,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,6,0,0,6,11,7,2,0,7,11,NA
+"15742","NN","L","trapnest_36","High","36_3b",2023-06-30,181,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,5,0,0,5,11,7,2,0,7,11,NA
+"15743","NN","L","trapnest_36","High","36_3b",2023-07-03,184,"year_2023","no change","osmia","sealed","parasitized","parasitized",2,NA,6,0,0,6,11,7,2,0,7,11,NA
+"15744","NN","L","trapnest_36","High","36_3b",2023-07-04,185,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,5,0,0,5,11,7,2,0,7,11,NA
+"15745","NN","L","trapnest_36","High","36_3b",2023-07-06,187,"year_2023","no change","osmia","sealed","parasitized","parasitized",2,NA,7,0,0,7,11,7,2,0,7,11,NA
 "15746","NN","L","trapnest_36","High","36_4a",2023-05-07,127,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,0,NA,0,0,11,NA
 "15747","NN","L","trapnest_36","High","36_4a",2023-05-11,131,"year_2023","pseudo","osmia",NA,NA,NA,4,NA,7,0,0,7,11,0,NA,0,0,11,NA
 "15748","NN","L","trapnest_36","High","36_4a",2023-05-12,132,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,0,NA,0,0,11,NA
@@ -15759,12 +15759,12 @@
 "15758","NN","L","trapnest_36","High","36_4a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15759","NN","L","trapnest_36","High","36_4b",2023-05-31,151,"year_2023","1 cell","osmia","not sealed",NA,"not parasitized",2,1,3,4,4,7,12.5,3.5,6,0,3.5,12.5,0
 "15760","NN","L","trapnest_36","High","36_4b",2023-06-01,152,"year_2023","4 cells","osmia","not sealed","parasitized","parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15761","NN","L","trapnest_36","High","36_4b",2023-06-04,155,"year_2023","1 cell + end cap","osmia","sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15762","NN","L","trapnest_36","High","36_4b",2023-06-05,156,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15763","NN","L","trapnest_36","High","36_4b",2023-06-08,159,"year_2023","no change","osmia","sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15764","NN","L","trapnest_36","High","36_4b",2023-06-10,161,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15765","NN","L","trapnest_36","High","36_4b",2023-06-11,162,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15766","NN","L","trapnest_36","High","36_4b",2023-06-12,163,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15761","NN","L","trapnest_36","High","36_4b",2023-06-04,155,"year_2023","1 cell + end cap","osmia","sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15762","NN","L","trapnest_36","High","36_4b",2023-06-05,156,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15763","NN","L","trapnest_36","High","36_4b",2023-06-08,159,"year_2023","no change","osmia","sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15764","NN","L","trapnest_36","High","36_4b",2023-06-10,161,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15765","NN","L","trapnest_36","High","36_4b",2023-06-11,162,"year_2023","no change","osmia","sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15766","NN","L","trapnest_36","High","36_4b",2023-06-12,163,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15767","NN","L","trapnest_36","High","36_4b",2023-06-15,166,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15768","NN","L","trapnest_36","High","36_4b",2023-06-19,170,"year_2023","no change","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15769","NN","L","trapnest_36","High","36_4b",2023-06-22,173,"year_2023","no change","osmia","sealed","parasitized","parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15788,12 +15788,12 @@
 "15787","NN","L","trapnest_36","High","36_5a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15788","NN","L","trapnest_36","High","36_5a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15789","NN","L","trapnest_36","High","36_5a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15790","NN","L","trapnest_36","High","36_5a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15791","NN","L","trapnest_36","High","36_5a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15792","NN","L","trapnest_36","High","36_5a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15793","NN","L","trapnest_36","High","36_5a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15794","NN","L","trapnest_36","High","36_5a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15795","NN","L","trapnest_36","High","36_5a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15790","NN","L","trapnest_36","High","36_5a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15791","NN","L","trapnest_36","High","36_5a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15792","NN","L","trapnest_36","High","36_5a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15793","NN","L","trapnest_36","High","36_5a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15794","NN","L","trapnest_36","High","36_5a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15795","NN","L","trapnest_36","High","36_5a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15796","NN","L","trapnest_36","High","36_5a",2023-06-15,166,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15797","NN","L","trapnest_36","High","36_5a",2023-06-19,170,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15798","NN","L","trapnest_36","High","36_5a",2023-06-22,173,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15817,12 +15817,12 @@
 "15816","NN","L","trapnest_36","High","36_6a",2023-05-29,149,"year_2023","1 cell","osmia","not sealed","not parasitized","not parasitized",1,1,5,2,2,7,11.5,0.5,2,0,1,12,0
 "15817","NN","L","trapnest_36","High","36_6a",2023-05-31,151,"year_2023","no change","osmia","not sealed","not parasitized","not parasitized",2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15818","NN","L","trapnest_36","High","36_6a",2023-06-01,152,"year_2023","1 cell","osmia","not sealed","parasitized","parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15819","NN","L","trapnest_36","High","36_6a",2023-06-04,155,"year_2023","4 cells","osmia","not sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15820","NN","L","trapnest_36","High","36_6a",2023-06-05,156,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15821","NN","L","trapnest_36","High","36_6a",2023-06-08,159,"year_2023","no change","osmia","not sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15822","NN","L","trapnest_36","High","36_6a",2023-06-10,161,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15823","NN","L","trapnest_36","High","36_6a",2023-06-11,162,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15824","NN","L","trapnest_36","High","36_6a",2023-06-12,163,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15819","NN","L","trapnest_36","High","36_6a",2023-06-04,155,"year_2023","4 cells","osmia","not sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15820","NN","L","trapnest_36","High","36_6a",2023-06-05,156,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15821","NN","L","trapnest_36","High","36_6a",2023-06-08,159,"year_2023","no change","osmia","not sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15822","NN","L","trapnest_36","High","36_6a",2023-06-10,161,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15823","NN","L","trapnest_36","High","36_6a",2023-06-11,162,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15824","NN","L","trapnest_36","High","36_6a",2023-06-12,163,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15825","NN","L","trapnest_36","High","36_6a",2023-06-15,166,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15826","NN","L","trapnest_36","High","36_6a",2023-06-19,170,"year_2023","end cap","osmia","sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15827","NN","L","trapnest_36","High","36_6a",2023-06-22,173,"year_2023","no change","osmia","sealed","parasitized","parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15846,12 +15846,12 @@
 "15845","NN","L","trapnest_36","High","36_7a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15846","NN","L","trapnest_36","High","36_7a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15847","NN","L","trapnest_36","High","36_7a",2023-06-01,152,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15848","NN","L","trapnest_36","High","36_7a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15849","NN","L","trapnest_36","High","36_7a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15850","NN","L","trapnest_36","High","36_7a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15851","NN","L","trapnest_36","High","36_7a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15852","NN","L","trapnest_36","High","36_7a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15853","NN","L","trapnest_36","High","36_7a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15848","NN","L","trapnest_36","High","36_7a",2023-06-04,155,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15849","NN","L","trapnest_36","High","36_7a",2023-06-05,156,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15850","NN","L","trapnest_36","High","36_7a",2023-06-08,159,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15851","NN","L","trapnest_36","High","36_7a",2023-06-10,161,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15852","NN","L","trapnest_36","High","36_7a",2023-06-11,162,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15853","NN","L","trapnest_36","High","36_7a",2023-06-12,163,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15854","NN","L","trapnest_36","High","36_7a",2023-06-15,166,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15855","NN","L","trapnest_36","High","36_7a",2023-06-19,170,"year_2023","pseudo","osmia",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15856","NN","L","trapnest_36","High","36_7a",2023-06-22,173,"year_2023","pseudo","osmia",NA,NA,NA,3,NA,5,1,1,6,11,7,2,0,7,11,NA
@@ -15875,12 +15875,12 @@
 "15874","NN","L","trapnest_36","High","36_8a",2023-05-29,149,"year_2023","pseudo","osmia",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15875","NN","L","trapnest_36","High","36_8a",2023-05-31,151,"year_2023","pseudo","osmia",NA,NA,NA,2,NA,3,4,4,7,12.5,3.5,6,0,3.5,12.5,NA
 "15876","NN","L","trapnest_36","High","36_8b",2023-06-01,152,"year_2023","empty","none",NA,NA,NA,1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15877","NN","L","trapnest_36","High","36_8b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15878","NN","L","trapnest_36","High","36_8b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15879","NN","L","trapnest_36","High","36_8b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15880","NN","L","trapnest_36","High","36_8b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15881","NN","L","trapnest_36","High","36_8b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15882","NN","L","trapnest_36","High","36_8b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15877","NN","L","trapnest_36","High","36_8b",2023-06-04,155,"year_2023","empty","none",NA,NA,NA,3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15878","NN","L","trapnest_36","High","36_8b",2023-06-05,156,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15879","NN","L","trapnest_36","High","36_8b",2023-06-08,159,"year_2023","empty","none",NA,NA,NA,2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15880","NN","L","trapnest_36","High","36_8b",2023-06-10,161,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15881","NN","L","trapnest_36","High","36_8b",2023-06-11,162,"year_2023","empty","none",NA,NA,NA,1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15882","NN","L","trapnest_36","High","36_8b",2023-06-12,163,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15883","NN","L","trapnest_36","High","36_8b",2023-06-15,166,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15884","NN","L","trapnest_36","High","36_8b",2023-06-19,170,"year_2023","empty","none",NA,NA,NA,0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15885","NN","L","trapnest_36","High","36_8b",2023-06-22,173,"year_2023","1 cell","osmia","not sealed",NA,"not parasitized",3,1,5,1,1,6,11,7,2,0,7,11,0
@@ -15904,12 +15904,12 @@
 "15903","NN","L","trapnest_36","High","36_9a",2023-05-29,149,"year_2023","empty","none",NA,NA,NA,1,NA,5,2,2,7,11.5,0.5,2,0,1,12,NA
 "15904","NN","L","trapnest_36","High","36_9a",2023-05-31,151,"year_2023","2 cells","osmia","not sealed","parasitized","parasitized",2,1,3,4,4,7,12.5,3.5,6,0,3.5,12.5,0
 "15905","NN","L","trapnest_36","High","36_9a",2023-06-01,152,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,5,0,0,5,13,6,5,3,3,10,NA
-"15906","NN","L","trapnest_36","High","36_9a",2023-06-04,155,"year_2023","no change","osmia","not sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15907","NN","L","trapnest_36","High","36_9a",2023-06-05,156,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,2,4,9,NA
-"15908","NN","L","trapnest_36","High","36_9a",2023-06-08,159,"year_2023","no change","osmia","not sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,2,4,9,NA
-"15909","NN","L","trapnest_36","High","36_9a",2023-06-10,161,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15910","NN","L","trapnest_36","High","36_9a",2023-06-11,162,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,2,5,9,NA
-"15911","NN","L","trapnest_36","High","36_9a",2023-06-12,163,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,2,5,9,NA
+"15906","NN","L","trapnest_36","High","36_9a",2023-06-04,155,"year_2023","no change","osmia","not sealed","parasitized","parasitized",3,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15907","NN","L","trapnest_36","High","36_9a",2023-06-05,156,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,6,3,3,3,8,NA
+"15908","NN","L","trapnest_36","High","36_9a",2023-06-08,159,"year_2023","no change","osmia","not sealed","parasitized","parasitized",2,NA,6,1,1,7,11,6,4,3,3,8,NA
+"15909","NN","L","trapnest_36","High","36_9a",2023-06-10,161,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15910","NN","L","trapnest_36","High","36_9a",2023-06-11,162,"year_2023","no change","osmia","not sealed","parasitized","parasitized",1,NA,7,0,0,7,11,7,4,3,4,8,NA
+"15911","NN","L","trapnest_36","High","36_9a",2023-06-12,163,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,4,3,4,8,NA
 "15912","NN","L","trapnest_36","High","36_9a",2023-06-15,166,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,3,2,5,9,NA
 "15913","NN","L","trapnest_36","High","36_9a",2023-06-19,170,"year_2023","no change","osmia","not sealed","parasitized","parasitized",0,NA,7,0,0,7,11,7,2,1,6,10,NA
 "15914","NN","L","trapnest_36","High","36_9a",2023-06-22,173,"year_2023","end cap","osmia","sealed","parasitized","parasitized",3,NA,5,1,1,6,11,7,2,0,7,11,NA

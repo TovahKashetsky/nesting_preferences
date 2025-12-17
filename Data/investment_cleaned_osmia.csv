@@ -78,10 +78,10 @@
 "77","BP","A","trapnest_2","Mid","a",2023-06-02,153,"2_9a","1 cell + end cap","sealed",NA,"not parasitized","osmia",2,NA,9,2,0,11,2,7.5,4.5,0,0,3,0,3,NA,0,5,8,0,0,0,NA,"year_2023",149,65
 "78","NN","K","trapnest_32","Mid","b",2023-06-01,152,"32_8b","2 cells + end cap","sealed","not parasitized","not parasitized","osmia",1,1,10,1,0,11,1,7,4,0,0,1,0,4,NA,0,4,7,0,0,0,0,"year_2023",62,17
 "79","NN","L","trapnest_35","Mid","a",2023-07-04,185,"35_7a","end cap","sealed",NA,"not parasitized","osmia",1,NA,10,0,0,10,0,6,2,0,0,0,0,0,NA,0,2,6,0,0,0,NA,"year_2023",142,5
-"80","NN","L","trapnest_36","High","b",2023-06-04,155,"36_13b","3 cells + end cap","sealed","not parasitized","not parasitized","osmia",3,1,6,1,0,7,1,11,6,0,0,4,0,4,NA,2,4,9,0,0,0,0,"year_2023",141,39
+"80","NN","L","trapnest_36","High","b",2023-06-04,155,"36_13b","3 cells + end cap","sealed","not parasitized","not parasitized","osmia",3,1,6,1,0,7,1,11,6,0,0,4,0,4,NA,3,3,8,0,0,0,0,"year_2023",141,39
 "81","NN","L","trapnest_36","High","a",2023-06-01,152,"36_1a","3 cells + end cap","sealed","not parasitized","not parasitized","osmia",1,NA,5,0,0,5,0,13,6,0,0,5,0,5,NA,3,3,10,0,0,0,NA,"year_2023",144,86
-"82","NN","L","trapnest_36","High","b",2023-06-15,166,"36_3b","1 cell + end cap","sealed","not parasitized","not parasitized","osmia",0,NA,7,0,0,7,0,11,7,0,0,0,0,3,NA,2,5,9,0,0,0,NA,"year_2023",148,82
-"83","NN","L","trapnest_36","High","b",2023-06-04,155,"36_4b","1 cell + end cap","sealed","parasitized","parasitized","osmia",3,NA,6,1,0,7,1,11,6,0,0,4,0,4,NA,2,4,9,0,0,0,NA,"year_2023",136,61
+"82","NN","L","trapnest_36","High","b",2023-06-15,166,"36_3b","1 cell + end cap","sealed","parasitized","parasitized","osmia",0,NA,7,0,0,7,0,11,7,0,0,0,0,3,NA,2,5,9,0,0,0,NA,"year_2023",148,82
+"83","NN","L","trapnest_36","High","b",2023-06-04,155,"36_4b","1 cell + end cap","sealed","parasitized","parasitized","osmia",3,NA,6,1,0,7,1,11,6,0,0,4,0,4,NA,3,3,8,0,0,0,NA,"year_2023",136,61
 "84","NN","L","trapnest_36","High","a",2023-06-19,170,"36_6a","end cap","sealed","parasitized","parasitized","osmia",0,NA,7,0,0,7,0,11,7,0,0,0,0,2,NA,1,6,10,0,0,0,NA,"year_2023",146,48
 "85","NN","L","trapnest_36","High","a",2023-06-22,173,"36_9a","end cap","sealed","parasitized","parasitized","osmia",3,NA,5,1,0,6,1,11,7,0,0,1,0,2,NA,0,7,11,0,0,0,NA,"year_2023",144,30
 "86","BP","A","trapnest_3","High","b",2023-06-02,153,"3_11b","2 cells + end cap","sealed","parasitized","parasitized","osmia",2,1,5,3,0,8,3,11,5,0,0,2,0,2,NA,0,5.5,11.5,0,0,0,0,"year_2023",142,19

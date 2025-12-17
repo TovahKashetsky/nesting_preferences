@@ -1530,7 +1530,8 @@ nesting_cells <- nesting_cells %>%
   mutate(Meg_active_mothers = replace_na(Meg_active_mothers, 0))
 
 
-## Make column for parasitized nests that never emerged, to be used in NDP
+## Make column for nests that never emerged with unknown parasitization status, to be used in NDP chunk
+# is sealed or not sealed, but we don't have info if it parasitized or not because it never emerged, so say not parasitized, to be assumed that it was treated as a congeneric 
 
 nesting_cells <- nesting_cells %>% mutate(Nest_parasitized_undev = if_else(!is.na(Sealed) & is.na(Nest_parasitized), 'not parasitized', Nest_parasitized))
 
@@ -2026,6 +2027,7 @@ write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachile.csv')
 
 ```{r Descriptive}
 
+
 ## How long are the straws?
 mean(nesting_investment$Straw_length) # 140.7 
 sd(nesting_investment$Straw_length) # 9.7 
@@ -2087,24 +2089,6 @@ confirm_treatment_data %>%
             Max_high = max(Available_cavities_prior)) # 1, 9
 
 
-## How many cells developed? 
-table(nesting_cells_os$Cell_occupant)
-table(nesting_cells_meg$Cell_occupant)
-
-nesting_cells_os %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
-length(nesting_cells_os$Cell_occupant)
-# 286 / 749 were identifiable
-
-nesting_cells_meg %>% filter(Cell_occupant == 'megachile' | Cell_occupant == 'osmia' | Cell_occupant == 'parasite')
-length(nesting_cells_meg$Cell_occupant)
-# 142 / 424 were identifiable
-# (286 + 143) / (723 + 408)
-
-# how many nests in the emergence data
-length(unique(nesting_cells_os$Nest_ID)) # 81
-length(unique(nesting_cells_meg$Nest_ID)) # 56
-
-
 ## How many nests per year?
 nesting %>% 
   group_by(Occupant, Year) %>% 
@@ -2115,39 +2099,51 @@ nesting %>%
 # Megachile   64    76
 
 
-## How many inner wall only nests, and how many were considered empty?
-
-nesting_os %>% 
-  filter(!is.na(Abandoned_inner_wall) & Status == 'empty' | Status == 'inner wall' | Status == 'inner wall + end cap') %>% 
-  group_by(Abandoned_inner_wall, Status) %>% 
-  summarise(count = length(unique(Nest_ID)))
-nesting_meg %>% 
-  filter(!is.na(Abandoned_inner_wall) & Status == 'empty' | Status == 'inner wall' | Status == 'inner wall + end cap') %>% 
-  group_by(Abandoned_inner_wall, Status) %>% 
-  summarise(count = length(unique(Nest_ID)))
-# 8 megachile considered empty 
-# 5 megachile considered bee choices that never developed into nests (the NA is a duplicate of one already counted)
-# 7 osmia considered empty 
-# 21 osmia considered bee choices that never developed into nests
-
-
 ## How many nests were not developed?
 nesting_cells %>% 
   filter(!is.na(Nest_parasitized_undev)) %>% 
   group_by(Nest_parasitized_undev, Occupant) %>% 
   summarise(count = length(unique(Nest_ID)))
 #                   Osmia  Megachile 
-# not parasitized    128    130
-# parasitized        55     13
+# not parasitized    128    129
+# parasitized        55     14
 
 nesting_cells %>% 
   filter(!is.na(Nest_parasitized)) %>% 
   group_by(Nest_parasitized, Occupant) %>% 
   summarise(count = length(unique(Nest_ID)))
 #                   Osmia  Megachile 
-# not parasitized    65     56
-# parasitized        55     13
+# not parasitized    65     55
+# parasitized        55     14
 
+
+## Ever more than one parasite type per nest?
+nesting_cells_os %>%
+  filter(Cell_occupant == "parasite") %>%
+  group_by(Nest_ID) %>%
+  summarise(n_species = n_distinct(Species_or_subtype)) %>%
+  filter(n_species > 1) # none
+
+nesting_cells_meg %>%
+  filter(Cell_occupant == "parasite") %>%
+  group_by(Nest_ID) %>%
+  summarise(n_species = n_distinct(Species_or_subtype)) %>%
+  filter(n_species > 1) # none
+
+
+## What was the development percentage? AKA the number of cells that had an identifyable occupant
+nesting_cells %>% 
+  filter(!is.na(Cell_ID)) %>% 
+  group_by(Cell_occupant) %>% 
+  summarise(count = length(unique(Cell_ID)))
+# empty	        52			
+# megachile	    122			
+# mold	        114			
+# osmia	        180			
+# parasite    	134			
+# pollen       	277			
+# unknown larva	305			
+(122 + 180 + 134) / (122 + 180 + 134 + 52 + 114 + 277 + 305) # 37% 
 
 ```
 

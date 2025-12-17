@@ -2991,18 +2991,18 @@
 "2990","CP","AL","trapnest_107","Mid","107_9a",2024-06-05,157,"year_2024","empty","none",NA,NA,NA,2,NA,11,1,1,12,6,0,1,0,0,6,NA
 "2991","CP","AL","trapnest_107","Mid","107_9a",2024-06-11,163,"year_2024","empty","none",NA,NA,NA,1,NA,12,0,0,12,6,1,1,1,0,5,NA
 "2992","CP","AL","trapnest_107","Mid","107_9a",2024-06-14,166,"year_2024","empty","none",NA,NA,NA,1,NA,12,0,0,12,6,1,1,1,0,5,NA
-"2993","CP","AL","trapnest_107","Mid","107_9a",2024-06-17,169,"year_2024","6 cells","megachile","not sealed","not parasitized","not parasitized",3,1,11,1,1,12,6,1,2,1,0,5,0
-"2994","CP","AL","trapnest_107","Mid","107_9a",2024-06-21,173,"year_2024","end cap","megachile","sealed","not parasitized","not parasitized",4,NA,11,0,0,11,7,2,0,0,2,7,NA
-"2995","CP","AL","trapnest_107","Mid","107_9a",2024-06-25,177,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",1,NA,12,0,0,12,6,2,0,0,2,6,NA
-"2996","CP","AL","trapnest_107","Mid","107_9a",2024-06-28,180,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
-"2997","CP","AL","trapnest_107","Mid","107_9a",2024-07-02,184,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
-"2998","CP","AL","trapnest_107","Mid","107_9a",2024-07-05,187,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
-"2999","CP","AL","trapnest_107","Mid","107_9a",2024-07-08,190,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
-"3000","CP","AL","trapnest_107","Mid","107_9a",2024-07-13,195,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
-"3001","CP","AL","trapnest_107","Mid","107_9a",2024-07-16,198,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
-"3002","CP","AL","trapnest_107","Mid","107_9a",2024-07-19,201,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
-"3003","CP","AL","trapnest_107","Mid","107_9a",2024-07-22,204,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
-"3004","CP","AL","trapnest_107","Mid","107_9a",2024-07-24,206,"year_2024","no change","megachile","sealed","not parasitized","not parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
+"2993","CP","AL","trapnest_107","Mid","107_9a",2024-06-17,169,"year_2024","6 cells","megachile","not sealed","parasitized","parasitized",3,1,11,1,1,12,6,1,2,1,0,5,0
+"2994","CP","AL","trapnest_107","Mid","107_9a",2024-06-21,173,"year_2024","end cap","megachile","sealed","parasitized","parasitized",4,NA,11,0,0,11,7,2,0,0,2,7,NA
+"2995","CP","AL","trapnest_107","Mid","107_9a",2024-06-25,177,"year_2024","no change","megachile","sealed","parasitized","parasitized",1,NA,12,0,0,12,6,2,0,0,2,6,NA
+"2996","CP","AL","trapnest_107","Mid","107_9a",2024-06-28,180,"year_2024","no change","megachile","sealed","parasitized","parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
+"2997","CP","AL","trapnest_107","Mid","107_9a",2024-07-02,184,"year_2024","no change","megachile","sealed","parasitized","parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
+"2998","CP","AL","trapnest_107","Mid","107_9a",2024-07-05,187,"year_2024","no change","megachile","sealed","parasitized","parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
+"2999","CP","AL","trapnest_107","Mid","107_9a",2024-07-08,190,"year_2024","no change","megachile","sealed","parasitized","parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
+"3000","CP","AL","trapnest_107","Mid","107_9a",2024-07-13,195,"year_2024","no change","megachile","sealed","parasitized","parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
+"3001","CP","AL","trapnest_107","Mid","107_9a",2024-07-16,198,"year_2024","no change","megachile","sealed","parasitized","parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
+"3002","CP","AL","trapnest_107","Mid","107_9a",2024-07-19,201,"year_2024","no change","megachile","sealed","parasitized","parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
+"3003","CP","AL","trapnest_107","Mid","107_9a",2024-07-22,204,"year_2024","no change","megachile","sealed","parasitized","parasitized",3,NA,12,0,0,12,6,2,0,0,2,6,NA
+"3004","CP","AL","trapnest_107","Mid","107_9a",2024-07-24,206,"year_2024","no change","megachile","sealed","parasitized","parasitized",2,NA,12,0,0,12,6,2,0,0,2,6,NA
 "3005","CP","AL","trapnest_107","Mid","107_9b",2024-07-26,208,"year_2024","pseudo","megachile",NA,NA,NA,0,NA,12,0,0,12,6,0,NA,0,0,6,NA
 "3006","CP","AL","trapnest_107","Mid","107_9b",2024-07-29,211,"year_2024","pseudo","megachile",NA,NA,NA,3,NA,12,0,0,12,6,0,NA,0,0,6,NA
 "3007","CP","AL","trapnest_107","Mid","107_9b",2024-08-02,215,"year_2024","pseudo","megachile",NA,NA,NA,3,NA,12,0,0,12,6,0,NA,0,0,6,NA
