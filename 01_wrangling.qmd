@@ -38,11 +38,8 @@ editor: visual
 
 ```{r Cleaning_2023}
 
-
 knitr::opts_chunk$set(echo = TRUE) 
-library(sqldf)
 library(tidyverse)
-# citation() # to see package versions
 
 # Load data
 data_2023 <- read_csv('Data/Aggregate_nesting_data_2023.csv')
@@ -1934,9 +1931,9 @@ nesting_cells_meg <- nesting_cells_meg %>% mutate(Cell_position_bi = if_else(Cel
 
 
 ## Make df for just nest investment
-nesting_investment <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo' & Status != 'empty')
+nesting_investment_0 <- nesting %>% filter(Occupant!= 'none' & Status != 'pseudo' & Status != 'empty')
 
-nesting_investment <- nesting_investment %>%
+nesting_investment_0 <- nesting_investment_0 %>%
   arrange(Date, Nest_ID) %>%
   filter(Status != 'no change') %>% 
   # then for each Nest_ID, pick the earliest date
@@ -1944,12 +1941,17 @@ nesting_investment <- nesting_investment %>%
   slice_max(Date, with_ties = FALSE) %>%
   ungroup()
 
-nesting_investment <- nesting_investment %>% filter(!is.na(Filled_length))
-table(nesting_investment$Occupant)
+nesting_investment_0 <- nesting_investment_0 %>% filter(!is.na(Filled_length))
+table(nesting_investment_0$Occupant) # 260
+length(unique(nesting_investment_0$Nest_ID))
 # 123 megachile, 137 osmia
 
 # fitler out all nests that aren't end capped to exclude abandoned nests and nests not finished at the end of the experiment 
-nesting_investment <- nesting_investment %>% filter(Sealed == 'sealed')
+nesting_investment <- nesting_investment_0 %>% filter(Sealed == 'sealed')
+
+# how many are left?
+table(nesting_investment$Occupant)
+# 61 megachile, 109 osmia
 
 ## Separate Osmia and Megachile data frames 
 nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
@@ -2054,10 +2056,6 @@ preferences_1 %>%
 # (100/2214) * 100 so 4.5% of the time
 
 
-## How many nests were excluded from nest investment data because they weren't finished?
-# length(Nest_ID_exclude) # 48
-
-
 ## Verifying my treatments: How related are my treatments to the number of available cavities?
 confirm_treatment_data <- nesting %>%
   distinct(Treatment, Subsite, Day_of_year, .keep_all = TRUE)
@@ -2097,6 +2095,15 @@ nesting %>%
 #             2023  2024 
 # Osmia       162   5
 # Megachile   64    76
+
+
+## How many nests were excluded from investment?
+nesting_investment_0 %>%
+  filter(Sealed != "sealed") %>%
+  count(Occupant)
+# Megachile    62
+# Osmia        28
+
 
 
 ## How many nests were not developed?

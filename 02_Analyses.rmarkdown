@@ -298,7 +298,7 @@ simulate_nests <- function(avail_cavities, total_nests) {
 }
 
 # indicate how many simulated data columns we want for the model
-n_sim <- 100 
+n_sim <- 250 
 
 
 ## Apply the function for Osmia 
@@ -363,7 +363,7 @@ sim_coefs_os_ps <- c(unlist(lapply(sim_list_os_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_1i_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_os_ps)
 
 # extract my observed coefficient
@@ -389,11 +389,6 @@ hist_1i
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_ps < df_coefs_os_ps) # none are larger
 
-hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
-# save
-ggsave('Figures/hist_1i.png', plot = hist_1i, width = 4.5, height = 3.5)
-
-
 
 ### MODEL 1.ii - Osmia excluding pseudo ###
 
@@ -414,7 +409,7 @@ sim_coefs_os_no_ps <- c(unlist(lapply(sim_list_os_no_ps_attr, function(x) {
 
 ## Observed data 
 
-mod_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+mod_1ii_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
 summary(mod_choice_consp_os_no_ps)
 
 # extract my observed coefficient
@@ -434,15 +429,18 @@ hist_1ii <- ggplot(df_coefs_os_no_ps, aes(x = sim_coefs_os_no_ps)) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Osmia are attracted to congenerics
 hist_1ii
- 
-########## hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
 
 ## Reporting
 
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_no_ps < df_coefs_os_no_ps) # none are larger
+
 # save
-ggsave('Figures/hist_1ii.png', plot = hist_1ii, width = 4.5, height = 3.5)
+hist_1_os <- hist_1i + hist_1ii + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_1_i_and_ii.png', plot = hist_1_os, width = 8, height = 3.5)
+saveRDS(mod_1i_choice_consp_os_ps, file = 'Models/mod_1i_choice_consp_os_ps.rds')
+saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1ii_choice_consp_os_no_ps.rds')
+
 
 # sample size
 sum(trapnesting_os_null$New_nests_os)
@@ -478,7 +476,7 @@ sim_coefs_meg_ps <- c(unlist(lapply(sim_list_meg_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+mod_1iii_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 summary(mod_choice_consp_meg_ps)
 
 # extract my observed coefficient
@@ -503,9 +501,6 @@ hist_1iii
 
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_ps < df_coefs_meg_ps) # none are larger
-# save
-ggsave('Figures/hist_1iii.png', plot = hist_1iii, width = 4.5, height = 3.5)
-
 
 
 ### MODEL 1.iv - Megachile excluding pseudo ###
@@ -527,7 +522,7 @@ sim_coefs_meg_no_ps <- c(unlist(lapply(sim_list_meg_no_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+mod_1iv_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
 summary(mod_choice_consp_meg_no_ps)
 
 # extract my observed coefficient
@@ -552,8 +547,12 @@ hist_1iv
 
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_no_ps < df_coefs_meg_no_ps) # none are larger
+
 # save
-ggsave('Figures/hist_1iv.png', plot = hist_1iv, width = 4.5, height = 3.5)
+hist_1_meg <- hist_1iii + hist_1iv + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_1_iii_and_iv.png', plot = hist_1_meg, width = 8, height = 3.5)
+saveRDS(mod_1iii_choice_consp_meg_ps, file = 'Models/mod_1iii_choice_consp_meg_ps.rds')
+saveRDS(mod_1iv_choice_consp_meg_no_ps, file = 'Models/mod_1iv_choice_consp_meg_no_ps.rds')
 
 # sample size
 sum(trapnesting_meg_null$New_nests_meg)
@@ -802,7 +801,7 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   hist_3ai_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3ai_DP < df_coefs_3ai_DP) # 15 are larger (varies everytime we rerun simulations)
+  table(obvs_coef_3ai_DP < df_coefs_3ai_DP) # 31 are larger (varies everytime we rerun simulations)
   
   
 ## NDP_os_prior expected vs observed
@@ -850,7 +849,7 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   hist_3ai_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 88 are larger
+  table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 214 are larger
  
 # save all three
 hist_3ai <- hist_3ai_DP + hist_3ai_NDP + hist_3ai_DPxNDP + plot_annotation(tag_levels = 'A')
@@ -909,7 +908,7 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   hist_3aii_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aii_DP < df_coefs_3aii_DP) # 1 is larger (varies with each new set of simulations)
+  table(obvs_coef_3aii_DP < df_coefs_3aii_DP) # 3 is larger (varies with each new set of simulations)
 
   
 ## NDP_os_prior expected vs observed
@@ -957,12 +956,13 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   hist_3aii_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 86 are larger 
+  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 224 are larger 
 
 # save all three
 hist_3aii <- hist_3aii_DP + hist_3aii_NDP + hist_3aii_DPxNDP + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_3aii.png', plot = hist_3aii, width = 8, height = 3)
-
+saveRDS(mod_3ai_choice_consp_par_os_ps, file = 'Models/mod_3ai_choice_consp_par_os_ps.rds')
+saveRDS(mod_3aii_choice_consp_par_os_no_ps, file = 'Models/mod_3aii_choice_consp_par_os_no_ps.rds')
 
 # sample size
 sum(trapnesting_os_null$New_nests_os) # 161
@@ -1034,7 +1034,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_DP < df_coefs_3aiii_DP) # 49 are larger (varies with simulations)
+  table(obvs_coef_3aiii_DP < df_coefs_3aiii_DP) # 115 are larger (varies with simulations)
 
   
 ## NDP_meg_prior expected vs observed
@@ -1058,7 +1058,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_NDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_NDP < df_coefs_3aiii_NDP) # 2 are larger
+  table(obvs_coef_3aiii_NDP < df_coefs_3aiii_NDP) # 1 is larger
 
   
 ## DP_meg_prior * NDP_meg_prior expected vs observed
@@ -1082,11 +1082,13 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 100 are larger
+  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 250 are larger
  
 # save all three
 hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_3aiii.png', plot = hist_3aiii, width = 8, height = 3)
+saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp_par_meg_ps.rds')
+
 
 
 ### MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo ###

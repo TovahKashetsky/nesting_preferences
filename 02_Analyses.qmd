@@ -13,20 +13,15 @@ editor: visual
 
 ## Loading packages
 
+library(tidyverse)
 library(glmmTMB)
 library(DHARMa)
 library(lme4)
-library(car)
-library(see)
-library(performance)
-library(sjPlot) 
-library(ggplot2)
-library(ggeffects)
-library(effects)
-library(tidyverse)
-library(interactions) 
-library(betareg)
-library(patchwork)
+library(performance) # for check_model
+library(car) # for vif(), just to double check check_model vif plots
+library(patchwork) # for adding histomgram panels into one figure
+library(ggeffects) # for ggpredict
+
 
 # set theme
 theme_set(theme_classic(base_size = 13))
@@ -194,26 +189,61 @@ nesting_meg %>%
 # 5 megachile considered bee choices that never developed into nests (the NA is a duplicate of one already counted)
 
 
+
+
+
+
+
 ## How many nests were parasitized?
 
-# arrange by parasitized nests first, and keep first row if nest is parasitized, or if there's bees and parasites then keep parasite 
-nest_n_os <- nesting_cells_os %>%
+nesting_cells_os_short <- nesting_cells_os %>% select(Treatment, Trapnest, Nest_ID, Cell_ID, Date, Cell_occupant, Species_or_subtype, Cell_parasitized, Nest_parasitized)
+
+nesting_cells_os_short %>%
   group_by(Nest_ID) %>%
-  arrange(
-    desc(Nest_parasitized == "parasitized" |
-         Species_or_subtype == "sapyga" | Species_or_subtype == "small parasite")) %>%
+  summarise(n_types = n_distinct(Nest_parasitized, na.rm = TRUE)) %>%
+  filter(n_types > 1)
+# some nests have both parasitized and not parasitized, because they became parasitized later one: 13_12a, 13_8a, 25_6b, 36_6a, 6_15a
+# so arrange and remove if parasitized if they say both
+
+nesting_cells_os_short <- nesting_cells_os_short %>%
+  group_by(Nest_ID) %>%
+  arrange(desc(Cell_occupant == "parasite")) %>%
   slice(1) %>%
   ungroup()
-nest_n_os %>% 
+
+table(nesting_cells_os_short$Cell_occupant)
+  
+nesting_cells_os_short %>% 
   group_by(Species_or_subtype) %>% 
   summarise(count =  length(unique(Nest_ID)))
-# all the NAs are osmia not developed enough to ID to species -> nest_n_os %>% filter(is.na(Species_or_subtype))
 
-# osmia pumila	  14			
-# sapyga	        39			
-# small parasite	2			
-# osmia tersula	  11			
-# osmia         	16	
+# osmia pumila	  6			
+# sapyga	        52			
+# small parasite	3			
+# osmia tersula	  9			
+# osmia         	12
+
+
+nesting_cells_meg_short <- nesting_cells_meg %>% select(Treatment, Trapnest, Nest_ID, Cell_ID, Date, Cell_occupant, Species_or_subtype, Cell_parasitized, Nest_parasitized)
+
+nesting_cells_meg_short %>%
+  group_by(Nest_ID) %>%
+  summarise(n_types = n_distinct(Nest_parasitized, na.rm = TRUE)) %>%
+  filter(n_types > 1)
+# 98_16a has both parasitized and not parasitized
+# so arrange and remove if parasitized 
+
+nesting_cells_meg_short <- nesting_cells_meg_short %>%
+  group_by(Nest_ID) %>%
+  arrange(desc(Cell_occupant == "parasite")) %>%
+  slice(1) %>%
+  ungroup()
+
+table(nesting_cells_meg_short$Cell_occupant)
+  
+nesting_cells_meg_short %>% 
+  group_by(Species_or_subtype) %>% 
+  summarise(count =  length(unique(Nest_ID)))
 
 nest_n_meg <- nesting_cells_meg %>%
   group_by(Nest_ID) %>%
@@ -238,6 +268,7 @@ nest_n_meg %>%
 
 
 ## How many cells were parasitized?
+
 nesting_cells_os %>% 
   group_by(Cell_occupant, Species_or_subtype) %>% 
   summarise(count = length(unique(Cell_ID)))
@@ -245,12 +276,9 @@ nesting_cells_os %>%
 # osmia tersula - 49
 # osmia NA - 45
 # spayga - 110
-# melittobia - 2
-nesting_cells_meg %>% 
-  group_by(Nest_parasitized) %>% 
-  summarise(count = length(unique(Nest_ID)))
-# 43 not parasitized
-# 14 parasitized
+# melittobia - 3
+# 287 cells total
+
 nesting_cells_meg %>% 
   group_by(Cell_occupant, Species_or_subtype) %>% 
   summarise(count = length(unique(Cell_ID)))
@@ -262,9 +290,9 @@ nesting_cells_meg %>%
 # megachile unknown - 10
 # chalcid - 5
 # coelioxys - 7
-# melittobia - 2
+# melittobia - 3
 # meloidae - 5
-
+# 142 cells total
 
 ```
 
@@ -298,7 +326,7 @@ simulate_nests <- function(avail_cavities, total_nests) {
 }
 
 # indicate how many simulated data columns we want for the model
-n_sim <- 100 
+n_sim <- 250 
 
 
 ## Apply the function for Osmia 
@@ -361,11 +389,11 @@ sim_coefs_os_ps <- c(unlist(lapply(sim_list_os_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-summary(mod_choice_consp_os_ps)
+mod_1i_choice_consp_os_ps <- glmer(New_nests_os ~ scale(Osmia_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+summary(mod_1i_choice_consp_os_ps)
 
 # extract my observed coefficient
-obvs_coef_os_ps <- summary(mod_choice_consp_os_ps)$coefficients[2,1]
+obvs_coef_os_ps <- summary(mod_1i_choice_consp_os_ps)$coefficients[2,1]
 
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_os_ps, c(0.025, 0.975))
@@ -407,11 +435,11 @@ sim_coefs_os_no_ps <- c(unlist(lapply(sim_list_os_no_ps_attr, function(x) {
 
 ## Observed data 
 
-mod_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-summary(mod_choice_consp_os_no_ps)
+mod_1ii_choice_consp_os_no_ps <- glmer(New_nests_os ~ scale(Osmia_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+summary(mod_1ii_choice_consp_os_no_ps)
 
 # extract my observed coefficient
-obvs_coef_os_no_ps <- summary(mod_choice_consp_os_no_ps)$coefficients[2,1]
+obvs_coef_os_no_ps <- summary(mod_1ii_choice_consp_os_no_ps)$coefficients[2,1]
 
 # does my observed value fall outside this range, and we reject the null?
 quantile(sim_coefs_os_no_ps, c(0.025, 0.975))
@@ -436,6 +464,9 @@ table(obvs_coef_os_no_ps < df_coefs_os_no_ps) # none are larger
 # save
 hist_1_os <- hist_1i + hist_1ii + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_1_i_and_ii.png', plot = hist_1_os, width = 8, height = 3.5)
+saveRDS(mod_1i_choice_consp_os_ps, file = 'Models/mod_1i_choice_consp_os_ps.rds')
+saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1ii_choice_consp_os_no_ps.rds')
+
 
 # sample size
 sum(trapnesting_os_null$New_nests_os)
@@ -469,11 +500,11 @@ sim_coefs_meg_ps <- c(unlist(lapply(sim_list_meg_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-summary(mod_choice_consp_meg_ps)
+mod_1iii_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_1iii_choice_consp_meg_ps)
 
 # extract my observed coefficient
-obvs_coef_meg_ps <- summary(mod_choice_consp_meg_ps)$coefficients[2,1]
+obvs_coef_meg_ps <- summary(mod_1iii_choice_consp_meg_ps)$coefficients[2,1]
 
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_ps, c(0.025, 0.975))
@@ -494,9 +525,6 @@ hist_1iii
 
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_ps < df_coefs_meg_ps) # none are larger
-# save
-ggsave('Figures/hist_1iii.png', plot = hist_1iii, width = 4.5, height = 3.5)
-
 
 
 ### MODEL 1.iv - Megachile excluding pseudo ###
@@ -518,11 +546,11 @@ sim_coefs_meg_no_ps <- c(unlist(lapply(sim_list_meg_no_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-summary(mod_choice_consp_meg_no_ps)
+mod_1iv_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_1iv_choice_consp_meg_no_ps)
 
 # extract my observed coefficient
-obvs_coef_meg_no_ps <- summary(mod_choice_consp_meg_no_ps)$coefficients[2,1]
+obvs_coef_meg_no_ps <- summary(mod_1iv_choice_consp_meg_no_ps)$coefficients[2,1]
 
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_no_ps, c(0.025, 0.975))
@@ -547,6 +575,8 @@ table(obvs_coef_meg_no_ps < df_coefs_meg_no_ps) # none are larger
 # save
 hist_1_meg <- hist_1iii + hist_1iv + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_1_iii_and_iv.png', plot = hist_1_meg, width = 8, height = 3.5)
+saveRDS(mod_1iii_choice_consp_meg_ps, file = 'Models/mod_1iii_choice_consp_meg_ps.rds')
+saveRDS(mod_1iv_choice_consp_meg_no_ps, file = 'Models/mod_1iv_choice_consp_meg_no_ps.rds')
 
 # sample size
 sum(trapnesting_meg_null$New_nests_meg)
@@ -735,7 +765,7 @@ Model 3a_i - including pseudo
 
 Model 3a_ii - excluding pseudo
 
-```{r Models_3_Parasite_Avoidance_Osmia, include=TRUE}
+```{r Models_3a_Parasite_Avoidance_Osmia, include=TRUE}
 
 
 ### MODEL 3a_i - Osmia avoidance of parasites, including pseudo ###
@@ -789,7 +819,7 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   hist_3ai_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3ai_DP < df_coefs_3ai_DP) # 15 are larger (varies everytime we rerun simulations)
+  table(obvs_coef_3ai_DP < df_coefs_3ai_DP) # 31 are larger (varies everytime we rerun simulations)
   
   
 ## NDP_os_prior expected vs observed
@@ -837,7 +867,7 @@ plot(ggpredict(mod_3ai_choice_consp_par_os_ps, terms = c('DP_os_prior', 'NDP_ps_
   hist_3ai_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 88 are larger
+  table(obvs_coef_3ai_DPxNDP < df_coefs_3ai_DPxNDP) # 214 are larger
  
 # save all three
 hist_3ai <- hist_3ai_DP + hist_3ai_NDP + hist_3ai_DPxNDP + plot_annotation(tag_levels = 'A')
@@ -896,7 +926,7 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   hist_3aii_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aii_DP < df_coefs_3aii_DP) # 1 is larger (varies with each new set of simulations)
+  table(obvs_coef_3aii_DP < df_coefs_3aii_DP) # 3 are larger (varies with each new set of simulations)
 
   
 ## NDP_os_prior expected vs observed
@@ -944,12 +974,13 @@ plot(ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('DP_os_prior', 'NDP
   hist_3aii_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 86 are larger 
+  table(obvs_coef_3aii_DPxNDP < df_coefs_3aii_DPxNDP) # 224 are larger 
 
 # save all three
 hist_3aii <- hist_3aii_DP + hist_3aii_NDP + hist_3aii_DPxNDP + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_3aii.png', plot = hist_3aii, width = 8, height = 3)
-
+saveRDS(mod_3ai_choice_consp_par_os_ps, file = 'Models/mod_3ai_choice_consp_par_os_ps.rds')
+saveRDS(mod_3aii_choice_consp_par_os_no_ps, file = 'Models/mod_3aii_choice_consp_par_os_no_ps.rds')
 
 # sample size
 sum(trapnesting_os_null$New_nests_os) # 161
@@ -963,7 +994,7 @@ Model 3a_iii - including pseudo
 
 Model 3a_iv - excluding pseudo
 
-```{r Models_3_Parasite_Avoidance_Megachile, include=TRUE}
+```{r Models_3a_Parasite_Avoidance_Megachile, include=TRUE}
 
 
 ### MODEL 3a_iii - Megachile avoidance of parasites, including pseudo ###
@@ -1019,7 +1050,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_DP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_DP < df_coefs_3aiii_DP) # 49 are larger (varies with simulations)
+  table(obvs_coef_3aiii_DP < df_coefs_3aiii_DP) # 96 are larger (varies with simulations)
 
   
 ## NDP_meg_prior expected vs observed
@@ -1043,7 +1074,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_NDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_NDP < df_coefs_3aiii_NDP) # 2 are larger
+  table(obvs_coef_3aiii_NDP < df_coefs_3aiii_NDP) # 1 is larger
 
   
 ## DP_meg_prior * NDP_meg_prior expected vs observed
@@ -1067,15 +1098,18 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 100 are larger
+  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 250 are larger
  
 # save all three
 hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_3aiii.png', plot = hist_3aiii, width = 8, height = 3)
+saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp_par_meg_ps.rds')
+
 
 
 ### MODEL 3a_iv - Megachile avoidance of parasites, excluding pseudo ###
 
+# run only observed data model
 # running the simulation gets the error 'Error: PIRLS loop resulted in NaN value' or 'Error in pwrssUpdate(pp, resp, tol = tolPwrss, GQmat = GQmat, compDev = compDev,  : Downdated VtV is not positive definite'
 # too little data to run it
 
@@ -1085,17 +1119,15 @@ ggsave('Figures/hist_3aiii.png', plot = hist_3aiii, width = 8, height = 3)
 # output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson())
 # summary(output)
 # } )
-#
-# # take all of the simulated coefficients
-# sim_coefs_3iv_DP <- c(unlist(lapply(sim_list_meg_no_ps_avoid, function(x) {
-# x$coefficients[2,1] # extract second row, first column for the estimate
-# })))
-#
-#
-# ## Making the model part 2: Observed data
-#
-# mod_choice_consp_par_meg_no_ps <- glmer(New_nests_meg ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-# summary(mod_choice_consp_par_meg_no_ps)
+
+
+## Making observed data model
+
+mod_3aiv_choice_consp_par_meg_no_ps <- glmer(New_nests_meg ~ scale(DP_meg_prior) * scale(NDP_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_3aiv_choice_consp_par_meg_no_ps)
+
+# save
+saveRDS(mod_3aiv_choice_consp_par_meg_no_ps, file = 'Models/mod_3aiv_choice_consp_par_meg_no_ps.rds')
 
 
 ```
