@@ -17,7 +17,7 @@ library(ggeffects)
 library(lme4)
 library(tidyverse)
 library(cowplot) # to patch figures together
-library(patchwork) # for adding histomgram panels into one figure
+library(patchwork) # for adding histogram panels into one figure
 library(scales) # for making the label number 
 
 
@@ -37,7 +37,7 @@ nesting_investment_os <- read_csv('data/investment_cleaned_osmia.csv')
 nesting_investment_meg <- read_csv('data/investment_cleaned_megachile.csv')
   # model for Fig S9 and S10
 mod_3aii_choice_consp_par_os_no_ps <- readRDS('Models/mod_3aii_choice_consp_par_os_no_ps.rds')
-mod_3aiii_choice_consp_par_meg_ps <- readRDS('Models/mod_3aiii_choice_consp_par_meg_ps.rds')
+mod_3aiv_choice_consp_par_meg_ps <- readRDS('Models/mod_3aiv_choice_consp_par_meg_no_ps.rds')
 
 
 # number of nests
@@ -651,7 +651,7 @@ combined_p3b <- combined_p3b +
 P3b_left_label <- ggplot() +
   annotate('text',
            x = 0.5, y = 0.5,
-           label = 'Proportion of nest filled with cells',
+           label = 'Proportion of straw filled with cells',
            angle = 90,
            size = 5) +
   theme_void() +
@@ -783,165 +783,92 @@ ggsave('Figures/Fig_p3c.png', Fig_p3c, width = 10, height = 5, dpi = 300)
 ```{r Supplementary_figures}
 
 
-## Graph Megachile interaction with DP and NDP with plots from the models 
-
-# tried running a model on the average of null new nests to plot it, but the average wasn't integers and it broke R :/
-# so then i round to the nearest integer, but it's very small, and rounds down to 0 so causes me to lose like 25% of the nests 
-# instead, I'll graph 5 random null columns
-sample(1:250, 5, replace = TRUE)
-# 174 30 108 66 216
-
-# make models
-# 174
-mod_3aiii_sim_1 <- glmer(Null_new_nests174 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-# 30
-mod_3aiii_sim_2 <- glmer(Null_new_nests30 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-# 108
-mod_3aiii_sim_3 <- glmer(Null_new_nests108 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-# 66
-mod_3aiii_sim_4 <- glmer(Null_new_nests66 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-# 216
-mod_3aiii_sim_5 <- glmer(Null_new_nests216 ~ scale(DP_meg_prior) * scale(NDP_ps_meg_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+## Plot interaction DP * NDP from observed-data models 
 
 
-# make with ggplot to save
-Df_mod_3aiii_sim_1 <- ggpredict(mod_3aiii_sim_1, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
+  # Osmia 
 
-Sup_fig_3aiii_sim_1 <- ggplot(Df_mod_3aiii_sim_1, aes(x = x, y = predicted, color = group)) +
+Df_mod_3aii <- ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
+# filter out the 1.5 group for visual simplicity 
+Df_mod_3aii <- Df_mod_3aii %>%
+  filter(group != "1.5")
+
+Sup_fig_3aii <- ggplot(Df_mod_3aii, aes(x = x, y = predicted, color = group)) +
   geom_line(size = 1) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = NULL,
+    x = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Osmia"),
+        "nests with no detectable parasites"
+      )
+    ),
     y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
+    color = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Osmia"),
+        "nests with detectable parasites"
+      )
+    ),
+    fill = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Osmia"),
+        "nests with detectable parasites"
+      )
+    )
   ) +
-  scale_color_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_fill_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
   theme(
     legend.position = "top",
     legend.justification = "center",
     legend.box.just = "center"
-  )  +
-  scale_y_sqrt()
-
-Df_mod_3aiii_sim_2 <- ggpredict(mod_3aiii_sim_2, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
-
-Sup_fig_3aiii_sim_2 <- ggplot(Df_mod_3aiii_sim_2, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
+  ) +
+  scale_y_sqrt(
+    breaks = c(0, 0.5, 1, 1.5, 2),
+    labels = c("0", "0.5", "1", "1.5", "2")
   ) +
   scale_color_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
+  '#a6eff5',
+  '#6dbbc2',
+  '#43767a',
+  '#132224'
   )) +
   scale_fill_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_y_sqrt()
+  '#a6eff5',
+  '#6dbbc2',
+  '#43767a',
+  '#132224'
+  )) 
 
-# simulation 3
-Df_mod_3aiii_sim_3 <- ggpredict(mod_3aiii_sim_3, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
 
-Sup_fig_3aiii_sim_3 <- ggplot(Df_mod_3aiii_sim_3, aes(x = x, y = predicted, color = group)) +
+  # Megachile
+
+Df_mod_3aiv <- ggpredict(mod_3aiv_choice_consp_par_meg_no_ps, terms = c('NDP_meg_prior [all]', 'DP_meg_prior'))
+
+Sup_fig_3aiv <- ggplot(Df_mod_3aiv_obs, aes(x = x, y = predicted, color = group)) +
   geom_line(size = 1) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
               alpha = 0.15, color = NA) +
   labs(
-    x = NULL,
+    x = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Megachile"),
+        "nests with no detectable parasites"
+      )
+    ),
     y = NULL,
-  ) +
-  scale_color_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_fill_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_y_sqrt()
-
-# simulation 4
-Df_mod_3aiii_sim_4 <- ggpredict(mod_3aiii_sim_4, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
-
-Sup_fig_3aiii_sim_4 <- ggplot(Df_mod_3aiii_sim_4, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_color_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_fill_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_y_sqrt()
-
-# simulation 5
-Df_mod_3aiii_sim_5 <- ggpredict(
-  mod_3aiii_sim_5,
-  terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior')
-)
-
-Sup_fig_3aiii_sim_5 <- ggplot(Df_mod_3aiii_sim_5, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_color_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_fill_manual(values = c(
-  'goldenrod1',
-  'goldenrod3',
-  '#705410'
-  )) +
-  scale_y_sqrt()
-
-
-# observed 
-
-Df_mod_3aiii_obs <- ggpredict(mod_3aiii_choice_consp_par_meg_ps, terms = c('NDP_ps_meg_prior [all]', 'DP_meg_prior'))
-
-Sup_fig_3aiii_obs <- ggplot(Df_mod_3aiii_obs, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-    color = 'Observed number of neighbouring\nnests with detectable parasites',
-    fill = 'Observed number of neighbouring\nnests with detectable parasites'
+    color = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Megachile"),
+        "nests with detectable parasites"
+      )
+    ),
+    fill = expression(
+      atop(
+        "Observed number of neighbouring " * italic("Megachile"),
+        "nests with detectable parasites"
+      )
+    )
   ) +
   scale_color_manual(values = c(
   '#ebadb0',
@@ -959,13 +886,27 @@ Sup_fig_3aiii_obs <- ggplot(Df_mod_3aiii_obs, aes(x = x, y = predicted, color = 
     legend.box.just = "center"
   ) +
   scale_y_sqrt()
-
 
 
 ## Combine plots
 
-# make specials legends for A and B panels
-Sup_fig_3aiii_obs <- Sup_fig_3aiii_obs +
+# make specials legends for both panels
+Sup_fig_3aii <- Sup_fig_3aii +
+  guides(
+    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
+    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = "center",
+    legend.box.just = "center",
+    legend.box = "vertical",
+    legend.title = element_text(hjust = 0.5),
+    legend.spacing.y = unit(2, "pt"),
+    legend.margin = margin(b = -5)
+  ) 
+
+Sup_fig_3aiv <- Sup_fig_3aiv +
   guides(
     colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
     fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
@@ -979,32 +920,10 @@ Sup_fig_3aiii_obs <- Sup_fig_3aiii_obs +
     legend.spacing.y = unit(2, "pt"),
     legend.margin = margin(b = -5)
   )
-
-Sup_fig_3aiii_sim_1 <- Sup_fig_3aiii_sim_1 +
-  guides(
-    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
-    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
-  ) +
-  theme(
-    legend.position = "top",
-    legend.justification = "center",
-    legend.box.just = "center",
-    legend.box = "vertical",
-    legend.title = element_text(hjust = 0.5),
-    legend.spacing.y = unit(2, "pt"),
-    legend.margin = margin(b = -5)
-  )
-
-# remove legends from other panels
-Sup_fig_3aiii_sim_2 <- Sup_fig_3aiii_sim_2 + theme(legend.position = "none")
-Sup_fig_3aiii_sim_3 <- Sup_fig_3aiii_sim_3 + theme(legend.position = "none")
-Sup_fig_3aiii_sim_4 <- Sup_fig_3aiii_sim_4 + theme(legend.position = "none")
-Sup_fig_3aiii_sim_5 <- Sup_fig_3aiii_sim_5 + theme(legend.position = "none")
 
 # combine all
-Combined_p3a_sup <- (Sup_fig_3aiii_obs + Sup_fig_3aiii_sim_1) /
-                    (Sup_fig_3aiii_sim_2 + Sup_fig_3aiii_sim_3) /
-                    (Sup_fig_3aiii_sim_4 + Sup_fig_3aiii_sim_5) 
+Sup_fig_3a <- (Sup_fig_3aii + Sup_fig_3aiv) + patchwork::plot_annotation(tag_levels = "A")
+
 
 # make labels
 P3a_sup_left_label <- ggplot() +
@@ -1020,292 +939,14 @@ P3a_sup_left_label <- ggplot() +
     plot.margin       = margin(0, 0, 0, 0)
   )
 
-P3a_sup_bottom_label <- ggdraw() + # diff than other labels so I can move it to the left
-  draw_label(
-    "Number of neighbouring nests with no detectable parasites",
-    x = 0.5,  
-    y = 0.8,
-    hjust = 0.5,
-    vjust = 0) +
-  theme(
-    panel.background  = element_rect(fill = 'white', colour = NA),
-    plot.background   = element_rect(fill = 'white', colour = NA),
-    plot.margin       = margin(0, 0, 0, 0)
-  )
-  
-# add left and bottom labels
-Sup_fig_3aiii <- cowplot::plot_grid(P3a_sup_left_label, Combined_p3a_sup, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Sup_fig_3aiii <- cowplot::plot_grid(Sup_fig_3aiii, P3a_sup_bottom_label, ncol = 1, rel_heights = c(1, 0.03)) 
 
+# add left and label
+Sup_fig_3a <- cowplot::plot_grid(P3a_sup_left_label, Sup_fig_3a, ncol = 2, rel_widths = c(0.05, 0.95)) 
 
-Sup_fig_3aiii
+Sup_fig_3a
 
 # save
-ggsave('Figures/Sup_fig_3aiii.png', Sup_fig_3aiii, width = 10, height = 12, dpi = 900) 
-
-
-
-## Do the same for Osmia interaction with DP and NDP with plots from the models 
-
-# graph 5 random null columns
-sample(1:250, 5, replace = TRUE)
-# 48 225 134 216 5
-
-
-# make models
-# 48
-mod_3aii_sim_1 <- glmer(Null_new_nests48 ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-# 225
-mod_3aii_sim_2 <- glmer(Null_new_nests225 ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-# 134
-mod_3aii_sim_3 <- glmer(Null_new_nests134 ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-# 216
-mod_3aii_sim_4 <- glmer(Null_new_nests216 ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-# 5
-mod_3aii_sim_5 <- glmer(Null_new_nests5 ~ scale(DP_os_prior) * scale(NDP_os_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-
-
-# make with ggplot to save
-Df_mod_3aii_sim_1 <- ggpredict(mod_3aii_sim_1, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter out the 1.5 group for visual simplicity
-Df_mod_3aii_sim_1 <- Df_mod_3aii_sim_1 %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_sim_1 <- ggplot(Df_mod_3aii_sim_1, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-    color = 'Simulated number of neighbouring\nnests with detectable parasites',
-    fill = 'Simulated number of neighbouring\nnests with detectable parasites'
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) +
-  scale_fill_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) 
-
-
-# make plot
-Df_mod_3aii_sim_2 <- ggpredict(mod_3aii_sim_2, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter out the 1.5 group for visual simplicity
-Df_mod_3aii_sim_2 <- Df_mod_3aii_sim_2 %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_sim_2 <- ggplot(Df_mod_3aii_sim_2, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) +
-  scale_fill_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) 
-
-
-# make plot
-Df_mod_3aii_sim_3 <- ggpredict(mod_3aii_sim_3, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter 
-Df_mod_3aii_sim_3 <- Df_mod_3aii_sim_3 %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_sim_3 <- ggplot(Df_mod_3aii_sim_3, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) +
-  scale_fill_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) 
-
-
-# make plot
-Df_mod_3aii_sim_4 <- ggpredict(mod_3aii_sim_4, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter 
-Df_mod_3aii_sim_4 <- Df_mod_3aii_sim_4 %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_sim_4 <- ggplot(Df_mod_3aii_sim_4, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) +
-  scale_fill_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) 
-
-
-# make plot
-Df_mod_3aii_sim_5 <- ggpredict(mod_3aii_sim_5, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter 
-Df_mod_3aii_sim_5 <- Df_mod_3aii_sim_5 %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_sim_5 <- ggplot(Df_mod_3aii_sim_5, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) +
-  scale_fill_manual(values = c(
-  '#f7d331',
-  '#edb118',
-  '#8a6712',
-  '#543f0c'
-  )) 
-
-
-
-## observed data 
-
-Df_mod_3aii_obs <- ggpredict(mod_3aii_choice_consp_par_os_no_ps, terms = c('NDP_os_prior [all]', 'DP_os_prior'))
-# filter 
-Df_mod_3aii_obs <- Df_mod_3aii_obs %>%
-  filter(group != "1.5")
-
-Sup_fig_3aii_obs <- ggplot(Df_mod_3aii_obs, aes(x = x, y = predicted, color = group)) +
-  geom_line(size = 1) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, color = NA) +
-  labs(
-    x = NULL,
-    y = NULL,
-    color = 'Observed number of neighbouring\nnests with detectable parasites',
-    fill = 'Observed number of neighbouring\nnests with detectable parasites'
-  ) +
-  theme(
-    legend.position = "top",
-    legend.justification = "center",
-    legend.box.just = "center"
-  ) +
-  scale_y_sqrt() +
-  scale_color_manual(values = c(
-  '#a6eff5',
-  '#6dbbc2',
-  '#43767a',
-  '#132224'
-  )) +
-  scale_fill_manual(values = c(
-  '#a6eff5',
-  '#6dbbc2',
-  '#43767a',
-  '#132224'
-  )) 
-
-
-
-## Combine plots
-
-# make specials legends for A and B panels
-Sup_fig_3aii_obs <- Sup_fig_3aii_obs +
-  guides(
-    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
-    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
-  ) +
-  theme(
-    legend.position = "top",
-    legend.justification = "center",
-    legend.box.just = "center",
-    legend.box = "vertical",
-    legend.title = element_text(hjust = 0.5),
-    legend.spacing.y = unit(2, "pt"),
-    legend.margin = margin(b = -5)
-  ) 
-
-Sup_fig_3aii_sim_1 <- Sup_fig_3aii_sim_1 +
-  guides(
-    colour = guide_legend(title.position = "top", label.position = "bottom", nrow = 1),
-    fill   = guide_legend(title.position = "top", label.position = "bottom", nrow = 1)
-  ) +
-  theme(
-    legend.position = "top",
-    legend.justification = "center",
-    legend.box.just = "center",
-    legend.box = "vertical",
-    legend.title = element_text(hjust = 0.5),
-    legend.spacing.y = unit(2, "pt"),
-    legend.margin = margin(b = -5)
-  )
-
-# remove legends from other panels
-Sup_fig_3aii_sim_2 <- Sup_fig_3aii_sim_2 + theme(legend.position = "none")
-Sup_fig_3aii_sim_3 <- Sup_fig_3aii_sim_3 + theme(legend.position = "none")
-Sup_fig_3aii_sim_4 <- Sup_fig_3aii_sim_4 + theme(legend.position = "none")
-Sup_fig_3aii_sim_5 <- Sup_fig_3aii_sim_5 + theme(legend.position = "none")
-
-# combine all
-Combined_p3aii_sup <- (Sup_fig_3aii_obs + Sup_fig_3aii_sim_1) /
-                    (Sup_fig_3aii_sim_2 + Sup_fig_3aii_sim_3) /
-                    (Sup_fig_3aii_sim_4 + Sup_fig_3aii_sim_5) 
-
-# add left and bottom labels
-Sup_fig_3aii <- cowplot::plot_grid(P3a_sup_left_label, Combined_p3aii_sup, ncol = 2, rel_widths = c(0.05, 0.95)) 
-Sup_fig_3aii <- cowplot::plot_grid(Sup_fig_3aii, P3a_sup_bottom_label, ncol = 1, rel_heights = c(1, 0.03)) 
-
-
-Sup_fig_3aii
-
-# save
-ggsave('Figures/Sup_fig_3aii.png', Sup_fig_3aii, width = 10, height = 12, dpi = 900) 
-
-
+ggsave('Figures/Sup_fig_3a.png', Sup_fig_3a, width = 10, height = 6, dpi = 900) 
 
 
 ```

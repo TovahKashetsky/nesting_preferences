@@ -2152,6 +2152,36 @@ nesting_cells %>%
 # unknown larva	305			
 (122 + 180 + 134) / (122 + 180 + 134 + 52 + 114 + 277 + 305) # 37% 
 
+
+## Species count for developed cells 
+table_species <- nesting_cells %>%
+  filter(Cell_occupant == 'megachile' & !is.na(Species_or_subtype) | Cell_occupant == 'osmia' & !is.na(Species_or_subtype)) %>%
+  count(Species_or_subtype)
+# 1 Megachile centuncularis
+# 1 Megachile mendica
+# 32 Megachile pugnata
+# 77 Megachile relativa
+# 1 Megachile rountundata
+# 80 Osmia pumila
+# 49 Osmia tersula
+
+## Species count for nests
+counting_species_by_nest <- nesting_cells %>%
+  filter(Cell_occupant == 'megachile' & !is.na(Species_or_subtype) | Cell_occupant == 'osmia' & !is.na(Species_or_subtype)) %>% 
+  group_by(Nest_ID) %>%
+  count(Species_or_subtype)
+
+counting_species_by_nest <- counting_species_by_nest %>% 
+  group_by(Species_or_subtype) %>% 
+  summarise(count = length(unique(Nest_ID)))
+# Megachile centuncularis	 1			
+# Megachile mendica	       1			
+# Megachile pugnata	       20			
+# Megachile relativa	     20			
+# Megachile rotundata	     1	
+# Osmia pumila	           27		
+# Osmia tersula	           19	
+
 ```
 
 ```{r Example_Code}

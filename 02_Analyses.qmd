@@ -54,7 +54,6 @@ plot(jitter(nesting_meg$NDP_meg_prior) ~ jitter(nesting_meg$DP_meg_prior))
 cor(nesting_meg$NDP_meg_prior, nesting_meg$DP_meg_prior) # good
 
 
-
 ```
 
 ```{r Cleaning, include=FALSE}
@@ -189,11 +188,6 @@ nesting_meg %>%
 # 5 megachile considered bee choices that never developed into nests (the NA is a duplicate of one already counted)
 
 
-
-
-
-
-
 ## How many nests were parasitized?
 
 nesting_cells_os_short <- nesting_cells_os %>% select(Treatment, Trapnest, Nest_ID, Cell_ID, Date, Cell_occupant, Species_or_subtype, Cell_parasitized, Nest_parasitized)
@@ -293,6 +287,26 @@ nesting_cells_meg %>%
 # melittobia - 3
 # meloidae - 5
 # 142 cells total
+
+
+## How many nests per treatment?
+trapnesting_os %>% 
+  group_by(Treatment) %>% 
+  summarize(Sum_nests = sum(New_nests_os))
+# Osmia
+  # low 56
+  # mid 51
+  # high 54
+
+
+trapnesting_meg %>% 
+  group_by(Treatment) %>% 
+  summarize(Sum_nests = sum(New_nests_meg))
+# Megachile
+  # low 41
+  # mid 50
+  # high 46
+
 
 ```
 
@@ -582,6 +596,7 @@ saveRDS(mod_1iv_choice_consp_meg_no_ps, file = 'Models/mod_1iv_choice_consp_meg_
 sum(trapnesting_meg_null$New_nests_meg)
 
 ```
+
 
 ## Parasite Preferences - Osmia (Sapyga)
 
@@ -1014,7 +1029,7 @@ sim_coefs_3aiii_NDP <- c(unlist(lapply(sim_list_3aiii_meg_ps_avoid, function(x) 
   x$coefficients[3,1] # extract third row, first column for the estimate for NDP
 })))
 sim_coefs_3aiii_DPxNDP <- c(unlist(lapply(sim_list_3aiii_meg_ps_avoid, function(x) {
-  x$coefficients[8,1] # extract eigth row, first column for the estimate for interaction
+  x$coefficients[9,1] # extract eigth row, first column for the estimate for interaction
 })))
 
 
@@ -1080,7 +1095,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
 ## DP_meg_prior * NDP_meg_prior expected vs observed
   
   # extract my observed coefficient
-  obvs_coef_3aiii_DPxNDP <- summary(mod_3aiii_choice_consp_par_meg_ps)$coefficients[8,1]
+  obvs_coef_3aiii_DPxNDP <- summary(mod_3aiii_choice_consp_par_meg_ps)$coefficients[9,1]
   
   # range of 95%, i.e., if my observed value falls within this range, its not different from the null
   quantile(sim_coefs_3aiii_DPxNDP, c(0.025, 0.975))
@@ -1098,7 +1113,7 @@ saveRDS(mod_3aiii_choice_consp_par_meg_ps, file = 'Models/mod_3aiii_choice_consp
   hist_3aiii_DPxNDP
   
   # what proportion of the simulated coefs fall above mine?
-  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 250 are larger
+  table(obvs_coef_3aiii_DPxNDP < df_coefs_3aiii_DPxNDP) # 125 are larger
  
 # save all three
 hist_3aiii <- hist_3aiii_DP + hist_3aiii_NDP + hist_3aiii_DPxNDP + plot_annotation(tag_levels = 'A')
@@ -1279,3 +1294,39 @@ nesting_meg %>%
 
 
 ```
+```{r AIC_Comparing_Models}
+
+## COmapring AIC between models including and excluding pseudo nests to examine how pseudo nests were perceived 
+
+
+# Prediction 1: Congeneric attraction
+
+  # Osmia - difference of 6.4
+AIC(mod_1i_choice_consp_os_ps) - AIC(mod_1ii_choice_consp_os_no_ps)
+
+  # Megachile - difference of 14.4
+AIC(mod_1iii_choice_consp_meg_ps) - AIC(mod_1iv_choice_consp_meg_no_ps)
+
+
+# Prediction 2: Risk of nesting in aggregations
+
+  # Osmia - difference of 2.7
+AIC(mod_2i_par_agg_os_ps) - AIC(mod_2ii_par_agg_os_no_ps)
+
+  # Megachile - difference of 1.5
+AIC(mod_2iv_par_agg_meg_ps) - AIC(mod_2v_par_agg_meg_no_ps)
+
+
+# Prediction 3: Avoidance of parasites
+
+  # Osmia - difference of 14.1
+AIC(mod_3ai_choice_consp_par_os_ps) - AIC(mod_3aii_choice_consp_par_os_no_ps)
+
+  # Megachile - difference of 44.6
+AIC(mod_3aiii_choice_consp_par_meg_ps) - AIC(mod_3aiv_choice_consp_par_meg_no_ps)
+
+
+
+```
+
+
