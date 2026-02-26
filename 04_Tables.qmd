@@ -186,7 +186,7 @@ format_table_function_terms <- function(df) {
                                'scale(Osmia_no_ps_prior)' = 'Number of neighbouring congeneric nests, excluding pseudo nests',
                                'scale(Meg_ps_prior)' = 'Number of neighbouring congeneric nests, including pseudo nests',
                                'scale(Meg_no_ps_prior)' = 'Number of neighbouring congeneric nests excluding pseudo nests',
-                               'scale(Good_days)' = 'Days with appropriate weather for bee activity',
+                               'scale(Good_days)' = 'Number of days with appropriate weather for bee activity',
                                'scale(DP_os_prior)' = 'Number of neighbouring congeneric nests with detectable parasites',
                                'scale(NDP_os_prior)' = 'Number of neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
                                'scale(NDP_ps_os_prior)' = 'Number of neighbouring congeneric nests with no detectable parasites',
@@ -311,7 +311,7 @@ mod_3bii_invest_filled_meg_table <- tidy_function_lmer(mod_3bii_invest_filled_me
 
 ```
 
-**Table S5.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* including pseudo nests as congenerics (model 1_i), n = 161 nests. Asterisks indicate significance for all tables.
+**Table S5.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* including pseudo nests as congenerics (model 1_i), n = 161 nests. Asterisks indicate significance for all tables.
 
 ```{r Model_1_i, echo=FALSE}
 
@@ -337,7 +337,7 @@ mod_1i_table
 
 ```
 
-**Table S6.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* excluding pseudo nests as congenerics (model 1_ii), n = 161 nests.
+**Table S6.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* excluding pseudo nests as congenerics (model 1_ii), n = 161 nests.
 
 ```{r Model_1_ii, echo=FALSE}
 
@@ -369,9 +369,9 @@ include_graphics('Figures/hist_1_i_and_ii.png')
 
 ```
 
-**Figure S2.** Coefficients from the *Osmia* GLMMs with a Poisson distributing and the response variable of the number of new nests, for prediction 1 using simulated data (grey bars) and observed data (red line) for the number of neighbouring congeneric nests (A) including pseudo nests (model 1_i) and (B) excluding pseudo nests (model 1_ii).
+**Figure S2.** Coefficients from the Poisson GLMMs of the number of new *Osmia* nests, for prediction 1 using simulated data (grey bars) and observed data (red line) for the number of neighbouring congeneric nests (A) including pseudo nests (model 1_i) and (B) excluding pseudo nests (model 1_ii).
 
-**Table S7.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Megachile* including pseudo nests as congenerics (model 1_iii), n = 137 nests.
+**Table S7.** Summary of the Poisson GLMM of the number of new *Megachile* nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Megachile* including pseudo nests as congenerics (model 1_iii), n = 137 nests.
 
 ```{r Model_1_iii, echo=FALSE}
 
@@ -397,7 +397,7 @@ mod_1iii_table
 
 ```
 
-**Table S8.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Megachile* excluding pseudo nests as congenerics (model 1_iv), n = 137 nests.
+**Table S8.** Summary of the Poisson GLMM of the number of new nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Megachile* excluding pseudo nests as congenerics (model 1_iv), n = 137 nests.
 
 ```{r Model_1_iv, echo=FALSE}
 
@@ -429,9 +429,9 @@ include_graphics('Figures/hist_1_iii_and_iv.png')
 
 ```
 
-**Figure S3.** Coefficients from the *Megachile* GLMMs with a Poisson distributing and the response variable of the number of new nests, for prediction 1 using simulated data (grey bars) and observed data (red line) for the number of neighbouring congeneric nests (A) including pseudo nests (model 1_i) and (B) excluding pseudo nests (model 1_iv).
+**Figure S3.** Coefficients from the Poisson GLMMs of the number of new *Megachile* nests, for prediction 1 using simulated data (grey bars) and observed data (red line) for the number of neighbouring congeneric nests (A) including pseudo nests (model 1_i) and (B) excluding pseudo nests (model 1_iv).
 
-**Table S9.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, including pseudo nests as hosts (model 2_i), n = 286 cells.
+**Table S9.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, including pseudo nests as hosts (model 2_i), n = 286 cells.
 
 ```{r Model_2_i, echo=FALSE}
 
@@ -457,7 +457,7 @@ mod_2i_table
 
 ```
 
-**Table S10.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, excluding pseudo nests as hosts (model 2_ii), n = 286 cells.
+**Table S10.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, excluding pseudo nests as hosts (model 2_ii), n = 286 cells.
 
 ```{r Model_2_ii, echo=FALSE}
 
@@ -484,7 +484,7 @@ mod_2ii_table
 
 ```
 
-**Table S11.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to active *Osmia* nests (model 2_iii), n = 286 cells.
+**Table S11.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to active *Osmia* nests (model 2_iii), n = 286 cells.
 
 ```{r Model_2_iii, echo=FALSE}
  
@@ -510,7 +510,7 @@ mod_2iii_table
 
 ```
 
-**Table S12.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, including pseudo nests as hosts (model 2_iv), n = 142 cells.
+**Table S12.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, including pseudo nests as hosts (model 2_iv), n = 142 cells.
 
 ```{r Model_2_iv, echo=FALSE}
 
@@ -537,7 +537,7 @@ mod_2iv_table
 
 ```
 
-**Table S13.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, excluding pseudo nests as hosts (model 2_v), n = 142 cells.
+**Table S13.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, excluding pseudo nests as hosts (model 2_v), n = 142 cells.
 
 ```{r Model_2_v, echo=FALSE}
 
@@ -563,7 +563,7 @@ mod_2v_table
 
 ```
 
-**Table S14.** Summary of the binomial GLMM with the response variable of cell parasitization status (0 for not parasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to active *Megachile* nests (model 2_vi), n = 142 cells.
+**Table S14.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to active *Megachile* nests (model 2_vi), n = 142 cells.
 
 ```{r Model_2_vi, echo=FALSE}
 
@@ -589,7 +589,7 @@ mod_2vi_table
 
 ```
 
-**Table S15.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics (model 3a_i), n = 161 nests.
+**Table S15.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, including pseudo nests as congenerics (model 3a_i), n = 161 nests.
 
 ```{r Model_3ai, echo=FALSE}
 
@@ -619,9 +619,9 @@ include_graphics('Figures/hist_3ai.png')
 
 ```
 
-**Figure S4.** Coefficients from the *Osmia* GLMMs with a Poisson distribution and the response variable of the number of new nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites including pseudo nests, and (C) the interaction between these two terms (model 3a_i).
+**Figure S4.** Coefficients from the Poisson GLMMs of the number of new *Osmia* nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites including pseudo nests, and (C) the interaction between these two terms (model 3a_i).
 
-**Table S16.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics (model 3a_ii), n = 161 nests.
+**Table S16.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Osmia*, excluding pseudo nests as congenerics (model 3a_ii), n = 161 nests.
 
 ```{r Model_3aii, echo=FALSE}
 
@@ -645,16 +645,15 @@ mod_3aii_table
 
 ```
 
-
 ```{r Model_3a_ii, echo=FALSE}
 
 include_graphics('Figures/hist_3aii.png')
 
 ```
 
-**Figure S5.** Coefficients from the *Osmia* GLMMs with a Poisson distribution and the response variable of the number of new nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites excluding pseudo nests, and (C) the interaction between these two terms (model 3a_ii).
+**Figure S5.** Coefficients from the Poisson GLMMs of the number of new *Osmia* nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites excluding pseudo nests, and (C) the interaction between these two terms (model 3a_ii).
 
-**Table S17.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics (model 3a_iii), n = 137 nests.
+**Table S17.** Summary of the Poisson GLMM of the number of new *Megachile* nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, including pseudo nests as congenerics (model 3a_iii), n = 137 nests.
 
 ```{r Model_3aiii, echo=FALSE}
 
@@ -684,9 +683,9 @@ include_graphics('Figures/hist_3aiii.png')
 
 ```
 
-**Figure S6.** Coefficients from the *Megachile* GLMMs with a Poisson distribution and the response variable of the number of new nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites including pseudo nests, and (C) the interaction between these two terms (model 3a_iii).
+**Figure S6.** Coefficients from the Poisson GLMMs of the number of new *Megachile* nests, for prediction 3a using simulated data (grey bars) and observed data (red line) for effects of (A) the number of neighbouring congeneric nests with detectable parasites, (B) the number of neighbouring congeneric nests with no detectable parasites including pseudo nests, and (C) the interaction between these two terms (model 3a_iii).
 
-**Table S18.** Summary of the GLMM with a Poisson distributing and the response variable of the number of new nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics (model 3a_iv), n = 137 nests.
+**Table S18.** Summary of the Poisson GLMM of the number of new *Megachile* nests, using the observed data for prediction 3a, testing an avoidance of parasites and an attraction to congenerics in nesting *Megachile*, excluding pseudo nests as congenerics (model 3a_iv), n = 137 nests.
 
 ```{r Model_3aiv, echo=FALSE}
 
@@ -716,9 +715,9 @@ include_graphics('Figures/Sup_fig_3a.png')
 
 ```
 
-**Figure S7.** Interaction plots for the GLMMs using observed-data with a Poisson distribution and the response variable of the number of new nests for prediction 3a. The interactions are between the number of neighbouring congeneric nests with detectable parasites and nest with no detectable parasites for (A) *Osmia* excluding pseudo nests, n = 161 nests (model 3a_ii) and (B) *Megachile* excluding pseudo nests, n = 137 nests (model 3a_iv). Y-axis is square root adjusted for visual purposes. Lines represent a linear model created with 95% confidence intervals. Note the different y-axis scales between the panels.
+**Figure S7.** Interaction plots for the observed-data Poisson GLMMs of the number of new nests for prediction 3a, both models excluding pseudo nests. Plots show the interactions between the number of neighbouring congeneric nests with and without detectable parasites for (A) *Osmia*, n = 161 nests (model 3a_ii) and (B) *Megachile*, n = 137 nests (model 3a_iv). Lines represent a linear model created with 95% confidence intervals. Y-axis is square root adjusted for visual purposes. Note the different y-axis scales for panels A and B.
 
-**Table S19.** Summary of the GLMM with a Gaussian distribution and the response variable of the length of straw containing nesting material, for prediction 3b, testing a change in nest investment of *Osmia* in response to parasitism (model 3b_i), n = 74 nests.
+**Table S19.** Summary of the LMM of the length of straw containing nesting material, for prediction 3b, testing a change in nest investment of *Osmia* in response to parasitism (model 3b_i), n = 74 nests.
 
 ```{r Model_3b_i, echo=FALSE}
 
@@ -744,7 +743,7 @@ mod_3bi_table
 
 ```
 
-**Table S20.** Summary of the GLMM with a Gaussian distribution and the response variable of the length of straw containing nesting material, for prediction 3b, testing a change in nest investment of *Megachile* in response to parasitism (model 3b_ii), n = 40 nests.
+**Table S20.** Summary of the LMM of the length of straw containing nesting material, for prediction 3b, testing a change in nest investment of *Megachile* in response to parasitism (model 3b_ii), n = 40 nests.
 
 ```{r Model_3b_ii, echo=FALSE}
 
@@ -770,7 +769,7 @@ mod_3bii_table
 
 ```
 
-**Table S21.** Summary of the binomial GLMM with the response variable of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitization predicts nest termination in *Osmia* (model_3c_i), n = 245 cells.
+**Table S21.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Osmia* (model_3c_i), n = 245 cells.
 
 ```{r Model_3c_i, echo=FALSE}
 
@@ -796,7 +795,7 @@ mod_3ci_table
 
 ```
 
-**Table S22.** Summary of the binomial GLMM with the response variable of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitization predicts nest termination in *Megachile* (model_3c_ii), n = 136 cells.
+**Table S22.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Megachile* (model_3c_ii), n = 136 cells.
 
 ```{r Model_3c_ii, echo=FALSE}
 
@@ -822,7 +821,7 @@ mod_3cii_table
 
 ```
 
-**Table S23.** Summary of the binomial GLMM with the response variable of inner wall status (1 for abandoned, 0 for continuing to be built into a nest containing at least one cell), for prediction 3d, testing abandoning inner walls as a response to parasites in *Osmia* (model_3d_i), n = 168 nests with 28 of these nests being abandoned inner walls.
+**Table S23.** Summary of the binomial GLMM of inner wall status (1 for abandoned, 0 for continuing to be built into a nest containing at least one cell), for prediction 3d, testing abandoning inner walls as a response to parasites in *Osmia* (model_3d_i), n = 168 nests with 28 of these nests being abandoned inner walls.
 
 ```{r Model_3d_i, echo=FALSE}
 

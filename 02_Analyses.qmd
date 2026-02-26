@@ -597,7 +597,6 @@ sum(trapnesting_meg_null$New_nests_meg)
 
 ```
 
-
 ## Parasite Preferences - Osmia (Sapyga)
 
 Model 2_i - including pseudo
@@ -1294,6 +1293,7 @@ nesting_meg %>%
 
 
 ```
+
 ```{r AIC_Comparing_Models}
 
 ## COmapring AIC between models including and excluding pseudo nests to examine how pseudo nests were perceived 
@@ -1327,6 +1327,5 @@ AIC(mod_3aiii_choice_consp_par_meg_ps) - AIC(mod_3aiv_choice_consp_par_meg_no_ps
 
 
 
+
 ```
-
-
