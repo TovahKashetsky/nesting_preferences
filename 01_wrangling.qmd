@@ -1482,27 +1482,38 @@ nesting_cells <- nesting_cells %>%
 ## Make column to say if nests are active enough to have mothers around
 
 # within the unsealed nests, filter out ones that are abandoned 
-# if nest is not sealed and says no change for 3 visits, it's abandoned
+# if nest is not sealed and says no change for 3-4 visits, it's abandoned
 
+# make a column for nests that had cells and an end cap added. If nests had cells and end cap within the same field visit, we can assume that the female was active. If the nest had only an end cap, we won't count that as active.
+nesting_cells <- nesting_cells %>% mutate(Active_and_end_caps = if_else(Sealed == 'sealed' & grepl('cell', Status), 'sealed but was active', 'other'))
+
+# say abandoned or not
 active_nests_summary <- nesting_cells %>%
-  arrange(Trapnest, Nest_ID, Date) %>%  # make sure data is ordered by date
+  arrange(Trapnest, Nest_ID, Date) %>% # make sure data is ordered by date
   group_by(Trapnest, Nest_ID) %>%
-  filter(Sealed == 'not sealed') %>% 
-  mutate(
-    # Check for 3 consecutive 'no change'
-    Abandoned = 
-      (Status == 'no change') &
-      lag(Status, 1) == 'no change' &
-      lag(Status, 2) == 'no change'
-  )
+  mutate( # check for 3 consecutive 'no change'
+    three_no_change =
+      Status == "no change" &
+      lag(Status, 1) == "no change" &
+      lag(Status, 2) == "no change",
+    fourth_day_status = lead(Status, 1), # check if there's a fourth day
+    Abandoned =
+      three_no_change & # if there's 3 days of no change and the fourth day doesn't exist or there's no activity (end cap or cell) on the fourth day, say abandoned
+      (
+        is.na(fourth_day_status) |
+        !grepl("end\\s*cap | cell", fourth_day_status)
+      )
+  )  %>%
+  ungroup() %>%
+  filter(Sealed == "not sealed" & Active_and_end_caps == "other" | Sealed == "sealed" & Active_and_end_caps == "sealed but was active" ) # filter this out last, otherwise it messes up nests that were sealed
 
 # convert to 0s and 1s
 active_nests_summary$Abandoned <- as.numeric(active_nests_summary$Abandoned)
 
-# Osmia
-# sum the number of nests that are not abandoned for each trapnest date combination 
+  # Osmia
+# sum the number of nests that are active and not abandoned for each trapnest date combination 
 summ_active_os <- active_nests_summary %>% 
-  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'osmia' & Status != 'pseudo') %>% 
+  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'osmia' & Status != 'pseudo' | Active_and_end_caps == 'sealed but was active' & Occupant == 'osmia') %>% 
   group_by(Date, Trapnest) %>% 
   summarise(Osmia_active_mothers = length(unique(Nest_ID)))
 
@@ -1513,9 +1524,11 @@ nesting_cells <- left_join(nesting_cells, summ_active_os)
 nesting_cells <- nesting_cells %>%
   mutate(Osmia_active_mothers = replace_na(Osmia_active_mothers, 0))
 
-# sum the number of nests that are no abandoned for each trapnest date combination 
+
+  # Megachile
+# sum the number of nests that are not abandoned for each trapnest date combination 
 summ_active_meg <- active_nests_summary %>% 
-  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'megachile' & Status != 'pseudo') %>% 
+  filter(Abandoned != 1 & Sealed == 'not sealed' & Occupant == 'megachile' & Status != 'pseudo'  | Active_and_end_caps == 'sealed but was active' & Occupant == 'megachile') %>% 
   group_by(Date, Trapnest) %>% 
   summarise(Meg_active_mothers = length(unique(Nest_ID)))
 
@@ -1803,7 +1816,7 @@ nesting_3 <- nesting_3 %>% select(Site, Subsite, Trapnest, Treatment, Straw_ID, 
 inner_wall_pref <- preferences %>%
   group_by(Nest_ID) %>%
   filter(Status != 'empty' & Status != 'pseudo') %>% 
-  filter(all(Contains_cells == 0)) 
+  filter(all(Contains_cells == 0))  
 
 inner_wall_pref %>%
   group_by(Occupant) %>%
@@ -1897,6 +1910,47 @@ nesting <- nesting %>%
 table(nesting$Abandoned_inner_wall)
 # 280 were built, 43 abandoned 
 # remember, this includes 'inner walls started' that were considered empty so there are additional nests that don't count towards the total
+
+```
+
+```{r Active_Mothers_For_Bee_Models}
+
+## Make column to say if nests are active enough to have mothers around for the bee models
+
+# already done in nesting df
+
+# make prior values
+
+
+df_trap13 <- nesting_x %>% filter(Date == '2023-06-02' & Trapnest == 'trapnest_13')
+
+
+
+
+
+
+# 1- for 0 or 1 new nests, (available_post - new nests) 
+  # osmia  
+nesting_x <- nesting %>% mutate(Osmia_active_mothers_prior_V1 = ifelse(Osmia_active_mothers == 1 & New_nests_os == 1, (Osmia_active_mothers - New_nests_os),
+                                                                       ifelse(Osmia_active_mothers == 0, 0, 'TBD')))
+  
+
+# 2 A- for multiple new nests, (n-1)/2
+  # osmia
+nesting_x <- nesting_x %>% mutate(Osmia_active_equ = if_else(New_nests_os > 1, ((New_nests_os - 1)/2), NA))
+
+
+
+
+
+# B- add equation + (active mothers - new nests)
+  # osmia 
+nesting_x <- nesting_x %>% mutate(Osmia_active_mothers_prior = ifelse(Osmia_active_mothers_prior_V1 == 'TBD', (Osmia_active_mothers - New_nests_os + Osmia_active_equ), 'leftover'))
+                                      
+
+
+
+
 
 ```
 
