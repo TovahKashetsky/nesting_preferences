@@ -196,9 +196,8 @@ nesting_cells_os_short %>%
   group_by(Nest_ID) %>%
   summarise(n_types = n_distinct(Nest_parasitized, na.rm = TRUE)) %>%
   filter(n_types > 1)
-# some nests have both parasitized and not parasitized, because they became parasitized later one: 13_12a, 13_8a, 25_6b, 36_6a, 6_15a
+# some nests have both parasitized and not parasitized, because they became parasitized later on: 13_12a, 13_8a, 25_6b, 36_6a, 6_15a
 # so arrange and remove if parasitized if they say both
-
 nesting_cells_os_short <- nesting_cells_os_short %>%
   group_by(Nest_ID) %>%
   arrange(desc(Cell_occupant == "parasite")) %>%
@@ -226,7 +225,6 @@ nesting_cells_meg_short %>%
   filter(n_types > 1)
 # 98_16a has both parasitized and not parasitized
 # so arrange and remove if parasitized 
-
 nesting_cells_meg_short <- nesting_cells_meg_short %>%
   group_by(Nest_ID) %>%
   arrange(desc(Cell_occupant == "parasite")) %>%
@@ -430,6 +428,7 @@ hist_1i
 table(obvs_coef_os_ps < df_coefs_os_ps) # none are larger
 
 
+
 ### MODEL 1.ii - Osmia excluding pseudo ###
 
 ## Simulated data 
@@ -470,16 +469,68 @@ hist_1ii <- ggplot(df_coefs_os_no_ps, aes(x = sim_coefs_os_no_ps)) +
 # reject the null - Osmia are attracted to congenerics
 hist_1ii
 
+
 ## Reporting
 
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_os_no_ps < df_coefs_os_no_ps) # none are larger
 
+
+
+### MODEL 1.iii - Osmia active mothers ###
+
+
+## Simulated data 
+
+# run the model on each of the simulated data columns
+sim_list_os_active_attr <- lapply(1:n_sim, function(x){
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Osmia_active_mothers_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest)') 
+  output <- glmer(as.formula(my_formula), data = trapnesting_os_null, family = poisson)
+  summary(output)
+} ) 
+
+# take all of the simulated coefficients
+sim_coefs_os_active <- c(unlist(lapply(sim_list_os_active_attr, function(x) {
+  x$coefficients[2,1] # extract second row, first column for the estimate 
+})))
+
+
+## Observed data
+
+mod_1iii_choice_consp_os_active <- glmer(New_nests_os ~ scale(Osmia_active_mothers_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
+summary(mod_1_choice_consp_os_active)
+
+# extract my observed coefficient
+obvs_coef_os_active <- summary(mod_1iii_choice_consp_os_active)$coefficients[2,1]
+
+# does my observed value fall outside this range, and we reject the null?
+quantile(sim_coefs_os_active, c(0.025, 0.975))
+obvs_coef_os_active # falls outside of range
+
+# convert to dataframe
+df_coefs_os_active <- data.frame(sim_coefs_os_active = sim_coefs_os_active)
+
+# plot
+hist_1iii <- ggplot(df_coefs_os_active, aes(x = sim_coefs_os_active)) +
+  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
+  geom_vline(xintercept = obvs_coef_os_active, color = 'red3', linetype = 'dashed', size = 1) +
+  labs(y = 'Count', x = 'Coefficient')
+# reject the null - Osmia are attracted to congenerics
+hist_1iii
+
+
+## Reporting
+
+# what proportion of the simulated coefs fall above mine?
+table(obvs_coef_os_active < df_coefs_os_active) # none are larger
+
+
 # save
-hist_1_os <- hist_1i + hist_1ii + plot_annotation(tag_levels = 'A')
-ggsave('Figures/hist_1_i_and_ii.png', plot = hist_1_os, width = 8, height = 3.5)
+hist_1_os <- hist_1i + hist_1ii + hist_1iii + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_1_i_ii_iii.png', plot = hist_1_os, width = 11, height = 3.5)
 saveRDS(mod_1i_choice_consp_os_ps, file = 'Models/mod_1i_choice_consp_os_ps.rds')
-saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1ii_choice_consp_os_no_ps.rds')
+saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1i_choice_consp_os_no_ps.rds')
+saveRDS(mod_1iii_choice_consp_os_active, file = 'Models/mod_1iii_choice_consp_os_active.rds')
 
 
 # sample size
@@ -496,7 +547,7 @@ Model 1_iv - excluding pseudo
 ```{r Models_1_Congeneric_Attraction_Megachile, include=TRUE}
 
 
-### MODEL 1.iii - Megachile including pseudo ###
+### MODEL 1.iv - Megachile including pseudo ###
 
 ## Making the model part 1: Simulated data 
 
@@ -514,11 +565,11 @@ sim_coefs_meg_ps <- c(unlist(lapply(sim_list_meg_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_1iii_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-summary(mod_1iii_choice_consp_meg_ps)
+mod_1iv_choice_consp_meg_ps <- glmer(New_nests_meg ~ scale(Meg_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_1iv_choice_consp_meg_ps)
 
 # extract my observed coefficient
-obvs_coef_meg_ps <- summary(mod_1iii_choice_consp_meg_ps)$coefficients[2,1]
+obvs_coef_meg_ps <- summary(mod_1iv_choice_consp_meg_ps)$coefficients[2,1]
 
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_ps, c(0.025, 0.975))
@@ -527,12 +578,12 @@ obvs_coef_meg_ps # not within this range
 # convert to dataframe
 df_coefs_meg_ps <- data.frame(sim_coefs_meg_ps = sim_coefs_meg_ps)
 
-hist_1iii <- ggplot(df_coefs_meg_ps, aes(x = sim_coefs_meg_ps)) +
+hist_1iv <- ggplot(df_coefs_meg_ps, aes(x = sim_coefs_meg_ps)) +
   geom_histogram(binwidth = 0.1, fill = 'grey50')  +
   geom_vline(xintercept = obvs_coef_meg_ps, color = 'red3', linetype = 'dashed', size = 1) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Megachile are attracted to congenerics 
-hist_1iii
+hist_1iv
 
 
 ## Reporting
@@ -541,7 +592,8 @@ hist_1iii
 table(obvs_coef_meg_ps < df_coefs_meg_ps) # none are larger
 
 
-### MODEL 1.iv - Megachile excluding pseudo ###
+
+### MODEL 1.v - Megachile excluding pseudo ###
 
 ## Making the model part 1: Simulated data 
 
@@ -560,11 +612,11 @@ sim_coefs_meg_no_ps <- c(unlist(lapply(sim_list_meg_no_ps_attr, function(x) {
 
 ## Making the model part 2: Observed data 
 
-mod_1iv_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
-summary(mod_1iv_choice_consp_meg_no_ps)
+mod_1v_choice_consp_meg_no_ps <- glmer(New_nests_meg ~ scale(Meg_no_ps_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_1v_choice_consp_meg_no_ps)
 
 # extract my observed coefficient
-obvs_coef_meg_no_ps <- summary(mod_1iv_choice_consp_meg_no_ps)$coefficients[2,1]
+obvs_coef_meg_no_ps <- summary(mod_1v_choice_consp_meg_no_ps)$coefficients[2,1]
 
 # range of 95%, i.e., if my observed value falls within this range, its not different from the null
 quantile(sim_coefs_meg_no_ps, c(0.025, 0.975))
@@ -573,12 +625,12 @@ obvs_coef_meg_no_ps # falls outside this range
 # convert to dataframe
 df_coefs_meg_no_ps <- data.frame(sim_coefs_meg_no_ps = sim_coefs_meg_no_ps)
 
-hist_1iv <- ggplot(df_coefs_meg_no_ps, aes(x = sim_coefs_meg_no_ps)) +
+hist_1v <- ggplot(df_coefs_meg_no_ps, aes(x = sim_coefs_meg_no_ps)) +
   geom_histogram(binwidth = 0.1, fill = 'grey50')  +
   geom_vline(xintercept = obvs_coef_meg_no_ps, color = 'red3', linetype = 'dashed', size = 1) +
   labs(y = 'Count', x = 'Coefficient')
 # reject the null - Megachile are attracted to congenerics 
-hist_1iv
+hist_1v
 
 
 ## Reporting
@@ -586,11 +638,60 @@ hist_1iv
 # what proportion of the simulated coefs fall above mine?
 table(obvs_coef_meg_no_ps < df_coefs_meg_no_ps) # none are larger
 
+
+
+### MODEL 1.vi - Megachile active mothers ###
+
+## Making the model part 1: Simulated data 
+
+# run the model on each of the simulated data columns
+sim_list_meg_active_attr <- lapply(1:n_sim, function(x){
+  my_formula <- paste0('Null_new_nests', x, ' ~ scale(Meg_active_mothers_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest)') 
+  output <- glmer(as.formula(my_formula), data = trapnesting_meg_null, family = poisson)
+  summary(output)
+} ) 
+
+# take all of the simulated coefficients
+sim_coefs_meg_active <- c(unlist(lapply(sim_list_meg_active_attr, function(x) {
+  x$coefficients[2,1] # extract second row, first column for the estimate 
+})))
+
+
+## Making the model part 2: Observed data 
+
+mod_1vi_choice_consp_meg_active <- glmer(New_nests_meg ~ scale(Meg_active_mothers_prior) + scale(Good_days) + poly(Day_of_year,2) + Year + Site + (1|Subsite/Trapnest), data = trapnesting_meg_null, family = poisson)
+summary(mod_1vi_choice_consp_meg_active)
+
+# extract my observed coefficient
+obvs_coef_meg_active <- summary(mod_1vi_choice_consp_meg_active)$coefficients[2,1]
+
+# range of 95%, i.e., if my observed value falls within this range, its not different from the null
+quantile(sim_coefs_meg_active, c(0.025, 0.975))
+obvs_coef_meg_active # falls outside of this range
+
+# convert to dataframe
+df_coefs_meg_active <- data.frame(sim_coefs_meg_active = sim_coefs_meg_active)
+
+hist_1vi <- ggplot(df_coefs_meg_active, aes(x = sim_coefs_meg_active)) +
+  geom_histogram(binwidth = 0.1, fill = 'grey50')  +
+  geom_vline(xintercept = obvs_coef_meg_active, color = 'red3', linetype = 'dashed', size = 1) +
+  labs(y = 'Count', x = 'Coefficient')
+# reject the null - Megachile are attracted to congenerics 
+hist_1vi
+
+
+## Reporting
+
+# what proportion of the simulated coefs fall above mine?
+table(obvs_coef_meg_active < df_coefs_meg_active) # 1 is larger
+
+
 # save
-hist_1_meg <- hist_1iii + hist_1iv + plot_annotation(tag_levels = 'A')
-ggsave('Figures/hist_1_iii_and_iv.png', plot = hist_1_meg, width = 8, height = 3.5)
-saveRDS(mod_1iii_choice_consp_meg_ps, file = 'Models/mod_1iii_choice_consp_meg_ps.rds')
-saveRDS(mod_1iv_choice_consp_meg_no_ps, file = 'Models/mod_1iv_choice_consp_meg_no_ps.rds')
+hist_1_meg <- hist_1iv + hist_1v + hist_1vi + plot_annotation(tag_levels = 'A')
+ggsave('Figures/hist_1_iv_v_vi.png', plot = hist_1_meg, width = 11, height = 3.5)
+saveRDS(mod_1iv_choice_consp_meg_ps, file = 'Models/mod_1iv_choice_consp_meg_ps.rds')
+saveRDS(mod_1v_choice_consp_meg_no_ps, file = 'Models/mod_1v_choice_consp_meg_no_ps.rds')
+saveRDS(mod_1vi_choice_consp_meg_active, file = 'Models/mod_1vi_choice_consp_meg_active.rds')
 
 # sample size
 sum(trapnesting_meg_null$New_nests_meg)
@@ -1000,6 +1101,7 @@ saveRDS(mod_3aii_choice_consp_par_os_no_ps, file = 'Models/mod_3aii_choice_consp
 sum(trapnesting_os_null$New_nests_os) # 161
 
 
+
 ```
 
 ## Parasite Avoidance - Megachile
@@ -1296,34 +1398,44 @@ nesting_meg %>%
 
 ```{r AIC_Comparing_Models}
 
-## COmapring AIC between models including and excluding pseudo nests to examine how pseudo nests were perceived 
+## Comapring AIC between models including and excluding pseudo nests to examine how pseudo nests were perceived 
 
 
 # Prediction 1: Congeneric attraction
 
-  # Osmia - difference of 6.4
-AIC(mod_1i_choice_consp_os_ps) - AIC(mod_1ii_choice_consp_os_no_ps)
+  # Osmia
+AIC(mod_1i_choice_consp_os_ps) # 849.7863
+AIC(mod_1ii_choice_consp_os_no_ps) # 843.38
+AIC(mod_1iii_choice_consp_os_active) # 814.1675
 
-  # Megachile - difference of 14.4
-AIC(mod_1iii_choice_consp_meg_ps) - AIC(mod_1iv_choice_consp_meg_no_ps)
+  # Megachile
+AIC(mod_1iv_choice_consp_meg_ps) # 853.9661
+AIC(mod_1v_choice_consp_meg_no_ps) # 839.5735
+AIC(mod_1vi_choice_consp_meg_active) # 840.5003
 
 
 # Prediction 2: Risk of nesting in aggregations
 
-  # Osmia - difference of 2.7
-AIC(mod_2i_par_agg_os_ps) - AIC(mod_2ii_par_agg_os_no_ps)
+  # Osmia 
+AIC(mod_2i_par_agg_os_ps) # 373.1831
+AIC(mod_2ii_par_agg_os_no_ps) # 370.4732
+AIC(mod_2iii_par_agg_os_active) # 370.6289
 
-  # Megachile - difference of 1.5
-AIC(mod_2iv_par_agg_meg_ps) - AIC(mod_2v_par_agg_meg_no_ps)
+  # Megachile 
+AIC(mod_2iv_par_agg_meg_ps) # 114.6041
+AIC(mod_2v_par_agg_meg_no_ps) # 113.0957
+AIC(mod_2vi_par_agg_meg_active) # 112.8491
 
 
 # Prediction 3: Avoidance of parasites
 
-  # Osmia - difference of 14.1
-AIC(mod_3ai_choice_consp_par_os_ps) - AIC(mod_3aii_choice_consp_par_os_no_ps)
+  # Osmia 
+AIC(mod_3ai_choice_consp_par_os_ps) # 848.0123
+AIC(mod_3aii_choice_consp_par_os_no_ps) # 833.9114
 
-  # Megachile - difference of 44.6
-AIC(mod_3aiii_choice_consp_par_meg_ps) - AIC(mod_3aiv_choice_consp_par_meg_no_ps)
+  # Megachile 
+AIC(mod_3aiii_choice_consp_par_meg_ps) # 851.5242
+AIC(mod_3aiv_choice_consp_par_meg_no_ps) # 806.8871
 
 
 

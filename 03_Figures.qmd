@@ -461,84 +461,9 @@ nesting_cells_meg %>%
 
 ```
 
-## Parasite Avoidance
+## Parasite Avoidance 
 
 ```{r P3a_Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
-
-
-## Osmia ##
-
-P3a_os <- trapnesting_os_null %>% 
-  ggplot(aes(y = New_nests_os, x = DP_os_prior)) +
-  geom_jitter(height = 0.09, width = 0.09, alpha = 0.4, color = '#59989e', shape = 16) +
-  geom_smooth(method = 'lm', color = '#59989e', fill = '#59989e') +
-  scale_y_continuous(
-    breaks = 0:5,
-    limits = c(0, 5.5),
-    labels = 0:5
-  )  +
-  labs(y = NULL, x = NULL)
-  
-
-## Megachile ##
-
-P3a_meg <- trapnesting_meg_null %>% 
-  ggplot(aes(y = New_nests_meg, x = DP_meg_prior)) +
-  geom_jitter(height = 0.09, width = 0.09, alpha = 0.4, color = '#B6686B', shape = 16) +
-  geom_smooth(method = 'lm',  color = '#B6686B', fill = '#B6686B') +
-  scale_x_continuous(breaks = 0:2, labels = 0:2) +
-  scale_y_continuous(
-    breaks = 0:5,
-    limits = c(0, 5.5),
-    labels = 0:5
-  )  +
-  labs(y = NULL, x = NULL)
-
-
-# Combine 
-        
-combined_p3a <- P3a_os + P3a_meg + 
-  plot_layout(ncol = 2, widths = c(4, 3), guides = 'collect') +
-  plot_annotation(tag_levels = "A")
-combined_p3a 
-
-# make labels, needs white background so it's not png
-P3a_left_label <- ggplot() +
-  annotate('text',
-           x = 0.5, y = 0.5,
-           label = 'Number of new nests',
-           angle = 90,
-           size = 5) +
-  theme_void() +
-  theme(
-    panel.background  = element_rect(fill = 'white', colour = NA),
-    plot.background   = element_rect(fill = 'white', colour = NA),
-    plot.margin       = margin(0, 0, 0, 0)
-  ) 
-P3a_bottom_label <- ggplot() +
-    annotate('text',
-           x = 0.5, y = 0.5,
-           label = 'Number of neighbouring nests with detectable parasites',
-           angle = 0,
-           size = 5) +
-  theme_void() +
-  theme(
-    panel.background  = element_rect(fill = 'white', colour = NA),
-    plot.background   = element_rect(fill = 'white', colour = NA),
-    plot.margin       = margin(0, 0, 0, 0)
-  )
-  
-# add left and bottom labels
-Fig_p3a <- cowplot::plot_grid(P3a_left_label, combined_p3a, ncol = 2, rel_widths = c(0.05, 0.95))
-Fig_p3a <- cowplot::plot_grid(Fig_p3a, P3a_bottom_label, ncol = 1, rel_heights = c(1, 0.06))
-
-# save
-ggsave('Figures/Fig_p3a.png', Fig_p3a, width = 8, height = 4, dpi = 300) 
-
-
-```
-
-```{r}
 
 
 ## Osmia ##
@@ -558,21 +483,21 @@ P3a_os <- trapnesting_os %>%
   geom_smooth(method = "lm",
               aes(colour = DP_os_prior_bi,
                   fill   = DP_os_prior_bi),
-                  linetype = "longdash")+
+                  linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   scale_fill_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Not parasitized", "Parasitized"),,
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   labs(y = NULL, x = NULL) +
@@ -602,18 +527,18 @@ P3a_meg <- trapnesting_meg %>%
                   linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests")))  +
   scale_fill_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests")))  +
   labs(y = NULL, x = NULL) + 

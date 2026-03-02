@@ -1915,41 +1915,50 @@ table(nesting$Abandoned_inner_wall)
 
 ```{r Active_Mothers_For_Bee_Models}
 
+
 ## Make column to say if nests are active enough to have mothers around for the bee models
 
-# already done in nesting df
+# already done in nesting df so now make prior values
+# same equation as other prior values
 
-# make prior values
+# 1- for 0 or 1 new nests, (active mothers - new nests) 
 
-
-df_trap13 <- nesting_x %>% filter(Date == '2023-06-02' & Trapnest == 'trapnest_13')
-
-
-
-
-
-
-# 1- for 0 or 1 new nests, (available_post - new nests) 
-  # osmia  
-nesting_x <- nesting %>% mutate(Osmia_active_mothers_prior_V1 = ifelse(Osmia_active_mothers == 1 & New_nests_os == 1, (Osmia_active_mothers - New_nests_os),
-                                                                       ifelse(Osmia_active_mothers == 0, 0, 'TBD')))
+  # Osmia  
+nesting <- nesting %>% mutate(Osmia_active_mothers_no_equ = ifelse(New_nests_os == 1 | New_nests_os == 0 , (Osmia_active_mothers - New_nests_os), NA))
   
+  # Megachile  
+nesting <- nesting %>% mutate(Meg_active_mothers_no_equ = ifelse(New_nests_meg == 1 | New_nests_meg == 0 , (Meg_active_mothers - New_nests_meg), NA))
 
-# 2 A- for multiple new nests, (n-1)/2
-  # osmia
-nesting_x <- nesting_x %>% mutate(Osmia_active_equ = if_else(New_nests_os > 1, ((New_nests_os - 1)/2), NA))
+# 2 A- for multiple new nests, (new - 1) / 2
 
+  # Osmia
+nesting <- nesting %>% mutate(Osmia_active_equ = if_else(New_nests_os > 1, ((New_nests_os - 1)/2), NA))
 
-
-
+  # Megachile
+nesting <- nesting %>% mutate(Meg_active_equ = if_else(New_nests_meg > 1, ((New_nests_meg - 1)/2), NA))
 
 # B- add equation + (active mothers - new nests)
-  # osmia 
-nesting_x <- nesting_x %>% mutate(Osmia_active_mothers_prior = ifelse(Osmia_active_mothers_prior_V1 == 'TBD', (Osmia_active_mothers - New_nests_os + Osmia_active_equ), 'leftover'))
-                                      
+
+  # Osmia 
+nesting <- nesting %>% mutate(Osmia_active_mothers_prior = ifelse(!is.na(Osmia_active_equ), (Osmia_active_mothers - New_nests_os + Osmia_active_equ), Osmia_active_mothers_no_equ))
+
+  # Megachile 
+nesting <- nesting %>% mutate(Meg_active_mothers_prior = ifelse(!is.na(Meg_active_equ), (Meg_active_mothers - New_nests_meg + Meg_active_equ), Meg_active_mothers_no_equ))
 
 
 
+# after inspecting, everythin is good except one -1 number because it was an inner wall and end cap only
+# check for instances of inner wall + end cap
+nesting %>%
+  filter(
+    grepl("inner\\s*wall", Status, ignore.case = TRUE) &
+    grepl("end\\s*cap", Status, ignore.case = TRUE)
+  )
+# only exists for the one sepcific date-trapnest combo: trapnest 7 on 2023-06-14, so override this manually
+nesting <- nesting %>% mutate(Osmia_active_mothers_prior = if_else(Trapnest == "trapnest_7" & Date == "2023-06-14", 0, Osmia_active_mothers_prior))
+
+
+nesting <- nesting %>% select(-Osmia_active_equ, -Osmia_active_mothers_no_equ, -Meg_active_equ, -Meg_active_mothers_no_equ)
 
 
 ```
@@ -2009,12 +2018,12 @@ table(nesting_investment$Occupant)
 
 ## Separate Osmia and Megachile data frames 
 nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
-table(nesting_investment_os$Occupant) # 108
+table(nesting_investment_os$Occupant) # 109
 nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile') 
 table(nesting_investment_meg$Occupant) # 61
 
 # take only columns that make sense at the nest level
-nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Sealed, Nest_parasitized, Nest_parasitized_undev, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)
+nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Sealed, Nest_parasitized, Nest_parasitized_undev, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)
 
 # still has duplicates for the nests, and seperate os and meg 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
@@ -2049,9 +2058,9 @@ trapnesting_os <- distinct(nesting_os, Date, Trapnest, .keep_all= TRUE)
 trapnesting_meg <- distinct(nesting_meg, Date, Trapnest, .keep_all= TRUE)
 
 # take only columns that make sense at the trapnest level
-trapnesting_os <- trapnesting_os %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_os, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Sum_unsealed_os, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
+trapnesting_os <- trapnesting_os %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_os, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, Sum_unsealed_os, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
 
-trapnesting_meg <- trapnesting_meg %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_meg, New_nests_sum, Available_cavities_prior, Meg_ps_prior, Meg_no_ps_prior, Sum_unsealed_meg, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
+trapnesting_meg <- trapnesting_meg %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_meg, New_nests_sum, Available_cavities_prior, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, Sum_unsealed_meg, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
 
 # still the same as before
 trapnesting_os %>% 
@@ -2228,13 +2237,33 @@ counting_species_by_nest <- nesting_cells %>%
 counting_species_by_nest <- counting_species_by_nest %>% 
   group_by(Species_or_subtype) %>% 
   summarise(count = length(unique(Nest_ID)))
+counting_species_by_nest
 # Megachile centuncularis	 1			
 # Megachile mendica	       1			
 # Megachile pugnata	       20			
+# Osmia pumila	           27	
 # Megachile relativa	     20			
 # Megachile rotundata	     1	
-# Osmia pumila	           27		
 # Osmia tersula	           19	
+
+
+## Are specific species nesting grouped together? Or a mix of congenerics
+
+species_grouping_os <- nesting_cells_os %>%
+  filter(Species_or_subtype != "sapyga") %>%
+  group_by(Trapnest, Date, Species_or_subtype) %>%
+  summarise(
+    n_nests = n_distinct(Nest_ID),
+    .groups = "drop")
+# no obvious groupings, repeats are mostly the same nest 
+
+species_grouping_meg <- nesting_cells_meg %>%
+  group_by(Trapnest, Date, Species_or_subtype) %>%
+  summarise(
+    n_nests = n_distinct(Nest_ID),
+    .groups = "drop")
+# no obvious groupings, repeats are mostly the same nest 
+
 
 ```
 
@@ -2284,5 +2313,6 @@ counting_species_by_nest <- counting_species_by_nest %>%
 # # the length of ex1 should = ex2 + ex3 --> 80 + 334 
 # emerg_and_pref_ex3 <- rbind(emerg_and_pref_ex2, emerg_and_pref_ex3)
 # emerg_and_pref_ex3 <- emerg_and_pref_ex3 %>% arrange(Nest_ID, Date)
+
 
 ```
