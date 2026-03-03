@@ -529,7 +529,7 @@ table(obvs_coef_os_active < df_coefs_os_active) # none are larger
 hist_1_os <- hist_1i + hist_1ii + hist_1iii + plot_annotation(tag_levels = 'A')
 ggsave('Figures/hist_1_i_ii_iii.png', plot = hist_1_os, width = 11, height = 3.5)
 saveRDS(mod_1i_choice_consp_os_ps, file = 'Models/mod_1i_choice_consp_os_ps.rds')
-saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1i_choice_consp_os_no_ps.rds')
+saveRDS(mod_1ii_choice_consp_os_no_ps, file = 'Models/mod_1ii_choice_consp_os_no_ps.rds')
 saveRDS(mod_1iii_choice_consp_os_active, file = 'Models/mod_1iii_choice_consp_os_active.rds')
 
 
