@@ -288,6 +288,7 @@ nesting_cells_meg %>%
 
 
 ## How many nests per treatment?
+
 trapnesting_os %>% 
   group_by(Treatment) %>% 
   summarize(Sum_nests = sum(New_nests_os))
@@ -296,7 +297,6 @@ trapnesting_os %>%
   # mid 51
   # high 54
 
-
 trapnesting_meg %>% 
   group_by(Treatment) %>% 
   summarize(Sum_nests = sum(New_nests_meg))
@@ -304,6 +304,33 @@ trapnesting_meg %>%
   # low 41
   # mid 50
   # high 46
+
+
+## Size difference in nest investment?
+
+investment_proportions_os <- nesting_investment_os %>% mutate(Prop_filled = Filled_length / Straw_length)
+
+investment_proportions_os %>% 
+  filter(Nest_parasitized == 'not parasitized') %>% 
+  summarise(Mean = mean(Prop_filled))
+# 0.453664
+investment_proportions_os %>% 
+  filter(Nest_parasitized == 'parasitized') %>% 
+  summarise(Mean = mean(Prop_filled))
+# 0.3279663	
+# 12.5% difference
+
+investment_proportions_meg <- nesting_investment_meg %>% mutate(Prop_filled = Filled_length / Straw_length)
+
+investment_proportions_meg %>% 
+  filter(Nest_parasitized == 'not parasitized') %>% 
+  summarise(Mean = mean(Prop_filled))
+# 0.4836976	
+investment_proportions_meg %>% 
+  filter(Nest_parasitized == 'parasitized') %>% 
+  summarise(Mean = mean(Prop_filled))
+# 0.5327157	
+
 
 
 ```

@@ -461,7 +461,7 @@ nesting_cells_meg %>%
 
 ```
 
-## Parasite Avoidance 
+## Parasite Avoidance
 
 ```{r P3a_Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -502,7 +502,7 @@ P3a_os <- trapnesting_os %>%
                    italic(Osmia) ~ " nests"))) +
   labs(y = NULL, x = NULL) +
   xlim(0, 15) +
-  ylim(-0.5, 5)
+  ylim(-0.5, 5) 
 
 P3a_os
 
@@ -552,9 +552,14 @@ P3a_meg
 
 
 # Combine 
-        
-combined_p3a <- P3a_os + P3a_meg + plot_layout(ncol = 2, guides = 'collect') +
-  plot_annotation(tag_levels = "A")
+
+combined_p3a <- P3a_os + P3a_meg + plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  theme(
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    plot.background = element_blank()
+  )
 
 P3a_left_label <- ggplot() +
   annotate('text',
@@ -580,7 +585,6 @@ Fig_p3a <- cowplot::plot_grid(
   ncol = 1, rel_heights = c(1, 0.09), align = "v", axis = "l")
 
 Fig_p3a <- cowplot::plot_grid(P3a_left_label, Fig_p3a, ncol = 2, rel_widths = c(0.05, 0.95)) 
-
 
 Fig_p3a
 
