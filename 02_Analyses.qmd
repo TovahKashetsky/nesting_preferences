@@ -1410,7 +1410,7 @@ nesting_meg %>% filter(Abandoned_inner_wall == 1)
 
 # save model
 saveRDS(mod_3di_inner_wall_os, file = 'Models/mod_3di_inner_wall_os.rds')
-# saveRDS(mod_3dii_inner_wall_meg, file = 'Models/mod_3dii_inner_wall_meg.rds')
+
 
 # sample size
 nesting_os %>% filter(!is.na(Abandoned_inner_wall)) # 168

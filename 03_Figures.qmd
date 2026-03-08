@@ -500,6 +500,7 @@ P3a_os <- trapnesting_os %>%
     labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
+  guides(fill = "none") +
   labs(y = NULL, x = NULL) +
   xlim(0, 15) +
   ylim(-0.5, 5) 
@@ -540,13 +541,14 @@ P3a_meg <- trapnesting_meg %>%
              "1" = 17),
     labels = c("Parasitized", "Not parasitized"),
     name = bquote(atop("Status of neighbouring",
-                   italic(Megachile) ~ " nests")))  +
+                   italic(Megachile) ~ " nests"))) +
+  guides(fill = "none") +
   labs(y = NULL, x = NULL) + 
   theme(
   legend.title.align = 0
 ) +
   xlim(0, 15) +
-  ylim(-0.5, 5)
+  ylim(-0.5, 5) 
 
 P3a_meg
 
