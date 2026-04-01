@@ -37,7 +37,7 @@ nesting_investment_os <- read_csv('data/investment_cleaned_osmia.csv')
 nesting_investment_meg <- read_csv('data/investment_cleaned_megachile.csv')
   # model for Fig S9 and S10
 mod_3aii_choice_consp_par_os_no_ps <- readRDS('Models/mod_3aii_choice_consp_par_os_no_ps.rds')
-mod_3aiv_choice_consp_par_meg_ps <- readRDS('Models/mod_3aiv_choice_consp_par_meg_no_ps.rds')
+mod_3aiv_choice_consp_par_meg_no_ps <- readRDS('Models/mod_3aiv_choice_consp_par_meg_no_ps.rds')
 
 
 # number of nests
@@ -558,9 +558,8 @@ P3a_meg
 combined_p3a <- P3a_os + P3a_meg + plot_layout(ncol = 2, guides = "collect") +
   plot_annotation(tag_levels = "A") &
   theme(
-    panel.border = element_blank(),
-    panel.background = element_blank(),
-    plot.background = element_blank()
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background  = element_rect(fill = "white", colour = NA)
   )
 
 P3a_left_label <- ggplot() +
@@ -591,7 +590,7 @@ Fig_p3a <- cowplot::plot_grid(P3a_left_label, Fig_p3a, ncol = 2, rel_widths = c(
 Fig_p3a
 
 # save
-ggsave('Figures/Fig_p3a.png', Fig_p3a, width = 11, height = 5, dpi = 300) 
+ggsave('Figures/Fig_p3a.png', Fig_p3a, width = 11, height = 5, dpi = 300, bg = 'white') 
 
 
 ```

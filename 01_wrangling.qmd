@@ -1965,6 +1965,37 @@ nesting <- nesting %>% select(-Osmia_active_equ, -Osmia_active_mothers_no_equ, -
 
 ```{r Editing_Data_for_Models}
 
+
+## Verifying my treatments: How related are my treatments to the number of available cavities?
+confirm_treatment_data <- nesting %>%
+  distinct(Treatment, Subsite, Day_of_year, .keep_all = TRUE)
+# mean and SD
+confirm_treatment_data %>% 
+  group_by(Treatment) %>% 
+  summarise(Mean_avail = mean(Available_cavities_prior),
+            SD_avail = sd(Available_cavities_prior))
+  # Mean +- SD
+   # Low-occupancy = 17.4 +- 1.0
+   # Mid-occupancy = 11.6 +- 0.9
+   # High-occupancy = 6.7 +- 0.8
+
+# range of available cavities
+confirm_treatment_data %>% 
+  filter(Treatment == 'Low') %>% 
+  ungroup() %>%
+  summarise(Min_low = min(Available_cavities_prior),
+            Max_low = max(Available_cavities_prior)) # 12, 18
+confirm_treatment_data %>% 
+  filter(Treatment == 'Mid') %>% 
+  ungroup() %>%
+  summarise(Min_mid = min(Available_cavities_prior),
+            Max_mid = max(Available_cavities_prior)) # 5, 13
+confirm_treatment_data %>% 
+  filter(Treatment == 'High') %>% 
+  ungroup() %>%
+  summarise(Min_high = min(Available_cavities_prior),
+            Max_high = max(Available_cavities_prior)) # 1, 9
+
 # check structure
 str(nesting)  
 
@@ -2012,6 +2043,10 @@ length(unique(nesting_investment_0$Nest_ID))
 # fitler out all nests that aren't end capped to exclude abandoned nests and nests not finished at the end of the experiment 
 nesting_investment <- nesting_investment_0 %>% filter(Sealed == 'sealed')
 
+# remove uneccesary columns
+nesting_investment <- nesting_investment %>% select(-Status, -Nest_parasitized_undev, -Good_days, -Bee_choice, -Available_post, -Available_cavities_prior, -New_nests_os, -New_nests_meg, -New_nests_sum, -Osmia_ps_prior, -Osmia_no_ps_prior, -Osmia_active_mothers, -Osmia_active_mothers_prior, -Meg_ps_prior, -Meg_no_ps_prior, -Meg_active_mothers, -Meg_active_mothers_prior, -Sum_unsealed_meg, -Sum_unsealed_os, -Abandoned_inner_wall, -Straw_ID)
+
+
 # how many are left?
 table(nesting_investment$Occupant)
 # 61 megachile, 109 osmia
@@ -2021,26 +2056,18 @@ nesting_investment_os <- nesting_investment %>% filter(Occupant == 'osmia')
 table(nesting_investment_os$Occupant) # 109
 nesting_investment_meg <- nesting_investment %>% filter(Occupant == 'megachile') 
 table(nesting_investment_meg$Occupant) # 61
+# remove columns from other genus
+nesting_investment_os <- nesting_investment_os %>% select(-DP_meg_prior, -NDP_meg_prior, -NDP_ps_meg_prior)
+
+nesting_investment_meg <- nesting_investment_meg %>% select(-DP_os_prior, -NDP_os_prior, -NDP_ps_os_prior)
+
 
 # take only columns that make sense at the nest level
-nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Sealed, Nest_parasitized, Nest_parasitized_undev, Good_days, Bee_choice, Available_post, New_nests_os, New_nests_meg, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, Sum_unsealed_os, Sum_unsealed_meg, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)
+nesting <- nesting %>% select(Site, Subsite, Trapnest, Treatment, Nest_ID, Date, Day_of_year, Year, Status, Occupant, Good_days, Bee_choice, Available_cavities_prior, New_nests_os, New_nests_meg, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, DP_os_prior, NDP_os_prior, NDP_ps_os_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior, Abandoned_inner_wall)
 
 # still has duplicates for the nests, and seperate os and meg 
 nesting_os <- nesting %>% filter(Occupant == 'osmia' | Occupant == 'none')
 nesting_meg <- nesting %>% filter(Occupant == 'megachile' | Occupant == 'none')
-
-# remove non-target columns
-nesting_os <- nesting_os %>% select(-New_nests_meg, -Meg_ps_prior, -Meg_no_ps_prior, -Sum_unsealed_meg, -DP_meg_prior, -NDP_meg_prior, -NDP_ps_meg_prior)
-
-nesting_meg <- nesting_meg %>% select(-New_nests_os, -Osmia_ps_prior, -Osmia_no_ps_prior, -Sum_unsealed_os, -DP_os_prior, -NDP_os_prior, -NDP_ps_os_prior)
-
-
-# is the math adding up? should be 43
-table(nesting_os$Abandoned_inner_wall) # 30
-table(nesting_meg$Abandoned_inner_wall) # 13
-
-# parasite data already only for collected nests
-table(nesting_investment$Date)
 
 # counting new nests 
 nesting_os %>% filter(!is.na(Bee_choice)) %>% 
@@ -2050,6 +2077,13 @@ nesting_meg %>% filter(!is.na(Bee_choice)) %>%
 nesting %>% filter(!is.na(Bee_choice)) %>% 
   summarize(nests_total = sum(Bee_choice)) # 307 total
 
+# is the math adding up? should be 43
+table(nesting_os$Abandoned_inner_wall) # 30
+table(nesting_meg$Abandoned_inner_wall) # 13
+
+# parasite data already only for collected nests
+table(nesting_investment$Date)
+
 
 ## Summing by trapnest
 
@@ -2058,9 +2092,9 @@ trapnesting_os <- distinct(nesting_os, Date, Trapnest, .keep_all= TRUE)
 trapnesting_meg <- distinct(nesting_meg, Date, Trapnest, .keep_all= TRUE)
 
 # take only columns that make sense at the trapnest level
-trapnesting_os <- trapnesting_os %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_os, New_nests_sum, Available_cavities_prior, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, Sum_unsealed_os, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
+trapnesting_os <- trapnesting_os %>% select(Site, Subsite, Trapnest, Treatment, Date, Day_of_year, Year, Good_days, Available_cavities_prior, New_nests_os, Osmia_ps_prior, Osmia_no_ps_prior, Osmia_active_mothers_prior, DP_os_prior, NDP_os_prior, NDP_ps_os_prior)
 
-trapnesting_meg <- trapnesting_meg %>% select(Trapnest, Date, Day_of_year, Year, Site, Subsite, Treatment, Good_days, New_nests_meg, New_nests_sum, Available_cavities_prior, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, Sum_unsealed_meg, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
+trapnesting_meg <- trapnesting_meg %>% select(Site, Subsite, Trapnest, Treatment, Date, Day_of_year, Year, Good_days, Available_cavities_prior, New_nests_meg, Meg_ps_prior, Meg_no_ps_prior, Meg_active_mothers_prior, DP_meg_prior, NDP_meg_prior, NDP_ps_meg_prior)
 
 # still the same as before
 trapnesting_os %>% 
@@ -2068,24 +2102,28 @@ trapnesting_os %>%
 trapnesting_meg %>% 
   summarize(nests_total = sum(New_nests_meg)) # 140 megachile nests 
 
-#remove NAs from emergence data for analyses 
+# remove NAs from emergence data for analyses 
 nesting_cells_os <- nesting_cells_os %>% filter(!is.na(Cell_parasitized))
 nesting_cells_meg <- nesting_cells_meg %>% filter(!is.na(Cell_parasitized))
+
+# only columns that we need
+nesting_cells_os <- nesting_cells_os %>% select(Site,	Subsite,	Trapnest,	Treatment, Nest_ID,	Cell_ID, Cell_position, Cell_position_bi,	Date,	Cell_occupant,	Species_or_subtype,	Cell_parasitized,	Nest_parasitized,	Occupant,	New_nests_os,	Osmia_ps, Osmia_no_ps,	Osmia_active_mothers,	Day_of_year,	Year)
+nesting_cells_meg <- nesting_cells_meg %>% select(Site,	Subsite,	Trapnest,	Treatment, Nest_ID,	Cell_ID, Cell_position, Cell_position_bi,	Date,	Cell_occupant, Species_or_subtype,	Cell_parasitized,	Nest_parasitized,	Occupant,	New_nests_meg,	Meg_ps,	Meg_no_ps,	Meg_active_mothers,	Day_of_year, Year)
 
 ## Saving wrangled data
 
   # nest-level data for all cavities
-write.csv(nesting_os, 'data/nesting_cleaned_osmia.csv')
-write.csv(nesting_meg, 'data/nesting_cleaned_megachile.csv')
+write.csv(nesting_os, 'data/nesting_cleaned_osmia.csv', row.names = FALSE)
+write.csv(nesting_meg, 'data/nesting_cleaned_megachile.csv', row.names = FALSE)
   # trapnest-level data
-write.csv(trapnesting_os, 'data/trapnesting_cleaned_osmia.csv')
-write.csv(trapnesting_meg, 'data/trapnesting_cleaned_megachile.csv')
+write.csv(trapnesting_os, 'data/trapnesting_cleaned_osmia.csv', row.names = FALSE)
+write.csv(trapnesting_meg, 'data/trapnesting_cleaned_megachile.csv', row.names = FALSE)
   # nest-level data for investment measures
-write.csv(nesting_investment_os, 'data/investment_cleaned_osmia.csv')
-write.csv(nesting_investment_meg, 'data/investment_cleaned_megachile.csv')
+write.csv(nesting_investment_os, 'data/investment_cleaned_osmia.csv', row.names = FALSE)
+write.csv(nesting_investment_meg, 'data/investment_cleaned_megachile.csv', row.names = FALSE)
   # cell-level data
-write.csv(nesting_cells_os, 'data/nesting_cells_cleaned_osmia.csv')
-write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachile.csv')
+write.csv(nesting_cells_os, 'data/nesting_cells_cleaned_osmia.csv', row.names = FALSE)
+write.csv(nesting_cells_meg, 'data/nesting_cells_cleaned_megachile.csv', row.names = FALSE)
 
 
 ```
@@ -2117,37 +2155,6 @@ preferences_1 %>%
   distinct(Trapnest, Date) %>%
   nrow() # out of the 2214 days and trapnest combinations 
 # (100/2214) * 100 so 4.5% of the time
-
-
-## Verifying my treatments: How related are my treatments to the number of available cavities?
-confirm_treatment_data <- nesting %>%
-  distinct(Treatment, Subsite, Day_of_year, .keep_all = TRUE)
-# mean and SD
-confirm_treatment_data %>% 
-  group_by(Treatment) %>% 
-  summarise(Mean_avail = mean(Available_cavities_prior),
-            SD_avail = sd(Available_cavities_prior))
-  # Mean +- SD
-   # Low-occupancy = 17.4 +- 1.0
-   # Mid-occupancy = 11.6 +- 0.9
-   # High-occupancy = 6.7 +- 0.8
-
-# range of available cavities
-confirm_treatment_data %>% 
-  filter(Treatment == 'Low') %>% 
-  ungroup() %>%
-  summarise(Min_low = min(Available_cavities_prior),
-            Max_low = max(Available_cavities_prior)) # 12, 18
-confirm_treatment_data %>% 
-  filter(Treatment == 'Mid') %>% 
-  ungroup() %>%
-  summarise(Min_mid = min(Available_cavities_prior),
-            Max_mid = max(Available_cavities_prior)) # 5, 13
-confirm_treatment_data %>% 
-  filter(Treatment == 'High') %>% 
-  ungroup() %>%
-  summarise(Min_high = min(Available_cavities_prior),
-            Max_high = max(Available_cavities_prior)) # 1, 9
 
 
 ## How many nests per year?

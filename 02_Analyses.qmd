@@ -525,7 +525,7 @@ sim_coefs_os_active <- c(unlist(lapply(sim_list_os_active_attr, function(x) {
 ## Observed data
 
 mod_1iii_choice_consp_os_active <- glmer(New_nests_os ~ scale(Osmia_active_mothers_prior) + scale(Good_days) + poly(Day_of_year,2) + Site + (1|Subsite/Trapnest), data = trapnesting_os_null, family = poisson)
-summary(mod_1_choice_consp_os_active)
+summary(mod_1iii_choice_consp_os_active)
 
 # extract my observed coefficient
 obvs_coef_os_active <- summary(mod_1iii_choice_consp_os_active)$coefficients[2,1]
