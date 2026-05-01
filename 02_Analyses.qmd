@@ -258,6 +258,7 @@ nest_n_meg %>%
 # megachile rotundata   	1			
 # megachile             	6
 
+# 2 + 3 melittobia nests / 307 nests = 1.6% nests parasitized by melittobia
 
 ## How many cells were parasitized?
 

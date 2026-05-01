@@ -322,7 +322,7 @@ mod_3bii_invest_filled_meg_table <- tidy_function_lmer(mod_3bii_invest_filled_me
 
 ```
 
-**Table S6.** AIC values from analyses with multiple observed-data models (which accounted for pseudo nests or active nests). Statistical summaries corresponding to these models are in Tables S7-S22. For the comprehensive description of how occupied cavities are considered in the models, see *Statistical Analyses* and Table S5.
+**Table S6.** AIC values from analyses with multiple observed-data models (which accounted for pseudo nests or active nests). Within each prediction–genus group, models with the lowest AIC values (including models within 2 AIC units of the minimum value) are in bold. Statistical summaries corresponding to these models are in Tables S7-S22. For the comprehensive description of how occupied cavities are considered in the models, see *Statistical Analyses* and Table S5.
 
 ```{r AIC_Table, echo=FALSE}
 
@@ -346,7 +346,6 @@ mod_3ai_AIC <- AIC(mod_3ai_choice_consp_par_os_ps)
 mod_3aii_AIC <- AIC(mod_3aii_choice_consp_par_os_no_ps)
 mod_3aiii_AIC <- AIC(mod_3aiii_choice_consp_par_meg_ps)
 mod_3aiv_AIC <- AIC(mod_3aiv_choice_consp_par_meg_no_ps)
-
 
 
 # make the table
@@ -382,8 +381,36 @@ AIC_table <- tibble(
 ), 2))
 
 
+# define groups for models
+groups <- c(
+  rep("1_osmia", 3), rep("1_megachile", 3),
+  rep("2_osmia", 3), rep("2_megachile", 3),
+  rep("3a_osmia", 2), rep("3a_megachile", 2)
+)
+
+# add group column
+AIC_table$Group <- groups
+
+# make list for models 2 AIC units of the best model in each group
+lowest_rows <- AIC_table %>%
+  group_by(Group) %>%
+  mutate(min_AIC = min(AIC)) %>%
+  filter(AIC <= min_AIC + 2) %>%
+  pull(Model)
+
+# remove helper column
+AIC_table <- AIC_table %>% select(-Group)
+
 # create table
 AIC_table <- flextable(AIC_table)
+
+# now make those best ones bold
+AIC_table <- bold(
+  AIC_table,
+  j = "AIC",
+  i = ~ Model %in% lowest_rows,
+  bold = TRUE
+)
 
 # make names italic
 AIC_table <- italic(
@@ -418,7 +445,7 @@ AIC_table
 
 ```
 
-**Table S7.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* including pseudo nests as congenerics (model 1_i), n = 161 nests. Asterisks indicate significance for all tables.
+**Table S7.** Summary of the Poisson GLMM of the number of new *Osmia* nests, using the observed data for prediction 1, testing for an attraction to congenerics in nesting *Osmia* including pseudo nests as congenerics (model 1_i), n = 161 nests. Asterisks indicate significance for all tables. The estimate (slope), error and associated statistics are reported for fixed effects, while the estimate for the random effects is the variance component.
 
 ```{r Model_1_i, echo=FALSE}
 
@@ -926,7 +953,7 @@ mod_3bii_table
 
 ```
 
-**Table S25.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Osmia* (model_3c_i), n = 245 cells.
+**Table S25.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Osmia* (model 3c_i), n = 245 cells.
 
 ```{r Model_3c_i, echo=FALSE}
 
@@ -951,7 +978,7 @@ mod_3ci_table
 
 ```
 
-**Table S26.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Megachile* (model_3c_ii), n = 136 cells.
+**Table S26.** Summary of the binomial GLMM of brood-cell position (1 for most recently constructed, 0 for previously constructed), for prediction 3c, testing if cell parasitism predicts nest termination in *Megachile* (model 3c_ii), n = 136 cells.
 
 ```{r Model_3c_ii, echo=FALSE}
 
@@ -976,7 +1003,7 @@ mod_3cii_table
 
 ```
 
-**Table S27.** Summary of the binomial GLMM of inner wall status (1 for abandoned, 0 for continuing to be built into a nest containing at least one cell), for prediction 3d, testing abandoning inner walls as a response to parasites in *Osmia* (model_3d_i), n = 168 nests with 28 of these nests being abandoned inner walls.
+**Table S27.** Summary of the binomial GLMM of inner wall status (1 for abandoned, 0 for continuing to be built into a nest containing at least one cell), for prediction 3d, testing abandoning inner walls as a response to parasites in *Osmia* (model 3d_i), n = 168 nests with 28 of these nests being abandoned inner walls.
 
 ```{r Model_3d_i, echo=FALSE}
 
