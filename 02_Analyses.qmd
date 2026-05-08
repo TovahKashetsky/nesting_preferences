@@ -9,14 +9,14 @@ execute:
 editor: visual
 ---
 
-```{r Load, include=FALSE}
+```{r Load}
 
 ## Loading packages
 
 library(tidyverse)
-library(glmmTMB)
-library(DHARMa)
-library(lme4)
+library(glmmTMB) # for glmer
+library(DHARMa) # for simulateResiduals
+library(lme4) # for lmer
 library(performance) # for check_model
 library(car) # for vif(), just to double check check_model vif plots
 library(patchwork) # for adding histomgram panels into one figure
@@ -56,7 +56,7 @@ cor(nesting_meg$NDP_meg_prior, nesting_meg$DP_meg_prior) # good
 
 ```
 
-```{r Cleaning, include=FALSE}
+```{r Cleaning}
 
 
 ## Cleaning data to reduce large standard error values from small sample sizes
@@ -151,7 +151,7 @@ nesting_investment_meg %>%
 nesting_cells_meg %>% filter(Cell_occupant == 'osmia')
 ```
 
-```{r Descriptive, include=FALSE}
+```{r Descriptive}
 
 
 # ## How many cells developed? 
@@ -336,7 +336,7 @@ investment_proportions_meg %>%
 
 ```
 
-```{r Simulations, include=FALSE}
+```{r Simulations}
 
 
 ## Create the function to simulate data
@@ -401,13 +401,7 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ```
 
-## Congeneric Attraction - Osmia
-
-Model 1_i - including pseudo
-
-Model 1_ii - excluding pseudo
-
-```{r Models_1_Congeneric_Attraction_Osmia, include=TRUE}
+```{r Models_1_Congeneric_Attraction_Osmia}
 
 
 ### MODEL 1.i - Osmia including pseudo ###
@@ -566,13 +560,7 @@ sum(trapnesting_os_null$New_nests_os)
 
 ```
 
-## Congeneric Attraction - Megachile
-
-Model 1_iii - including pseudo
-
-Model 1_iv - excluding pseudo
-
-```{r Models_1_Congeneric_Attraction_Megachile, include=TRUE}
+```{r Models_1_Congeneric_Attraction_Megachile}
 
 
 ### MODEL 1.iv - Megachile including pseudo ###
@@ -726,15 +714,7 @@ sum(trapnesting_meg_null$New_nests_meg)
 
 ```
 
-## Parasite Preferences - Osmia (Sapyga)
-
-Model 2_i - including pseudo
-
-Model 2_ii - excluding pseudo
-
-Model 2_iii - active nests
-
-```{r Models_2_Parasites_Attraction_Osmia, include=TRUE, fig.width=10, fig.height=10}
+```{r Models_2_Parasites_Attraction_Osmia, fig.width=10, fig.height=10}
 
 
 ### MODEL 2_i - Osmia parasite aggregation preferences, including pseudo ###
@@ -814,15 +794,7 @@ table(nesting_cells_os$Cell_parasitized) # 174 + 113 = 287
 
 ```
 
-## Parasite Preferences - Megachile (Meloid, Coelioxys, Chalcid)
-
-Model 2_iv - including pseudo
-
-Model 2_v - excluding pseudo
-
-Model 2_vi - active nests
-
-```{r Models_2_Parasites_Attraction_Megachile, include=TRUE, fig.width=10, fig.height=10}
+```{r Models_2_Parasites_Attraction_Megachile, fig.width=10, fig.height=10}
 
 
 ### MODEL 2_iv - Megachile parasite aggregation preferences, including pseudo ###
@@ -902,13 +874,7 @@ table(nesting_cells_meg$Cell_parasitized) # 122 + 20 = 142
 
 ```
 
-## Parasite Avoidance - Osmia
-
-Model 3a_i - including pseudo
-
-Model 3a_ii - excluding pseudo
-
-```{r Models_3a_Parasite_Avoidance_Osmia, include=TRUE}
+```{r Models_3a_Parasite_Avoidance_Osmia}
 
 
 ### MODEL 3a_i - Osmia avoidance of parasites, including pseudo ###
@@ -1132,13 +1098,7 @@ sum(trapnesting_os_null$New_nests_os) # 161
 
 ```
 
-## Parasite Avoidance - Megachile
-
-Model 3a_iii - including pseudo
-
-Model 3a_iv - excluding pseudo
-
-```{r Models_3a_Parasite_Avoidance_Megachile, include=TRUE}
+```{r Models_3a_Parasite_Avoidance_Megachile}
 
 
 ### MODEL 3a_iii - Megachile avoidance of parasites, including pseudo ###
@@ -1276,21 +1236,7 @@ saveRDS(mod_3aiv_choice_consp_par_meg_no_ps, file = 'Models/mod_3aiv_choice_cons
 
 ```
 
-## Parasite Defences
-
-Model 3b_i - length of straw filled, Osmia
-
-Model 3b_ii - length of straw filled, Megachile
-
-Model 3c_i - nest termination, Osmia
-
-Model 3c_ii - nest termination, Megachile
-
-Model 3d_i - abandoned inner wall, Osmia
-
-Model 3d_ii - abandoned inner wall, Megachile
-
-```{r Models_3b_Nest_Investment, include=TRUE, fig.width=10, fig.height=10}
+```{r Models_3b_Nest_Investment, fig.width=10, fig.height=10}
 
 # MODEL 3b_i - Osmia investment #
 ## try beta-binomial distribution with glmTMB
@@ -1339,7 +1285,7 @@ nesting_investment_meg %>%
 
 ```
 
-```{r Models_3c_Nest_Termination, include=TRUE, fig.width=10, fig.height=10}
+```{r Models_3c_Nest_Termination, fig.width=10, fig.height=10}
 
 
 # Remove NAs from unknown cell positions
@@ -1388,7 +1334,7 @@ length(unique(nesting_cells_meg$Nest_ID)) # 56 nests
 
 ```
 
-```{r Models_3d_Nest_Abandonment, include=TRUE, fig.width=10, fig.height=10}
+```{r Models_3d_Nest_Abandonment, fig.width=10, fig.height=10}
 
 # MODEL 3d_i - Osmia abandoned inner walls including pseudo #
 
@@ -1420,52 +1366,6 @@ nesting_os %>%
 nesting_meg %>% filter(!is.na(Abandoned_inner_wall)) # 145
 nesting_meg %>%
   summarise(Count = sum(Abandoned_inner_wall, na.rm = TRUE)) # 13
-
-
-```
-
-```{r AIC_Comparing_Models}
-
-## Comapring AIC between models including and excluding pseudo nests to examine how pseudo nests were perceived 
-
-
-# Prediction 1: Congeneric attraction
-
-  # Osmia
-AIC(mod_1i_choice_consp_os_ps) # 849.7863
-AIC(mod_1ii_choice_consp_os_no_ps) # 843.38
-AIC(mod_1iii_choice_consp_os_active) # 814.1675
-
-  # Megachile
-AIC(mod_1iv_choice_consp_meg_ps) # 853.9661
-AIC(mod_1v_choice_consp_meg_no_ps) # 839.5735
-AIC(mod_1vi_choice_consp_meg_active) # 840.5003
-
-
-# Prediction 2: Risk of nesting in aggregations
-
-  # Osmia 
-AIC(mod_2i_par_agg_os_ps) # 373.1831
-AIC(mod_2ii_par_agg_os_no_ps) # 370.4732
-AIC(mod_2iii_par_agg_os_active) # 370.6289
-
-  # Megachile 
-AIC(mod_2iv_par_agg_meg_ps) # 114.6041
-AIC(mod_2v_par_agg_meg_no_ps) # 113.0957
-AIC(mod_2vi_par_agg_meg_active) # 112.8491
-
-
-# Prediction 3: Avoidance of parasites
-
-  # Osmia 
-AIC(mod_3ai_choice_consp_par_os_ps) # 848.0123
-AIC(mod_3aii_choice_consp_par_os_no_ps) # 833.9114
-
-  # Megachile 
-AIC(mod_3aiii_choice_consp_par_meg_ps) # 851.5242
-AIC(mod_3aiv_choice_consp_par_meg_no_ps) # 806.8871
-
-
 
 
 ```

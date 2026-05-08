@@ -2,7 +2,7 @@
 title: 
   Social attraction during nest-site selection and anti-parasite 
   defenses of solitary cavity-nesting bees
-subtitle: 'Supplementary Material: Model Summaries'
+subtitle: 'Supplementary Material: Statistics'
 format:
   docx: 
     reference-doc: custom-reference-doc.docx
@@ -203,9 +203,9 @@ format_table_function_terms <- function(df) {
                                'scale(DP_meg_prior):scale(NDP_ps_meg_prior)' = 'Number of neighbouring congeneric nests with detectable parasites * Number of neighbouring congeneric nests with no detectable parasites, including pseudo nests',
                                'scale(DP_meg_prior):scale(NDP_meg_prior)' = 'Number of neighbouring congeneric nests with detectable parasites * Number of neighbouring congeneric nests with no detectable parasites, excluding pseudo nests',
                                'Cell_parasitized' = 'Cell parasitism',
-                               'Nest_parasitizedparasitized' = 'Nest parasitism (parasitized)',
-                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Number of neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitized)',
-                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Number of neighbouring congeneric nests with detectable parasites * Nest parasitism (parasitized)',
+                               'Nest_parasitizedparasitized' = 'Nest parasitism (parasitised)',
+                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Number of neighbouring Osmia nests with detectable parasites * Nest parasitism (parasitised)',
+                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Number of neighbouring congeneric nests with detectable parasites * Nest parasitism (parasitised)',
                                'poly(Day_of_year, 2)1' = 'Day of year I: linear effect',
                                'poly(Day_of_year, 2)2' = 'Day of year II: quadratic effect',
                                'Yearyear_2024' = 'Year (2024)',
@@ -230,9 +230,9 @@ format_table_function_terms_par <- function(df) {
                                'scale(Osmia_active_mothers)' = 'Number of active host mothers',
                                'scale(Meg_active_mothers)' = 'Number of active host mothers',
                                'Cell_parasitized' = 'Cell parasitism',
-                               'Nest_parasitizedparasitized' = 'Focal nest parasitism (parasitized)',
-                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Number of host nests with detectable parasites * Focal nest parasitism (parasitized)',
-                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Number of neighbouring host nests with detectable parasites * Focal nest parasitism (parasitized)',
+                               'Nest_parasitizedparasitized' = 'Focal nest parasitism (parasitised)',
+                               'scale(DP_os_prior):Nest_parasitizedparasitized' = 'Number of host nests with detectable parasites * Focal nest parasitism (parasitised)',
+                               'scale(DP_meg_prior):Nest_parasitizedparasitized' = 'Number of neighbouring host nests with detectable parasites * Focal nest parasitism (parasitised)',
                                'poly(Day_of_year, 2)1' = 'Day of year I: linear effect',
                                'poly(Day_of_year, 2)2' = 'Day of year II: quadratic effect',
                                'Yearyear_2024' = 'Year (2024)',
@@ -617,7 +617,7 @@ include_graphics('Figures/hist_1_iv_v_vi.png')
 
 **Figure S3.** Coefficients from the Poisson GLMMs of the number of new *Megachile* nests, for prediction 1 using simulated data (grey bars) and observed data (vertical red dashed line) for the number of neighbouring congeneric nests (A) including pseudo nests (model 1_iv), (B) excluding pseudo nests (model 1_v), and (C) including only active nests (model 1_vi).
 
-**Table S13.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, including pseudo nests as hosts (model 2_i), n = 287 cells.
+**Table S13.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, including pseudo nests as hosts (model 2_i), n = 287 cells.
 
 ```{r Model_2_i, echo=FALSE}
 
@@ -643,7 +643,7 @@ mod_2i_table
 
 ```
 
-**Table S14.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, excluding pseudo nests as hosts (model 2_ii), n = 287 cells.
+**Table S14.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to *Osmia* aggregations, excluding pseudo nests as hosts (model 2_ii), n = 287 cells.
 
 ```{r Model_2_ii, echo=FALSE}
 
@@ -670,7 +670,7 @@ mod_2ii_table
 
 ```
 
-**Table S15.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to active *Osmia* nests (model 2_iii), n = 287 cells.
+**Table S15.** Summary of the binomial GLMM of *Osmia* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Sapyga*, *Melittobia*) are attracted to active *Osmia* nests (model 2_iii), n = 287 cells.
 
 ```{r Model_2_iii, echo=FALSE}
  
@@ -696,7 +696,7 @@ mod_2iii_table
 
 ```
 
-**Table S16.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, including pseudo nests as hosts (model 2_iv), n = 142 cells.
+**Table S16.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, including pseudo nests as hosts (model 2_iv), n = 142 cells.
 
 ```{r Model_2_iv, echo=FALSE}
 
@@ -723,7 +723,7 @@ mod_2iv_table
 
 ```
 
-**Table S17.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, excluding pseudo nests as hosts (model 2_v), n = 142 cells.
+**Table S17.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to *Megachile* aggregations, excluding pseudo nests as hosts (model 2_v), n = 142 cells.
 
 ```{r Model_2_v, echo=FALSE}
 
@@ -749,7 +749,7 @@ mod_2v_table
 
 ```
 
-**Table S18.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitized, 1 for parasitized) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to active *Megachile* nests (model 2_vi), n = 142 cells.
+**Table S18.** Summary of the binomial GLMM of *Megachile* cell parasitism status (0 for unparasitised, 1 for parasitised) for prediction 2, testing if parasites (*Coelioxys,* meloid beetles, *Melittobia*, and other chalcid wasps) are attracted to active *Megachile* nests (model 2_vi), n = 142 cells.
 
 ```{r Model_2_vi, echo=FALSE}
 

@@ -8,14 +8,14 @@ format:
 editor: visual
 ---
 
-```{r Prepping, include=FALSE}
+```{r Prepping}
 
 ## Loading packages
 
-library(ggplot2)
-library(ggeffects)
-library(lme4)
 library(tidyverse)
+library(ggplot2)
+library(ggeffects) # for ggpredict
+library(lme4) # for lmer
 library(cowplot) # to patch figures together
 library(patchwork) # for adding histogram panels into one figure
 library(scales) # for making the label number 
@@ -68,7 +68,7 @@ nesting_cells_meg <- nesting_cells_meg %>% filter(Site != 'NN')
 
 ```
 
-```{r Simulations, include=FALSE}
+```{r Simulations}
 
 
 ## Create the function to simulate data
@@ -133,7 +133,7 @@ trapnesting_meg_null <- trapnesting_meg %>%
 
 ```
 
-```{r Ordering_treatments, include=FALSE}
+```{r Ordering_treatments}
 
 
 ## Ordering treatments
@@ -154,9 +154,7 @@ trapnesting_meg_null <- trapnesting_meg_null %>% mutate(Null_new_nests_mean = ro
 
 ```
 
-## Congeneric Attraction
-
-```{r P1_Congeneric_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P1_Congeneric_Attraction}
 
 
 ## Osmia ##
@@ -312,9 +310,7 @@ sum(trapnesting_meg_null$New_nests_meg) # 137
 
 ```
 
-## Parasite Attraction
-
-```{r P2_Parasite_Attraction, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P2_Parasite_Attraction}
 
 
 ## Osmia ##
@@ -407,7 +403,7 @@ Fig_p2 <- combined_p2 + plot_annotation(tag_levels = NULL) &
 P2_left_label <- ggplot() +
   annotate('text',
            x = 0.5, y = 0.5,
-           label = 'Proportion of parasitized nests',
+           label = 'Proportion of parasitised nests',
            angle = 90,
            size = 5) +
   theme_void() +
@@ -461,9 +457,7 @@ nesting_cells_meg %>%
 
 ```
 
-## Parasite Avoidance
-
-```{r P3a_Parasite_Avoidance, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3a_Parasite_Avoidance}
 
 
 ## Osmia ##
@@ -486,18 +480,18 @@ P3a_os <- trapnesting_os %>%
                   linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   scale_fill_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Osmia) ~ " nests"))) +
   guides(fill = "none") +
@@ -528,18 +522,18 @@ P3a_meg <- trapnesting_meg %>%
                   linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests")))  +
   scale_fill_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Parasitized", "Not parasitized"),
+    labels = c("Parasitised", "Not parasitised"),
     name = bquote(atop("Status of neighbouring",
                    italic(Megachile) ~ " nests"))) +
   guides(fill = "none") +
@@ -595,7 +589,7 @@ ggsave('Figures/Fig_p3a.png', Fig_p3a, width = 11, height = 5, dpi = 300, bg = '
 
 ```
 
-```{r P3b_Investment, echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3b_Investment}
 
 ## Osmia ##
 # make proportion data for figure
@@ -625,19 +619,19 @@ P3b_os <- nesting_investment_os %>%
   scale_colour_manual(
     values = c("not parasitized" = "#59989e",
              "parasitized"     = "#21393b"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Osmia))
   ) +
   scale_fill_manual(
     values = c("not parasitized" = "#59989e",
              "parasitized"     = "#21393b"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Osmia))
   ) +
   scale_shape_manual(
     values = c("not parasitized" = 16,
              "parasitized" = 17),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Osmia))
   ) +
   labs(y = NULL, x = NULL) +
@@ -673,7 +667,7 @@ P3b_meg <- nesting_investment_meg %>%
       "parasitized" = "#422426"
     ),
     breaks = c("not parasitized", "parasitized"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Megachile))
   ) +
   scale_fill_manual(
@@ -682,7 +676,7 @@ P3b_meg <- nesting_investment_meg %>%
       "parasitized" = "#422426"
     ),
     breaks = c("not parasitized", "parasitized"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Megachile))
   ) +
   scale_shape_manual(
@@ -691,7 +685,7 @@ P3b_meg <- nesting_investment_meg %>%
       "parasitized" = 17
     ),
     breaks = c("not parasitized", "parasitized"),
-    labels = c("Not parasitized", "Parasitized"),
+    labels = c("Not parasitised", "Parasitised"),
     name = bquote(italic(Megachile))
   ) +
   labs(y = NULL, x = NULL) +
@@ -745,7 +739,7 @@ ggsave('Figures/Fig_p3b.png', Fig_p3b, width = 11, height = 5, dpi = 300)
 
 Nest Termination
 
-```{r P3c_Nest_Termination,echo=FALSE, warning=FALSE, message=FALSE}
+```{r P3c_Nest_Termination}
 
 ## Osmia ##
 
@@ -760,6 +754,7 @@ Fig_p3c_os <- nesting_cells_os_fig %>%
   geom_bar(position = 'fill') +
   scale_fill_manual(
     values = c('Not parasitized' = '#59989e', 'Parasitized' = '#21393b'),
+    labels = c('Not parasitised', 'Parasitised'),
     name = bquote(italic(Osmia))
   ) +
   labs(y = NULL, x = NULL)
@@ -778,6 +773,7 @@ Fig_p3c_meg <- nesting_cells_meg_fig %>%
   geom_bar(position = 'fill') +
   scale_fill_manual(
     values = c('Not parasitized' = '#B6686B', 'Parasitized' = '#422426'),
+    labels = c('Not parasitised', 'Parasitised'),
     name = bquote(italic(Megachile))
   ) +
   labs(y = NULL, x = NULL)
