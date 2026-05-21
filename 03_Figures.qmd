@@ -480,20 +480,20 @@ P3a_os <- trapnesting_os %>%
                   linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Osmia) ~ " nests"))) +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Osmia) ~ "nests",
+                   "with detectable parasites"))) +
   scale_fill_manual(
     values = c('0' = "#59989e", '1' = "#21393b"),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Osmia) ~ " nests"))) +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Osmia) ~ "nests",
+                   "with detectable parasites"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Osmia) ~ " nests"))) +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Osmia) ~ "nests",
+                   "with detectable parasites"))) +
   guides(fill = "none") +
   labs(y = NULL, x = NULL) +
   xlim(0, 15) +
@@ -522,20 +522,20 @@ P3a_meg <- trapnesting_meg %>%
                   linetype = "longdash") +
   scale_colour_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Megachile) ~ " nests")))  +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Megachile) ~ "nests",
+                   "with detectable parasites")))   +
   scale_fill_manual(
     values = c('0' = "#B6686B", '1' = "#422426"),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Megachile) ~ " nests"))) +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Megachile) ~ "nests",
+                   "with detectable parasites"))) +
   scale_shape_manual(
     values = c("0" = 16,
              "1" = 17),
-    labels = c("Parasitised", "Not parasitised"),
-    name = bquote(atop("Status of neighbouring",
-                   italic(Megachile) ~ " nests"))) +
+    labels = c("Present", "Absent"),
+    name = bquote(atop("Neighbouring" ~ italic(Megachile) ~ "nests",
+                   "with detectable parasites")))   +
   guides(fill = "none") +
   labs(y = NULL, x = NULL) + 
   theme(
